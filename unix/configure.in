@@ -672,7 +672,7 @@ eval "TCL_LIB_FILE=libtcl${LIB_SUFFIX}"
 
 eval "TCL_LIB_FILE=${TCL_LIB_FILE}"
 
-TCL_LIBRARY='$(prefix)/lib/tcl$(VERSION)'
+TCL_LIBRARY='$(prefix)/share/tcl/tcl$(VERSION)'
 PRIVATE_INCLUDE_DIR='$(includedir)'
 HTML_DIR='$(DISTDIR)/html'
 
@@ -773,7 +773,7 @@ if test "$FRAMEWORK_BUILD" = "1" ; then
 elif test "$prefix/lib" != "$libdir"; then
     TCL_PACKAGE_PATH="${libdir} ${prefix}/lib ${TCL_PACKAGE_PATH}"
 else
-    TCL_PACKAGE_PATH="${prefix}/lib ${TCL_PACKAGE_PATH}"
+    TCL_PACKAGE_PATH="${prefix}/share/tcl"
 fi
 
 #--------------------------------------------------------------------
