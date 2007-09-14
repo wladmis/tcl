@@ -940,7 +940,7 @@ install-doc: doc
 	done
 
 install-headers:
-	@for i in "$(INCLUDE_INSTALL_DIR)"; \
+	@for i in "$(INCLUDE_INSTALL_DIR)/tcl/generic" "$(INCLUDE_INSTALL_DIR)/tcl/unix" "$(INCLUDE_INSTALL_DIR)"; \
 	    do \
 	    if [ ! -d "$$i" ] ; then \
 		echo "Making directory $$i"; \
@@ -949,14 +949,15 @@ install-headers:
 		fi; \
 	    done;
 	@echo "Installing header files to $(INCLUDE_INSTALL_DIR)/";
-	@for i in $(GENERIC_DIR)/tcl.h $(GENERIC_DIR)/tclDecls.h \
-		$(GENERIC_DIR)/tclOO.h $(GENERIC_DIR)/tclOODecls.h \
-		$(GENERIC_DIR)/tclPlatDecls.h \
-		$(GENERIC_DIR)/tclTomMath.h \
-		$(GENERIC_DIR)/tclTomMathDecls.h ; \
+	@for i in tcl.h tclDecls.h tclOO.h tclOODecls.h tclPlatDecls.h tclTomMath.h tclTomMathDecls.h; \
 	    do \
-	    $(INSTALL_DATA) $$i "$(INCLUDE_INSTALL_DIR)"; \
+	    $(INSTALL_DATA) $(GENERIC_DIR)/$$i "$(INCLUDE_INSTALL_DIR)"; \
 	    done;
+	@for i in tclInt.h tclPort.h tclRegexp.h tclIntDecls.h tclIntPlatDecls.h regex.h tclCompile.h; \
+		do \
+		$(INSTALL_DATA) $(GENERIC_DIR)/$$i $(INCLUDE_INSTALL_DIR)/tcl/generic; \
+		done;
+	@$(INSTALL_DATA) $(UNIX_DIR)/tclUnixPort.h $(INCLUDE_INSTALL_DIR)/tcl/unix;
 
 # Optional target to install private headers
 install-private-headers:
