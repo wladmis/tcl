@@ -742,7 +742,7 @@ install-binaries: binaries
 	@EXTRA_INSTALL_BINARIES@
 
 install-libraries: libraries $(INSTALL_TZDATA) install-msgs
-	@for i in $(INCLUDE_INSTALL_DIR) $(SCRIPT_INSTALL_DIR); \
+	@for i in $(INCLUDE_INSTALL_DIR)/tcl/generic $(INCLUDE_INSTALL_DIR)/tcl/unix $(SCRIPT_INSTALL_DIR); \
 	    do \
 	    if [ ! -d $$i ] ; then \
 		echo "Making directory $$i"; \
@@ -764,13 +764,15 @@ install-libraries: libraries $(INSTALL_TZDATA) install-msgs
 	    chmod +x $(SRC_DIR)/../unix/install-sh; \
 	    fi
 	@echo "Installing header files";
-	@for i in $(GENERIC_DIR)/tcl.h $(GENERIC_DIR)/tclDecls.h \
-		$(GENERIC_DIR)/tclPlatDecls.h \
-		$(GENERIC_DIR)/tclTomMath.h \
-		$(GENERIC_DIR)/tclTomMathDecls.h ; \
+	@for i in tcl.h tclDecls.h tclPlatDecls.h tclTomMath.h tclTomMathDecls.h; \
 	    do \
-	    $(INSTALL_DATA) $$i $(INCLUDE_INSTALL_DIR); \
+	    $(INSTALL_DATA) $(GENERIC_DIR)/$$i $(INCLUDE_INSTALL_DIR); \
 	    done;
+	@for i in tclMath.h tclInt.h tclPort.h tclRegexp.h tclIntDecls.h tclIntPlatDecls.h regex.h tclCompile.h; \
+	    do \
+	    $(INSTALL_DATA) $(GENERIC_DIR)/$$i $(INCLUDE_INSTALL_DIR)/tcl/generic; \
+	    done;
+	@$(INSTALL_DATA) $(UNIX_DIR)/tclUnixPort.h $(INCLUDE_INSTALL_DIR)/tcl/unix;
 	@echo "Installing library files to $(SCRIPT_INSTALL_DIR)";
 	@for i in $(TOP_DIR)/library/*.tcl $(TOP_DIR)/library/tclIndex \
 		$(UNIX_DIR)/tclAppInit.c $(UNIX_DIR)/ldAix @DTRACE_SRC@; \
