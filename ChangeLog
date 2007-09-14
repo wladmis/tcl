@@ -1,3 +1,492 @@
+2006-10-18  Pat Thoyts  <patthoyts@users.sourceforge.net>
+
+	*** 8.4.14 TAGGED FOR RELEASE ***
+
+	* win/nmakehlp.c: Ensure builds with VC6 without Platform SDK.
+	* win/rules.vc:   Pickup MACHINE from environment.
+
+2006-10-17  Don Porter  <dgp@users.sourceforge.net>
+
+	* generic/tclIOUtil.c:	Cleaned up some code flagged by a
+	* generic/tclInt.h:	`make checkexports` test.
+	* win/tclWin32Dll.c:
+	* win/tclWinFile.c:
+	
+2006-10-16  Daniel Steffen  <das@users.sourceforge.net>
+
+	* changes: updates for 8.4.14 release.
+
+	* macosx/Makefile: don't redo prebinding of non-prebound binaires.
+
+2006-10-11  Andreas Kupries  <andreask@activestate.com>
+
+	* generic/tclPkg.c (Tcl_PkgRequireEx): Corrected crash when
+	  argument version==NULL passed in. Backport of the fix for the
+	  same problem in 8.5.
+
+2006-10-10  Don Porter  <dgp@users.sourceforge.net>
+
+	* changes:		changes updated for 8.4.14 release.
+
+2006-10-06  Jeff Hobbs  <jeffh@ActiveState.com>
+
+	* tests/http.test: update tests to handle strictness change.
+
+2006-10-06  Pat Thoyts  <patthoyts@users.sourceforge.net>
+
+	* win/rules.vc: bug #1571954: avoid /RTCc flag with MSVC8
+
+2006-10-05  Jeff Hobbs  <jeffh@ActiveState.com>
+
+	* library/http/http.tcl (http::geturl): only do geturl url rfc
+	3986 validity checking if $::http::strict is true (default false
+	for 8.4).  [Bug 1560506]
+
+	* generic/tcl.h: note limitation on changing Tcl_UniChar size
+	* generic/tclEncoding.c (UtfToUnicodeProc, UnicodeToUtfProc): 
+	* tests/encoding.test (encoding-16.1): fix alignment issues in
+	unicode <> utf conversion procs. [Bug 1122671]
+
+2006-10-05  Miguel Sofer  <msofer@users.sf.net>
+
+	* generic/tclVar.c (Tcl_LappendObjCmd):
+	* tests/append.test(4.21-22): fix for longstanding [Bug 1570718],
+	lappending nothing to non-list. Reported by lvirden
+
+2006-10-02  Don Porter  <dgp@users.sourceforge.net>
+
+	* generic/tclFileName.c (TclGlob):	Prevent doubling of directory
+	separators by [glob].  [Bug 1569042]
+
+2006-10-01  Pat Thoyts  <patthoyts@users.sourceforge.net>
+
+	* win/tclWinFile.c: Handle possible missing define.
+	* win/tclWinFile.c: Backported fix for bug #1420432 (cannot set 
+	* tests/cmdAH.test: mtime for directories on windows).
+
+2006-09-30  Miguel Sofer  <msofer@users.sf.net>
+
+	* generic/tclUtil.c (Tcl_SplitList): optimisation, [Patch 1344747]
+	by dgp.
+
+2006-09-26  Pat Thoyts  <patthoyts@users.sourceforge.net>
+
+	* win/makefile.vc:  Updated MSVC build to properly deal with
+	* win/nmakehlp.c:   MSVC8 and AMD64 target. Backport from 8.5
+	* win/rules.vc:
+	* generic/tcl.h:    Fixed stat definition for MSVC8 AMD64.
+	* win/tclWinSock.c: Casting type police.
+	* win/tclWinTime.c:
+
+2006-09-26  Don Porter  <dgp@users.sourceforge.net>
+
+	* generic/tcl.h:	As 2006-09-22 commit from Donal K. Fellows
+	demonstrates, "#define NULL 0" is just wrong, and as a quotable chat
+	figure observed, "If NULL isn't defined, we're not using a C compiler."
+	Improper fallback definition of NULL removed.
+
+2006-09-25  Andreas Kupries  <andreask@activestate.com>
+
+	* generic/tclIO.c (Tcl_StackChannel): Fixed [SF Tcl Bug 1564642],
+	  aka coverity #51. Extended loop condition, added checking for
+	  NULL to prevent seg.fault.
+
+2006-09-25  Andreas Kupries <andreask@activestate.com>
+
+	* generic/tclBasic.c: Reverted exposure of patchlevel in
+	  registered core version when TIP#268 features are
+	  activated. Better compatibility with existing packages.
+	  Like Tk.
+
+2006-09-24  Miguel Sofer  <msofer@users.sf.net>
+
+	* generic/tclParse.c (Tcl_ParseCommand): also return an error if 
+	start==NULL and numBytes<0. This is coverity's bug #20
+
+	* generic/tclStringObj.c (STRING_SIZE): fix allocation for
+	0-length strings. This is coverity's bugs #54-5
+	
+2006-09-22  Andreas Kupries  <andreask@activestate.com>
+
+	* generic/tclInt.h: Moved TIP#268's field 'packagePrefer' to the
+	  end of the structure, for better backward compatibility.
+
+2006-09-22  Andreas Kupries <andreask@activestate.com>
+
+	* generic/tclPkg.c (Tcl_PkgRequireEx): Changes handling of the
+	  return information from 'Tcl_PkgRequireProc'. Keep the
+	  interpreter result empty. Backport of fix for problem found
+	  while testing #268 under 8.5. More details in the comments.
+
+2006-09-22  Donal K. Fellows  <donal.k.fellows@man.ac.uk>
+
+	* generic/tclThreadTest.c (TclCreateThread): Use NULL instead of 0 as
+	end-of-strings marker to Tcl_AppendResult; the difference matters on
+	64-bit machines. [Bug 1562528]
+
+2006-09-21  Andreas Kupries <andreask@activestate.com>
+
+	* generic/tcl.decls:  Implemented TIP #268, conditionally.
+	* generic/tclBasic.c: Define TCL_TIP268 to activate the new
+	* generic/tclDecls.h: features.
+	* generic/tclInt.h:
+	* generic/tclPkg.c: 
+	* generic/tclStubInit.c:
+	* generic/tclTest.c:
+	* library/init.tcl
+	* library/package.tcl:
+	* tests/pkg.test:
+	* tests/platform.test:
+	* tests/safe.test:
+	* doc/PkgRequire.3:
+
+2006-09-15  Jeff Hobbs  <jeffh@ActiveState.com>
+
+	* library/http/http.tcl:      Change " " -> "+" url encoding mapping
+	* library/http/pkgIndex.tcl:  to " " -> "%20" as per RFC 3986.
+	* tests/http.test (http-5.1): bump http to 2.5.3 for 8.4.14
+
+2006-09-12  Andreas Kupries  <andreask@activestate.com>
+
+	* unix/configure.in (HAVE_MTSAFE_GETHOST*): Modified to recognize
+	  HP-UX 11.00 and beyond as having mt-safe implementations of the
+	  gethost functions.
+	* unix/configure: Regenerated, using autoconf 2.13
+
+	* unix/tclUnixCompat.c (PadBuffer): Fixed bug in calculation of
+	  the increment needed to align the pointer, and added
+	  documentation explaining why the macro is implemented as it is.
+
+2006-09-11  Andreas Kupries  <andreask@activestate.com>
+
+	* tests/msgcat.test: Bumped version in auxiliary files as well.
+	* doc/msgcat.n: 
+
+2006-09-11  Daniel Steffen  <das@users.sourceforge.net>
+
+	* unix/tclUnixCompat.c: make compatLock static and only declare it when
+	it will actually be used; #ifdef parts of TSD that are not always
+	needed; adjust #ifdefs to cover all possible cases; fix whitespace.
+
+2006-09-10  Don Porter  <dgp@users.sourceforge.net>
+
+	* library/msgcat/msgcat.tcl:	Bump to version msgcat 1.3.4 to account
+	* library/msgcat/pkgIndex.tcl:	for modifications.
+
+2006-09-10  Daniel Steffen  <das@users.sourceforge.net>
+
+	* library/msgcat/msgcat.tcl (msgcat::Init): on Darwin, add fallback of
+	* tests/msgcat.test:                        default msgcat locale to
+	* unix/tclUnixInit.c (TclpSetVariables):    current CFLocale identifier
+	if available (via private ::tcl::mac::locale global, set at interp init
+	when on Mac OS X 10.3 or later with CoreFoundation).
+
+	* unix/tcl.m4: add caching to new SC_TCL_* macros for MT-safe wrappers.
+	* unix/configure: autoconf-2.13
+
+2006-09-08  Andreas Kupries  <andreask@activestate.com>
+
+	* unix/tclUnixCompat.c: Fixed conditions for CopyArray/CopyString,
+	  and CopyHostent. Also fixed bad var names in TclpGetHostByName.
+
+2006-09-08  Zoran Vasiljevic <vasiljevic@users.sourceforge.net>
+
+	* unix/tclUnixCompat.c: Added fallback to gethostbyname()
+	and gethostbyaddr() if the implementation is known to be
+	MT-safe (currently for Darwin 6 or later only).
+
+	* unix/configure.in: Assume gethostbyname() and gethostbyaddr()
+	are MT-safe starting with Darwin 6 (Mac OSX 10.2).
+
+	* unix/configure: Regenerated with autoconf V2.13
+
+2006-09-07  Zoran Vasiljevic <vasiljevic@users.sourceforge.net>
+
+	* unix/tclUnixFCmd.c: Removed some false tests added
+	(and left by mistake) by fixing the Tcl Bug: 999544
+
+	* unix/tclUnixCompat.c: Added fallback to MT-unsafe
+	library calls if TCL_THREADS is not defined.
+	Fixed alignment of arrays copied by CopyArrayi() to be
+	on the sizeof(char *) boundary.
+
+2006-09-07  Andreas Kupries <andreask@activestate.com>
+
+	* unix/configure: Regenerated using autoconf 2.13.
+
+2006-09-07  Zoran Vasiljevic <vasiljevic@users.sourceforge.net>
+
+	* unix/tclUnixChan.c   Rewritten MT-safe wrappers to
+	* unix/tclUnixCompat.c return ptrs to TSD storage
+	* unix/tclUnixFCmd.c   making them all look like their
+	* unix/tclUnixPort.h   MT-unsafe pendants API-wise.
+	* unix/tclUnixSock.c   
+
+2006-09-06  Zoran Vasiljevic <vasiljevic@users.sourceforge.net>
+
+	* unix/tclUnixChan.c: Added TCL_THREADS ifdef'ed  usage
+	* unix/tclUnixFCmd.c: of MT-safe calls like:
+	* unix/tclUnixSock.c: getpwuid, getpwnam, getgrgid, getgrnam,
+	* unix/tclUnixPort.h: gethostbyname and gethostbyaddr.
+	* unix/Makefile.in:   See Tcl Bug: 999544
+	* unix/configure.in:
+	* unix/tcl.m4:
+	* unix/configure: Regenerated.
+
+	* unix/tclUnixCompat.c: New file containing MT-safe implementation
+	of some library calls.
+
+2006-09-04  Don Porter  <dgp@users.sourceforge.net>
+
+	* tests/main.text (Tcl_Main-4.4):       Test corrected to not be
+        timing sensitive to the Bug 1481986 fix. [Bug 1550858]
+
+2006-09-04  Jeff Hobbs  <jeffh@ActiveState.com>
+
+	* doc/package.n: correct package example
+
+2006-08-30  Jeff Hobbs  <jeffh@ActiveState.com>
+
+	* win/tclWinChan.c: [Bug 819667] Improve logic for identifying COM
+	ports.
+
+	* win/tclWinFCmd.c:    [Bug 1548263] Added test for NULL return
+	* generic/tclIOUtil.c: from Tcl_FSGetNormalizedPath which was
+	causing segv's
+
+	* generic/tclFileName.c (TclDoGlob): match incr with existing decr.
+
+	* unix/Makefile.in: add valgrindshell target and update default
+	VALGRINDARGS.  User can override, or add to it with VALGRIND_OPTS
+	env var.
+
+	* generic/tclBasic.c (Tcl_CreateInterp): init iPtr->threadId
+
+	* generic/tclIOGT.c (ExecuteCallback): 
+	* generic/tclPkg.c (Tcl_PkgRequireEx): replace Tcl_GlobalEval(Obj)
+	with more efficient Tcl_Eval(Obj)Ex
+
+2006-08-22  Andreas Kupries <andreask@activestate.com>
+
+	* unix/tclUnixNotfy.c (Tcl_WaitForEvent): Fixed broken if syntax
+	  committed 2006-08-21 by Daniel. The broken syntax is visible to
+	  all unix platforms, but not on OSX for machines which
+	  HAVE_COREFOUNDATION.
+
+2006-08-21  Don Porter  <dgp@users.sourceforge.net>
+
+	* generic/tclIOUtil.c:	Revisions to complete the thread finalization
+	of the cwdPathPtr.  [Bug 1536142]
+
+2006-08-21  Daniel Steffen  <das@users.sourceforge.net>
+
+	* macosx/tclMacOSXNotify.c (Tcl_WaitForEvent): if the run loop is
+	already running (e.g. if Tcl_WaitForEvent was called recursively),
+	re-run it in a custom run loop mode containing only the source for the
+	notifier thread, otherwise wakeups from other sources added to the
+	common run loop modes might get lost; sync panic msg changes from HEAD.
+
+	* unix/tclUnixNotfy.c (Tcl_WaitForEvent): on 64-bit Darwin,
+	pthread_cond_timedwait() appears to have a bug that causes it to wait
+	forever when passed an absolute time which has already been exceeded by
+	the system time; as a workaround, when given a very brief timeout, just
+	do a poll on that platform. [Bug 1457797]
+
+	* unix/tclUnixPort.h (Darwin): override potentially faulty configure
+	detection of termios availability in all cases, since termios is known
+	to be present on all Mac OS X releases since 10.0. [Bug 497147]
+
+2006-08-18  Daniel Steffen  <das@users.sourceforge.net>
+
+	* unix/tcl.m4 (Darwin): add support for --enable-64bit on x86_64, for
+	universal builds including x86_64, for 64-bit CoreFoundation on Leopard
+	and for use of -mmacosx-version-min instead of MACOSX_DEPLOYMENT_TARGET.
+	* unix/configure: autoconf-2.13
+
+	* generic/tcl.h:      add fixes for building on Leopard and support for
+	* unix/tclUnixPort.h: 64-bit CoreFoundation on Leopard.
+
+	* unix/tclUnixPort.h: on Darwin x86_64, disable use of vfork as it
+	causes execve to fail intermittently. (rdar://4685553)
+	
+	* macosx/README: updates for x86_64 support and Xcode 2.4.
+
+	* unix/tclUnixChan.c (TclUnixWaitForFile): with timeout < 0, if select()
+	returns early (e.g. due to a signal), call it again instead of returning
+	a timeout result. Fixes intermittent event-13.8 failures.
+
+2006-08-09  Don Porter  <dgp@users.sourceforge.net>
+
+	* generic/tclEncoding.c:	Replace buffer copy in for loop
+	with call to memcpy().  Thanks to afredd. [Patch 1530262]
+
+2006-08-03  Daniel Steffen  <das@users.sourceforge.net>
+
+	* unix/tclUnixPipe.c (TclpCreateProcess): for USE_VFORK: ensure standard
+	channels are initialized before vfork() so that the child doesn't
+	potentially corrupt global state in the parent's address space.
+
+2006-07-30  Kevin Kenny  <kennykb@acm.org>
+
+	* tests/clock.test: Allowed UTC as a synonym for GMT in two
+	tests that indirectly invoke 'strftime' with the result of
+	'gmtime' to fix a bogus test failure on FreeBSD systems.
+	[Bug 1513489].
+	
+2006-07-30  Joe English  <jenglish@users.sourceforge.net>
+
+	* doc/AppInit.3: Fix typo [Bug 1496886]
+
+2006-07-20  Daniel Steffen  <das@users.sourceforge.net>
+
+	* macosx/tclMacOSXNotify.c (Tcl_InitNotifier, Tcl_WaitForEvent): create
+	notifier thread lazily upon first call to Tcl_WaitForEvent() rather than
+	in Tcl_InitNotifier(). Allows calling exeve() in processes where the
+	event loop has not yet been run (Darwin's execve() fails in processes
+	with more than one thread), in particular allows embedders to call
+	fork() followed by execve(), previously the pthread_atfork() child
+	handler's call to Tcl_InitNotifier() would immediately recreate the
+	notifier thread in the child after a fork.
+
+	* macosx/tclMacOSXNotify.c (Tcl_InitNotifier):     add support for
+	* unix/tclUnixFCmd.c (DoRenameFile, CopyFileAtts): weakly importing
+	* unix/tclUnixInit.c (TclpSetInitialEncodings):    symbols not available
+	on OSX 10.2 or 10.3, enables binaires built on later OSX versions to run
+	on earlier ones.
+	* macosx/README: document how to enable weak-linking; cleanup.
+	* unix/tclUnixPort.h: add support for weak-linking; conditionalize
+	AvailabilityMacros.h inclusion; only disable realpath on 10.2 or earlier
+	when threads are enabled.
+	* unix/tclLoadDyld.c (TclpLoadMemoryGetBuffer): change runtime Darwin
+	* unix/tclUnixInit.c (TclpInitPlatform):        release check to use
+	                                                global initialized once.
+	* unix/tclUnixFCmd.c (DoRenameFile, TclpObjNormalizePath): add runtime
+	Darwin release check to determine if realpath is threadsafe.
+	* unix/configure.in: add check on Darwin for compiler support of weak
+	* unix/tcl.m4:       import and for AvailabilityMacros.h header; move
+	Darwin specific checks & defines that are only relevant to the tcl build
+	out of tcl.m4; restrict framework option to Darwin; cleanup quoting.
+	* unix/configure: autoconf-2.13
+
+	* unix/tclLoadDyld.c (TclpLoadMemory):
+	* unix/tclUnixPipe.c (TclpCreateProcess): fix signed-with-unsigned
+	comparison and other warnings from gcc4 -Wextra.
+
+2006-07-13  Andreas Kupries <andreask@activestate.com>
+
+	* unix/tclUnixPort.h: Added the inclusion of
+	  <AvailabilityMacros.h>. The missing header caused the upcoming
+	  #if conditions to wrongly exclude realpath, causing file
+	  normalize to ignore symbolic links in the path.
+
+2006-07-11  Zoran Vasiljevic <vasiljevic@users.sourceforge.net>
+
+	* generic/tclAsync.c: Made Tcl_AsyncDelete() more tolerant
+	when called after all thread TSD has been garbage-collected.
+
+2006-07-10  Jeff Hobbs  <jeffh@ActiveState.com>
+
+	* generic/tclIO.c (Tcl_CreateChannel): allow Tcl std channel
+	inheritance to be #defined out (default remains in).
+
+2006-06-15  Don Porter  <dgp@users.sourceforge.net>
+
+	* changes:		changes to start prep for an 8.4.14 release.
+
+2006-06-14  Daniel Steffen  <das@users.sourceforge.net>
+
+	* unix/tclUnixPort.h (Darwin): support for MAC_OS_X_VERSION_MAX_ALLOWED
+	define from AvailabilityMacros.h: override configure detection and only
+	use API available in the indicated OS version or earlier.
+
+2006-06-14  Pat Thoyts  <patthoyts@users.sourceforge.net>
+
+	* generic/regerror.c:   Enable building Tcl with Microsoft's
+	* generic/tcl.h:        latest compiler offering (VS2005). 
+	* generic/tclDate.c:    We have to handle a number of oddities
+	* tests/env.test:       as they have deprecated most of the 
+	* win/makefile.vc:      standard C library and now generate 
+	* win/nmakehlp.c:       manifest files to be linked into the
+	* win/rules.vc:         binaries. SF bug #1424909
+	* win/tclWinTime.c:
+
+2006-06-13  Donal K. Fellows  <donal.k.fellows@man.ac.uk>
+
+	* unix/tclLoadDl.c (TclpDlopen): Workaround for a compiler bug in Sun
+	Forte 6. [Bug 1503729]
+
+2006-06-06  Don Porter  <dgp@users.sourceforge.net>
+
+	* doc/GetStdChan.3:	Added recommendation that each call to
+	Tcl_SetStdChannel() be accompanied by a call to Tcl_RegisterChannel().
+
+2006-05-31  Jeff Hobbs  <jeffh@ActiveState.com>
+
+	* generic/tclNamesp.c (NamespaceInscopeCmd): revert [Bug 1400572]
+	fix of 2006-01-09 for [namespace inscope] as it seems to mess with
+	itcl scope decoding.  Leaving namespace-29.6 test failure until
+	final cause it determined.
+
+2006-05-29  Jeff Hobbs  <jeffh@ActiveState.com>
+
+	* generic/tcl.h (Tcl_DecrRefCount): use if/else construct to allow
+	placement in unbraced outer if/else conditions. (jcw)
+
+2006-05-27  Daniel Steffen  <das@users.sourceforge.net>
+
+	* macosx/tclMacOSXNotify.c: implemented pthread_atfork() handler that
+	* unix/tcl.m4 (Darwin):     recreates CoreFoundation state and notifier
+	thread in the child after a fork(). Note that pthread_atfork() is
+	available starting with Tiger only. Because vfork() is used by the core
+	on Darwin, [exec]/[open] are not affected by this fix, only extensions
+	or embedders that call fork() directly (such as TclX). However, this
+	only makes fork() safe from corefoundation tcl with --disable-threads;
+	as on all platforms, forked children may deadlock in threaded tcl due to
+	the potential for stale locked mutexes in the child. [Patch 923072]
+	* unix/configure: autoconf-2.59
+
+2006-05-24  Donal K. Fellows  <donal.k.fellows@manchester.ac.uk>
+
+	* unix/tcl.m4 (SC_CONFIG_SYSTEM): Fixed quoting of command script to
+	awk; it was a rarely used branch, but it was wrong. [Bug 1494160]
+
+2006-05-13  Don Porter  <dgp@users.sourceforge.net>
+
+	* generic/tclFileName.c (TclDoGlob):	Disabled the partial
+	normalization done by the recursive glob routine, since changing the
+	precise string of the pathname broke [glob] on some Tcl_Filesystems.
+	[Bug 943995]
+
+	* generic/tclProc.c (ProcCompileProc):	When a bump of the compile
+	epoch forces the re-compile of a proc body, take care not to
+	overwrite any Proc struct that may be referred to on the active
+	call stack.  This fixes [Bug 1482718].  Note that the fix will not be
+	effective for code that calls the private routine TclProcCompileProc()
+	directly.
+
+2006-05-05  Don Porter  <dgp@users.sourceforge.net>
+
+	* generic/tclMain.c (Tcl_Main):		Corrected flaw that required
+	* tests/main.test: (Tcl_Main-4.5):	processing of one interactive
+	command before passing control to the loop routine registered with
+	Tcl_SetMainLoop() [Bug 1481986].
+
+2006-05-04  Don Porter  <dgp@users.sourceforge.net>
+
+	* README:		Bump version number to 8.4.14
+	* generic/tcl.h:
+	* tools/tcl.wse.in:
+	* unix/configure.in:
+	* unix/tcl.spec:
+	* win/README.binary:
+	* win/configure.in:
+
+	* unix/configure:	autoconf-2.13
+	* win/configure:
+
+	* generic/tclExecute.c (ExprSrandFunc):	Restore acceptance of wide
+	* tests/expr-old.test: integer values by srand() [Bug 1480509].
+
 2006-04-12  Don Porter  <dgp@users.sourceforge.net>
 
 	*** 8.4.13 TAGGED FOR RELEASE ***
@@ -1365,7 +1854,7 @@
 	* generic/tclUtil.c (TclGetIntForIndex): intreps of numeric types
 	with simpler calls of Tcl_GetIntFromObj and Tcl_GetLongFromObj,
 	now that those routines are better behaved wrt shimmering.
-	[Patch 1177219]
+	[Patch 1177129]
 
 2005-03-29  Jeff Hobbs  <jeffh@ActiveState.com>
 

@@ -13,7 +13,7 @@
  * See the file "license.terms" for information on usage and redistribution
  * of this file, and for a DISCLAIMER OF ALL WARRANTIES.
  *
- * RCS: @(#) $Id: tclBasic.c,v 1.75.2.21 2006/03/06 21:56:13 dgp Exp $
+ * RCS: @(#) $Id$
  */
 
 #include "tclInt.h"
@@ -345,6 +345,12 @@ Tcl_CreateInterp()
 
     Tcl_InitHashTable(&iPtr->packageTable, TCL_STRING_KEYS);
     iPtr->packageUnknown = NULL;
+#ifdef TCL_TIP268
+    /* TIP #268 */
+    iPtr->packagePrefer = (getenv ("TCL_PKG_PREFER_LATEST") == NULL ? 
+			   PKG_PREFER_STABLE   :
+			   PKG_PREFER_LATEST);
+#endif
     iPtr->cmdCount = 0;
     iPtr->termOffset = 0;
     TclInitLiteralTable(&(iPtr->literalTable));
@@ -363,6 +369,7 @@ Tcl_CreateInterp()
     iPtr->emptyObjPtr = Tcl_NewObj(); /* another empty object */
     Tcl_IncrRefCount(iPtr->emptyObjPtr);
     iPtr->resultSpace[0] = 0;
+    iPtr->threadId = Tcl_GetCurrentThread();
 
     iPtr->globalNsPtr = NULL;	/* force creation of global ns below */
     iPtr->globalNsPtr = (Namespace *) Tcl_CreateNamespace(interp, "",
@@ -571,10 +578,17 @@ Tcl_CreateInterp()
 
     /*
      * Register Tcl's version number.
+     * TIP#268: Expose information about its status,
+     *          for runtime switches in the core library
+     *          and tests.
      */
 
     Tcl_PkgProvideEx(interp, "Tcl", TCL_VERSION, (ClientData) &tclStubs);
-    
+
+#ifdef TCL_TIP268
+    Tcl_SetVar2(interp, "tcl_platform", "tip,268", "1",
+	    TCL_GLOBAL_ONLY);
+#endif
 #ifdef Tcl_InitStubs
 #undef Tcl_InitStubs
 #endif

@@ -5,7 +5,7 @@
 # "autoconf" program (constructs like "@foo@" will get replaced in the
 # actual Makefile.
 #
-# RCS: @(#) $Id: Makefile.in,v 1.121.2.16 2005/11/27 02:34:41 das Exp $
+# RCS: @(#) $Id$
 
 VERSION 		= @TCL_VERSION@
 MAJOR_VERSION		= @TCL_MAJOR_VERSION@
@@ -140,7 +140,8 @@ GENERIC_FLAGS =
 #GENERIC_FLAGS = -DTCL_GENERIC_ONLY
 UNIX_OBJS = tclUnixChan.o tclUnixEvent.o tclUnixFCmd.o \
 	tclUnixFile.o tclUnixPipe.o tclUnixSock.o \
-	tclUnixTime.o tclUnixInit.o tclUnixThrd.o 
+	tclUnixTime.o tclUnixInit.o tclUnixThrd.o \
+	tclUnixCompat.o
 #UNIX_OBJS =
 NOTIFY_OBJS = tclUnixNotfy.o
 #NOTIFY_OBJS =
@@ -433,7 +434,8 @@ UNIX_SRCS = \
 	$(UNIX_DIR)/tclUnixTest.c \
 	$(UNIX_DIR)/tclUnixThrd.c \
 	$(UNIX_DIR)/tclUnixTime.c \
-	$(UNIX_DIR)/tclUnixInit.c
+	$(UNIX_DIR)/tclUnixInit.c \
+	$(UNIX_DIR)/tclUnixCompat.c
 
 NOTIFY_SRCS = \
 	$(UNIX_DIR)/tclUnixNotfy.c
@@ -551,10 +553,17 @@ ddd: tclsh
 	$(DDD) -command=gdb.run ./tclsh
 	rm gdb.run
 
+VALGRINDARGS=--tool=memcheck --num-callers=8 --leak-resolution=high --leak-check=yes --show-reachable=yes -v
+
 valgrind: tclsh tcltest
 	@LD_LIBRARY_PATH_VAR@=`pwd`:$${@LD_LIBRARY_PATH_VAR@}; export @LD_LIBRARY_PATH_VAR@; \
 	TCL_LIBRARY="${TCL_BUILDTIME_LIBRARY}"; export TCL_LIBRARY; \
-	valgrind --num-callers=8 --leak-resolution=high -v --leak-check=yes --show-reachable=yes $(VALGRINDARGS) ./tcltest $(TOP_DIR)/tests/all.tcl -singleproc 1 $(TESTFLAGS) $(TCLTESTARGS)
+	valgrind $(VALGRINDARGS) ./tcltest $(TOP_DIR)/tests/all.tcl -singleproc 1 $(TESTFLAGS) $(TCLTESTARGS)
+
+valgrindshell: tclsh
+	@LD_LIBRARY_PATH_VAR@=`pwd`:$${@LD_LIBRARY_PATH_VAR@}; export @LD_LIBRARY_PATH_VAR@; \
+	TCL_LIBRARY="${TCL_BUILDTIME_LIBRARY}"; export TCL_LIBRARY; \
+	valgrind $(VALGRINDARGS) ./tclsh $(SCRIPT)
 
 # The following target outputs the name of the top-level source directory
 # for Tcl (it is used by Tk's configure script, for example).  The
@@ -1079,6 +1088,9 @@ tclUnixInit.o: $(UNIX_DIR)/tclUnixInit.c $(GENERIC_DIR)/tclInitScript.h tclConfi
 	$(CC) -c $(CC_SWITCHES) -DTCL_LIBRARY=\"${TCL_LIBRARY}\" \
 		-DTCL_PACKAGE_PATH="\"${TCL_PACKAGE_PATH}\"" \
 		$(UNIX_DIR)/tclUnixInit.c
+
+tclUnixCompat.o: $(UNIX_DIR)/tclUnixCompat.c
+	$(CC) -c $(CC_SWITCHES) $(UNIX_DIR)/tclUnixCompat.c
 
 # The following are Mac OS X only sources:
 tclMacOSXBundle.o: $(MAC_OSX_DIR)/tclMacOSXBundle.c

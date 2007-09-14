@@ -1,6 +1,6 @@
 Recent user-visible changes to Tcl:
 
-RCS: @(#) $Id: changes,v 1.79.2.41 2006/04/13 21:16:54 dgp Exp $
+RCS: @(#) $Id$
 
 1. No more [command1] [command2] construct for grouping multiple
 commands on a single command line.
@@ -6329,7 +6329,7 @@ Restores Tcl 8.4.9 behavior (porter)
 
 2005-12-12 (bug fix)[1377619] configure syntax error exposed in bash-3.1 (hobbs)
 
-2006-01-09 (bug fix)[1480572] [info level $l] => "namespace inscope" (porter)
+2006-01-09 (bug fix)[1400572] [info level $l] => "namespace inscope" (porter)
 
 2006-01-23 (bug fix)[1410553] Tcl_GetRange Unicode confusion (twylite,spjuth)
 
@@ -6369,3 +6369,54 @@ removed (steffen)
 2006-04-11 (bug fix)[1458266] enter/enterstep trace interference (leunissen)
 
 --- Released 8.4.13, April 19, 2006 --- See ChangeLog for details ---
+
+2006-05-04 (bug fix)[1480509] srand() accept wide input (porter,afredd)
+
+2006-05-05 (bug fix)[1481986] interactive Tcl_Main blocks main loop (porter,lin)
+
+2006-05-13 (bug fix)[1482718] proc re-compile: preserve the previous
+bytecode while references still on the stack (porter,ryazanov)
+
+2006-05-13 (bug fix)[943995] fixed [glob] on VFS (porter)
+
+2006-05-27 (bug fix)[923072] Darwin: made unthreaded CoreFoundation notifier
+naked-fork safe on Tiger (steffen)
+
+2006-05-31 (revert 2006-01-09)[1400572] namespace inscope & info level (porter)
+        *** POTENTIAL INCOMPATIBILITY ***
+
+2006-06-14 (platform support)[1424909] MS VS2005 support (thoyts)
+
+2006-07-20 (platform support) Mac OS X weak linking (steffen)
+
+2006-07-20 (bug fix) Darwin: execve() works iff event loop not yet run (steffen)
+
+2006-08-18 (bug fix) intermittent failures in TclUnixWaitForFile() (steffen)
+
+2006-08-18 (platform support) Darwin x86_64 (steffen)
+
+2006-08-21 (bug fix)[1457797] Darwin 64-bit notifier hang (steffen)
+
+2006-08-21 (bug fix) Darwin: recursively called event loop (steffen)
+
+2006-08-30 (bug fix)[1548263] filesystem segfaults (hobbs,mccormack)
+
+2006-09-06 (bug fix)[999544] use of MT-safe system calls (vasiljevic)
+
+2006-09-10 (platform support) Darwin: msgcat use CFLocale (steffen)
+=> msgcat 1.3.4
+
+2006-09-22 (bug fix)[1562528] NULL terminates variadic calls (fellows,ryazanov)
+
+2006-09-26 (platform support) MSVC8 AMD64 support (thoyts)
+
+2006-10-05 (bug fix)[1570718] make [lappend $nonList] complain (sofer,virden)
+
+2006-10-05 (bug fix)[1122671] alignment fixes in unicode encoding routines
+(hobbs,staplin)
+
+2006-10-05 (new feature) [set ::http::strict 1] (default value is 0) to enable
+URL validity checking against RFC 2986 (hobbs)
+=> http 2.5.3
+
+--- Released 8.4.14, October 19, 2006 --- See ChangeLog for details ---

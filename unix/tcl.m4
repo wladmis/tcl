@@ -539,32 +539,32 @@ AC_DEFUN([SC_ENABLE_SHARED], [
 #------------------------------------------------------------------------
 
 AC_DEFUN([SC_ENABLE_FRAMEWORK], [
-    AC_MSG_CHECKING([how to package libraries])
-    AC_ARG_ENABLE(framework,
-	[  --enable-framework      package shared libraries in MacOSX frameworks [--disable-framework]],
-	[tcl_ok=$enableval], [tcl_ok=no])
-
-    if test "${enable_framework+set}" = set; then
-	enableval="$enable_framework"
-	tcl_ok=$enableval
-    else
-	tcl_ok=no
-    fi
-
-    if test "$tcl_ok" = "yes" ; then
-	AC_MSG_RESULT([framework])
-	FRAMEWORK_BUILD=1
-	if test "${SHARED_BUILD}" = "0" ; then
-	    AC_MSG_WARN([Frameworks can only be built if --enable-shared is yes])
+    if test "`uname -s`" = "Darwin" ; then
+	AC_MSG_CHECKING([how to package libraries])
+	AC_ARG_ENABLE(framework,
+	    [  --enable-framework      package shared libraries in MacOSX frameworks [--disable-framework]],
+	    [enable_framework=$enableval], [enable_framework=no])
+	if test $enable_framework = yes; then
+	    if test $SHARED_BUILD = 0; then
+		AC_MSG_WARN([Frameworks can only be built if --enable-shared is yes])
+		enable_framework=no
+	    fi
+	    if test $tcl_corefoundation = no; then
+		AC_MSG_WARN([Frameworks can only be used when CoreFoundation is available])
+		enable_framework=no
+	    fi
+	fi
+	if test $enable_framework = yes; then
+	    AC_MSG_RESULT([framework])
+	    FRAMEWORK_BUILD=1
+	else
+	    if test $SHARED_BUILD = 1; then
+		AC_MSG_RESULT([shared library])
+	    else
+		AC_MSG_RESULT([static library])
+	    fi
 	    FRAMEWORK_BUILD=0
 	fi
-	if test $tcl_corefoundation = no; then
-	    AC_MSG_WARN([Frameworks can only be used when CoreFoundation is available])
-	    FRAMEWORK_BUILD=0
-	fi
-    else
-	AC_MSG_RESULT([standard shared library])
-	FRAMEWORK_BUILD=0
     fi
 ])
 
@@ -774,9 +774,9 @@ AC_DEFUN([SC_ENABLE_LANGINFO], [
     fi
     AC_MSG_CHECKING([whether to use nl_langinfo])
     if test "$langinfo_ok" = "yes"; then
-	AC_CACHE_VAL(tcl_cv_langinfo_h,
+	AC_CACHE_VAL(tcl_cv_langinfo_h, [
 	    AC_TRY_COMPILE([#include <langinfo.h>], [nl_langinfo(CODESET);],
-		    [tcl_cv_langinfo_h=yes],[tcl_cv_langinfo_h=no]))
+		    [tcl_cv_langinfo_h=yes],[tcl_cv_langinfo_h=no])])
 	AC_MSG_RESULT([$tcl_cv_langinfo_h])
 	if test $tcl_cv_langinfo_h = yes; then
 	    AC_DEFINE(HAVE_LANGINFO)
@@ -890,7 +890,7 @@ AC_DEFUN([SC_CONFIG_SYSTEM], [
 		# results, and the version is kept in special file).
 
 		if test -r /etc/.relid -a "X`uname -n`" = "X`uname -s`" ; then
-		    tcl_cv_sys_version=MP-RAS-`awk '{print $3}' /etc/.relid`
+		    tcl_cv_sys_version=MP-RAS-`awk '{print [$]3}' /etc/.relid`
 		fi
 		if test "`uname -s`" = "AIX" ; then
 		    tcl_cv_sys_version=AIX-`uname -v`.`uname -r`
@@ -1548,78 +1548,91 @@ dnl AC_CHECK_TOOL(AR, ar)
 	    CFLAGS_OPTIMIZE="-Os"
 	    SHLIB_CFLAGS="-fno-common"
 	    if test $do64bit = yes; then
-	        do64bit_ok=yes
-	        CFLAGS="$CFLAGS -arch ppc64 -mpowerpc64 -mcpu=G5"
+		do64bit_ok=yes
+		case `arch` in
+		    ppc)
+			CFLAGS="$CFLAGS -arch ppc64 -mpowerpc64 -mcpu=G5";;
+		    i386)
+			CFLAGS="$CFLAGS -arch x86_64";;
+		    *)
+			AC_MSG_WARN([Don't know how enable 64-bit on architecture `arch`])
+			do64bit_ok=no;;
+		esac
+	    else
+		# Check for combined 32-bit and 64-bit fat build
+		echo "$CFLAGS " | grep -E -q -- '-arch (ppc64|x86_64) ' && \
+		    echo "$CFLAGS " | grep -E -q -- '-arch (ppc|i386) ' && \
+		    fat_32_64=yes
 	    fi
 	    SHLIB_LD='${CC} -dynamiclib ${CFLAGS} ${LDFLAGS}'
 	    AC_CACHE_CHECK([if ld accepts -single_module flag], tcl_cv_ld_single_module, [
-	        hold_ldflags=$LDFLAGS
-	        LDFLAGS="$LDFLAGS -dynamiclib -Wl,-single_module"
-	        AC_TRY_LINK(, [int i;], tcl_cv_ld_single_module=yes, tcl_cv_ld_single_module=no)
-	        LDFLAGS=$hold_ldflags])
+		hold_ldflags=$LDFLAGS
+		LDFLAGS="$LDFLAGS -dynamiclib -Wl,-single_module"
+		AC_TRY_LINK(, [int i;], tcl_cv_ld_single_module=yes, tcl_cv_ld_single_module=no)
+		LDFLAGS=$hold_ldflags])
 	    if test $tcl_cv_ld_single_module = yes; then
-	        SHLIB_LD="${SHLIB_LD} -Wl,-single_module"
+		SHLIB_LD="${SHLIB_LD} -Wl,-single_module"
 	    fi
 	    SHLIB_LD_LIBS='${LIBS}'
 	    SHLIB_SUFFIX=".dylib"
 	    DL_OBJS="tclLoadDyld.o"
 	    DL_LIBS=""
 	    # Don't use -prebind when building for Mac OS X 10.4 or later only:
-	    test -z "${MACOSX_DEPLOYMENT_TARGET}" || \
-		test "`echo "${MACOSX_DEPLOYMENT_TARGET}" | awk -F. '{print [$]2}'`" -lt 4 && \
+	    test "`echo "${MACOSX_DEPLOYMENT_TARGET}" | awk -F '10\\.' '{print int([$]2)}'`" -lt 4 -a \
+		"`echo "${CFLAGS}" | awk -F '-mmacosx-version-min=10\\.' '{print int([$]2)}'`" -lt 4 && \
 		LDFLAGS="$LDFLAGS -prebind"
 	    LDFLAGS="$LDFLAGS -headerpad_max_install_names"
 	    AC_CACHE_CHECK([if ld accepts -search_paths_first flag], tcl_cv_ld_search_paths_first, [
-	        hold_ldflags=$LDFLAGS
-	        LDFLAGS="$LDFLAGS -Wl,-search_paths_first"
-	        AC_TRY_LINK(, [int i;], tcl_cv_ld_search_paths_first=yes, tcl_cv_ld_search_paths_first=no)
-	        LDFLAGS=$hold_ldflags])
+		hold_ldflags=$LDFLAGS
+		LDFLAGS="$LDFLAGS -Wl,-search_paths_first"
+		AC_TRY_LINK(, [int i;], tcl_cv_ld_search_paths_first=yes, tcl_cv_ld_search_paths_first=no)
+		LDFLAGS=$hold_ldflags])
 	    if test $tcl_cv_ld_search_paths_first = yes; then
-	        LDFLAGS="$LDFLAGS -Wl,-search_paths_first"
+		LDFLAGS="$LDFLAGS -Wl,-search_paths_first"
 	    fi
 	    CC_SEARCH_FLAGS=""
 	    LD_SEARCH_FLAGS=""
 	    LD_LIBRARY_PATH_VAR="DYLD_LIBRARY_PATH"
 	    PLAT_OBJS=\$\(MAC\_OSX_OBJS\)
 	    PLAT_SRCS=\$\(MAC\_OSX_SRCS\)
-            AC_MSG_CHECKING([whether to use CoreFoundation])
-            AC_ARG_ENABLE(corefoundation, [  --enable-corefoundation use CoreFoundation API [--enable-corefoundation]],
-                [tcl_corefoundation=$enableval], [tcl_corefoundation=yes])
-            AC_MSG_RESULT([$tcl_corefoundation])
-            if test $tcl_corefoundation = yes; then
-                AC_CACHE_CHECK([for CoreFoundation.framework], tcl_cv_lib_corefoundation, [
-                    hold_libs=$LIBS; hold_cflags=$CFLAGS
-                    if test $do64bit_ok = no ; then
-                        # remove -arch ppc64 from CFLAGS while testing presence
-                        # of CF, otherwise all archs will have CF disabled.
-                        # CF for ppc64 is disabled in tclUnixPort.h instead.
-                        CFLAGS="`echo "$CFLAGS" | sed -e 's/-arch ppc64/-arch ppc/'`"
-                    fi
-                    LIBS="$LIBS -framework CoreFoundation"
-                    AC_TRY_LINK([#include <CoreFoundation/CoreFoundation.h>], 
-                        [CFBundleRef b = CFBundleGetMainBundle();], 
-                        tcl_cv_lib_corefoundation=yes, tcl_cv_lib_corefoundation=no)
-                    LIBS=$hold_libs; CFLAGS=$hold_cflags])
-                if test $tcl_cv_lib_corefoundation = yes; then
-                    LIBS="$LIBS -framework CoreFoundation"
-                    AC_DEFINE(HAVE_COREFOUNDATION)
-                fi
+	    AC_MSG_CHECKING([whether to use CoreFoundation])
+	    AC_ARG_ENABLE(corefoundation, [  --enable-corefoundation use CoreFoundation API [--enable-corefoundation]],
+		[tcl_corefoundation=$enableval], [tcl_corefoundation=yes])
+	    AC_MSG_RESULT([$tcl_corefoundation])
+	    if test $tcl_corefoundation = yes; then
+		AC_CACHE_CHECK([for CoreFoundation.framework], tcl_cv_lib_corefoundation, [
+		    hold_libs=$LIBS; hold_cflags=$CFLAGS
+		    if test "$fat_32_64" = yes; then
+			# On Tiger there is no 64-bit CF, so remove 64-bit archs
+			# from CFLAGS while testing for presence of CF.
+			# 64-bit CF is disabled in tclUnixPort.h if necessary.
+			CFLAGS="`echo "$CFLAGS " | sed -e 's/-arch ppc64 / /g' -e 's/-arch x86_64 / /g'`"
+		    fi
+		    LIBS="$LIBS -framework CoreFoundation"
+		    AC_TRY_LINK([#include <CoreFoundation/CoreFoundation.h>], 
+			[CFBundleRef b = CFBundleGetMainBundle();], 
+			tcl_cv_lib_corefoundation=yes, tcl_cv_lib_corefoundation=no)
+		    LIBS=$hold_libs; CFLAGS=$hold_cflags])
+		if test $tcl_cv_lib_corefoundation = yes; then
+		    LIBS="$LIBS -framework CoreFoundation"
+		    AC_DEFINE(HAVE_COREFOUNDATION)
+		else
+		    tcl_corefoundation=no
+		fi
+		if test "$fat_32_64" = yes -a $tcl_corefoundation = yes; then
+		    AC_CACHE_CHECK([for 64-bit CoreFoundation], tcl_cv_lib_corefoundation_64, [
+			hold_cflags=$CFLAGS
+			CFLAGS="`echo "$CFLAGS " | sed -e 's/-arch ppc / /g' -e 's/-arch i386 / /g'`"
+			AC_TRY_LINK([#include <CoreFoundation/CoreFoundation.h>], 
+			    [CFBundleRef b = CFBundleGetMainBundle();], 
+			    tcl_cv_lib_corefoundation_64=yes, tcl_cv_lib_corefoundation_64=no)
+			CFLAGS=$hold_cflags])
+		    if test $tcl_cv_lib_corefoundation_64 = no; then
+			AC_DEFINE(NO_COREFOUNDATION_64)
+		    fi
+		fi
 	    fi
-	    AC_CHECK_HEADERS(libkern/OSAtomic.h)
-	    AC_CHECK_FUNCS(OSSpinLockLock)
-	    AC_CHECK_HEADERS(copyfile.h)
-	    AC_CHECK_FUNCS(copyfile)
 	    AC_DEFINE(MAC_OSX_TCL)
-	    AC_DEFINE(USE_VFORK)
-	    AC_DEFINE(TCL_DEFAULT_ENCODING,"utf-8")
-	    AC_DEFINE(TCL_LOAD_FROM_MEMORY)
-	    # prior to Darwin 7, realpath is not threadsafe, so don't
-	    # use it when threads are enabled, c.f. bug # 711232:
-	    AC_CHECK_FUNC(realpath)
-	    if test $ac_cv_func_realpath = yes -a "${TCL_THREADS}" = 1 \
-	            -a `uname -r | awk -F. '{print [$]1}'` -lt 7 ; then
-	        ac_cv_func_realpath=no
-	    fi
 	    ;;
 	NEXTSTEP-*)
 	    SHLIB_CFLAGS=""
@@ -2265,7 +2278,7 @@ int main() {
 #--------------------------------------------------------------------
 
 AC_DEFUN([SC_MISSING_POSIX_HEADERS], [
-    AC_CACHE_CHECK([dirent.h], tcl_cv_dirent_h,
+    AC_CACHE_CHECK([dirent.h], tcl_cv_dirent_h, [
     AC_TRY_LINK([#include <sys/types.h>
 #include <dirent.h>], [
 #ifndef _POSIX_SOURCE
@@ -2285,7 +2298,7 @@ d = opendir("foobar");
 entryPtr = readdir(d);
 p = entryPtr->d_name;
 closedir(d);
-], tcl_cv_dirent_h=yes, tcl_cv_dirent_h=no))
+], tcl_cv_dirent_h=yes, tcl_cv_dirent_h=no)])
 
     if test $tcl_cv_dirent_h = no; then
 	AC_DEFINE(NO_DIRENT_H)
@@ -2483,16 +2496,16 @@ AC_DEFUN([SC_TIME_HANDLER], [
 
     AC_CHECK_FUNCS(gmtime_r localtime_r)
 
-    AC_CACHE_CHECK([tm_tzadj in struct tm], tcl_cv_member_tm_tzadj,
+    AC_CACHE_CHECK([tm_tzadj in struct tm], tcl_cv_member_tm_tzadj, [
 	AC_TRY_COMPILE([#include <time.h>], [struct tm tm; tm.tm_tzadj;],
-	    tcl_cv_member_tm_tzadj=yes, tcl_cv_member_tm_tzadj=no))
+	    tcl_cv_member_tm_tzadj=yes, tcl_cv_member_tm_tzadj=no)])
     if test $tcl_cv_member_tm_tzadj = yes ; then
 	AC_DEFINE(HAVE_TM_TZADJ)
     fi
 
-    AC_CACHE_CHECK([tm_gmtoff in struct tm], tcl_cv_member_tm_gmtoff,
+    AC_CACHE_CHECK([tm_gmtoff in struct tm], tcl_cv_member_tm_gmtoff, [
 	AC_TRY_COMPILE([#include <time.h>], [struct tm tm; tm.tm_gmtoff;],
-	    tcl_cv_member_tm_gmtoff=yes, tcl_cv_member_tm_gmtoff=no))
+	    tcl_cv_member_tm_gmtoff=yes, tcl_cv_member_tm_gmtoff=no)])
     if test $tcl_cv_member_tm_gmtoff = yes ; then
 	AC_DEFINE(HAVE_TM_GMTOFF)
     fi
@@ -2501,24 +2514,24 @@ AC_DEFUN([SC_TIME_HANDLER], [
     # Its important to include time.h in this check, as some systems
     # (like convex) have timezone functions, etc.
     #
-    AC_CACHE_CHECK([long timezone variable], tcl_cv_timezone_long,
+    AC_CACHE_CHECK([long timezone variable], tcl_cv_timezone_long, [
 	AC_TRY_COMPILE([#include <time.h>],
 	    [extern long timezone;
 	    timezone += 1;
 	    exit (0);],
-	    tcl_cv_timezone_long=yes, tcl_cv_timezone_long=no))
+	    tcl_cv_timezone_long=yes, tcl_cv_timezone_long=no)])
     if test $tcl_cv_timezone_long = yes ; then
 	AC_DEFINE(HAVE_TIMEZONE_VAR)
     else
 	#
 	# On some systems (eg IRIX 6.2), timezone is a time_t and not a long.
 	#
-	AC_CACHE_CHECK([time_t timezone variable], tcl_cv_timezone_time,
+	AC_CACHE_CHECK([time_t timezone variable], tcl_cv_timezone_time, [
 	    AC_TRY_COMPILE([#include <time.h>],
 		[extern time_t timezone;
 		timezone += 1;
 		exit (0);],
-		tcl_cv_timezone_time=yes, tcl_cv_timezone_time=no))
+		tcl_cv_timezone_time=yes, tcl_cv_timezone_time=no)])
 	if test $tcl_cv_timezone_time = yes ; then
 	    AC_DEFINE(HAVE_TIMEZONE_VAR)
 	fi
@@ -2783,3 +2796,367 @@ AC_DEFUN([SC_TCL_64BIT_FLAGS], [
 	fi
     fi
 ])
+
+#--------------------------------------------------------------------
+# SC_TCL_GETHOSTBYADDR_R
+#
+#	Check if we have MT-safe variant of gethostbyaddr().
+#
+# Arguments:
+#	None
+#	
+# Results:
+#
+#	Might define the following vars:
+#		HAVE_GETHOSTBYADDR_R
+#		HAVE_GETHOSTBYADDR_R_7
+#		HAVE_GETHOSTBYADDR_R_8
+#
+#--------------------------------------------------------------------
+
+AC_DEFUN([SC_TCL_GETHOSTBYADDR_R], [AC_CHECK_FUNC(gethostbyaddr_r, [
+    AC_CACHE_CHECK([for gethostbyaddr_r with 7 args], tcl_cv_api_gethostbyaddr_r_7, [
+    AC_TRY_COMPILE([
+	#include <netdb.h>
+    ], [
+	char *addr;
+	int length;
+	int type;
+	struct hostent *result;
+	char buffer[2048];
+	int buflen = 2048;
+	int h_errnop;
+
+	(void) gethostbyaddr_r(addr, length, type, result, buffer, buflen,
+			       &h_errnop);
+    ], tcl_cv_api_gethostbyaddr_r_7=yes, tcl_cv_api_gethostbyaddr_r_7=no)])
+    tcl_ok=$tcl_cv_api_gethostbyaddr_r_7
+    if test "$tcl_ok" = yes; then
+	AC_DEFINE(HAVE_GETHOSTBYADDR_R_7)
+    else
+	AC_CACHE_CHECK([for gethostbyaddr_r with 8 args], tcl_cv_api_gethostbyaddr_r_8, [
+	AC_TRY_COMPILE([
+	    #include <netdb.h>
+	], [
+	    char *addr;
+	    int length;
+	    int type;
+	    struct hostent *result, *resultp;
+	    char buffer[2048];
+	    int buflen = 2048;
+	    int h_errnop;
+
+	    (void) gethostbyaddr_r(addr, length, type, result, buffer, buflen,
+				   &resultp, &h_errnop);
+	], tcl_cv_api_gethostbyaddr_r_8=yes, tcl_cv_api_gethostbyaddr_r_8=no)])
+	tcl_ok=$tcl_cv_api_gethostbyaddr_r_8
+	if test "$tcl_ok" = yes; then
+	    AC_DEFINE(HAVE_GETHOSTBYADDR_R_8)
+	fi
+    fi
+    if test "$tcl_ok" = yes; then
+	AC_DEFINE(HAVE_GETHOSTBYADDR_R)
+    fi
+])])
+
+#--------------------------------------------------------------------
+# SC_TCL_GETHOSTBYNAME_R
+#
+#	Check to see what variant of gethostbyname_r() we have.
+#	Based on David Arnold's example from the comp.programming.threads
+#	FAQ Q213
+#
+# Arguments:
+#	None
+#	
+# Results:
+#
+#	Might define the following vars:
+#		HAVE_GETHOSTBYADDR_R
+#		HAVE_GETHOSTBYADDR_R_3
+#		HAVE_GETHOSTBYADDR_R_5
+#		HAVE_GETHOSTBYADDR_R_6
+#
+#--------------------------------------------------------------------
+
+AC_DEFUN([SC_TCL_GETHOSTBYNAME_R], [AC_CHECK_FUNC(gethostbyname_r, [
+    AC_CACHE_CHECK([for gethostbyname_r with 6 args], tcl_cv_api_gethostbyname_r_6, [
+    AC_TRY_COMPILE([
+	#include <netdb.h>
+    ], [
+	char *name;
+	struct hostent *he, *res;
+	char buffer[2048];
+	int buflen = 2048;
+	int h_errnop;
+
+	(void) gethostbyname_r(name, he, buffer, buflen, &res, &h_errnop);
+    ], tcl_cv_api_gethostbyname_r_6=yes, tcl_cv_api_gethostbyname_r_6=no)])
+    tcl_ok=$tcl_cv_api_gethostbyname_r_6
+    if test "$tcl_ok" = yes; then
+	AC_DEFINE(HAVE_GETHOSTBYNAME_R_6)
+    else
+	AC_CACHE_CHECK([for gethostbyname_r with 5 args], tcl_cv_api_gethostbyname_r_5, [
+	AC_TRY_COMPILE([
+	    #include <netdb.h>
+	], [
+	    char *name;
+	    struct hostent *he;
+	    char buffer[2048];
+	    int buflen = 2048;
+	    int h_errnop;
+
+	    (void) gethostbyname_r(name, he, buffer, buflen, &h_errnop);
+	], tcl_cv_api_gethostbyname_r_5=yes, tcl_cv_api_gethostbyname_r_5=no)])
+	tcl_ok=$tcl_cv_api_gethostbyname_r_5
+	if test "$tcl_ok" = yes; then
+	    AC_DEFINE(HAVE_GETHOSTBYNAME_R_5)
+	else
+	    AC_CACHE_CHECK([for gethostbyname_r with 3 args], tcl_cv_api_gethostbyname_r_3, [
+	    AC_TRY_COMPILE([
+		#include <netdb.h>
+	    ], [
+		char *name;
+		struct hostent *he;
+		struct hostent_data data;
+
+		(void) gethostbyname_r(name, he, &data);
+	    ], tcl_cv_api_gethostbyname_r_3=yes, tcl_cv_api_gethostbyname_r_3=no)])
+	    tcl_ok=$tcl_cv_api_gethostbyname_r_3
+	    if test "$tcl_ok" = yes; then
+		AC_DEFINE(HAVE_GETHOSTBYNAME_R_3)
+	    fi
+	fi
+    fi
+    if test "$tcl_ok" = yes; then
+	AC_DEFINE(HAVE_GETHOSTBYNAME_R)
+    fi
+])])
+
+#--------------------------------------------------------------------
+# SC_TCL_GETPWUID_R
+#
+#	Check if we have MT-safe variant of getpwuid() and if yes,
+#	which one exactly.
+#
+# Arguments:
+#	None
+#	
+# Results:
+#
+#	Might define the following vars:
+#		HAVE_GETPWUID_R
+#		HAVE_GETPWUID_R_4
+#		HAVE_GETPWUID_R_5
+#
+#--------------------------------------------------------------------
+
+AC_DEFUN([SC_TCL_GETPWUID_R], [AC_CHECK_FUNC(getpwuid_r, [
+    AC_CACHE_CHECK([for getpwuid_r with 5 args], tcl_cv_api_getpwuid_r_5, [
+    AC_TRY_COMPILE([
+	#include <sys/types.h>
+	#include <pwd.h>
+    ], [
+	uid_t uid;
+	struct passwd pw, *pwp;
+	char buf[512];
+	int buflen = 512;
+
+	(void) getpwuid_r(uid, &pw, buf, buflen, &pwp);
+    ], tcl_cv_api_getpwuid_r_5=yes, tcl_cv_api_getpwuid_r_5=no)])
+    tcl_ok=$tcl_cv_api_getpwuid_r_5
+    if test "$tcl_ok" = yes; then
+	AC_DEFINE(HAVE_GETPWUID_R_5)
+    else
+	AC_CACHE_CHECK([for getpwuid_r with 4 args], tcl_cv_api_getpwuid_r_4, [
+	AC_TRY_COMPILE([
+	    #include <sys/types.h>
+	    #include <pwd.h>
+	], [
+	    uid_t uid;
+	    struct passwd pw;
+	    char buf[512];
+	    int buflen = 512;
+
+	    (void)getpwnam_r(uid, &pw, buf, buflen);
+	], tcl_cv_api_getpwuid_r_4=yes, tcl_cv_api_getpwuid_r_4=no)])
+	tcl_ok=$tcl_cv_api_getpwuid_r_4
+	if test "$tcl_ok" = yes; then
+	    AC_DEFINE(HAVE_GETPWUID_R_4)
+	fi
+    fi
+    if test "$tcl_ok" = yes; then
+	AC_DEFINE(HAVE_GETPWUID_R)
+    fi
+])])
+
+#--------------------------------------------------------------------
+# SC_TCL_GETPWNAM_R
+#
+#	Check if we have MT-safe variant of getpwnam() and if yes,
+#	which one exactly.
+#
+# Arguments:
+#	None
+#	
+# Results:
+#
+#	Might define the following vars:
+#		HAVE_GETPWNAM_R
+#		HAVE_GETPWNAM_R_4
+#		HAVE_GETPWNAM_R_5
+#
+#--------------------------------------------------------------------
+
+AC_DEFUN([SC_TCL_GETPWNAM_R], [AC_CHECK_FUNC(getpwnam_r, [
+    AC_CACHE_CHECK([for getpwnam_r with 5 args], tcl_cv_api_getpwnam_r_5, [
+    AC_TRY_COMPILE([
+	#include <sys/types.h>
+	#include <pwd.h>
+    ], [
+	char *name;
+	struct passwd pw, *pwp;
+	char buf[512];
+	int buflen = 512;
+
+	(void) getpwnam_r(name, &pw, buf, buflen, &pwp);
+    ], tcl_cv_api_getpwnam_r_5=yes, tcl_cv_api_getpwnam_r_5=no)])
+    tcl_ok=$tcl_cv_api_getpwnam_r_5
+    if test "$tcl_ok" = yes; then
+	AC_DEFINE(HAVE_GETPWNAM_R_5)
+    else
+	AC_CACHE_CHECK([for getpwnam_r with 4 args], tcl_cv_api_getpwnam_r_4, [
+	AC_TRY_COMPILE([
+	    #include <sys/types.h>
+	    #include <pwd.h>
+	], [
+	    char *name;
+	    struct passwd pw;
+	    char buf[512];
+	    int buflen = 512;
+
+	    (void)getpwnam_r(name, &pw, buf, buflen);
+	], tcl_cv_api_getpwnam_r_4=yes, tcl_cv_api_getpwnam_r_4=no)])
+	tcl_ok=$tcl_cv_api_getpwnam_r_4
+	if test "$tcl_ok" = yes; then
+	    AC_DEFINE(HAVE_GETPWNAM_R_4)
+	fi
+    fi
+    if test "$tcl_ok" = yes; then
+	AC_DEFINE(HAVE_GETPWNAM_R)
+    fi
+])])
+
+#--------------------------------------------------------------------
+# SC_TCL_GETGRGID_R
+#
+#	Check if we have MT-safe variant of getgrgid() and if yes,
+#	which one exactly.
+#
+# Arguments:
+#	None
+#	
+# Results:
+#
+#	Might define the following vars:
+#		HAVE_GETGRGID_R
+#		HAVE_GETGRGID_R_4
+#		HAVE_GETGRGID_R_5
+#
+#--------------------------------------------------------------------
+
+AC_DEFUN([SC_TCL_GETGRGID_R], [AC_CHECK_FUNC(getgrgid_r, [
+    AC_CACHE_CHECK([for getgrgid_r with 5 args], tcl_cv_api_getgrgid_r_5, [
+    AC_TRY_COMPILE([
+	#include <sys/types.h>
+	#include <grp.h>
+    ], [
+	gid_t gid;
+	struct group gr, *grp;
+	char buf[512];
+	int buflen = 512;
+
+	(void) getgrgid_r(gid, &gr, buf, buflen, &grp);
+    ], tcl_cv_api_getgrgid_r_5=yes, tcl_cv_api_getgrgid_r_5=no)])
+    tcl_ok=$tcl_cv_api_getgrgid_r_5
+    if test "$tcl_ok" = yes; then
+	AC_DEFINE(HAVE_GETGRGID_R_5)
+    else
+	AC_CACHE_CHECK([for getgrgid_r with 4 args], tcl_cv_api_getgrgid_r_4, [
+	AC_TRY_COMPILE([
+	    #include <sys/types.h>
+	    #include <grp.h>
+	], [
+	    gid_t gid;
+	    struct group gr;
+	    char buf[512];
+	    int buflen = 512;
+
+	    (void)getgrgid_r(gid, &gr, buf, buflen);
+	], tcl_cv_api_getgrgid_r_4=yes, tcl_cv_api_getgrgid_r_4=no)])
+	tcl_ok=$tcl_cv_api_getgrgid_r_4
+	if test "$tcl_ok" = yes; then
+	    AC_DEFINE(HAVE_GETGRGID_R_4)
+	fi
+    fi
+    if test "$tcl_ok" = yes; then
+	AC_DEFINE(HAVE_GETGRGID_R)
+    fi
+])])
+
+#--------------------------------------------------------------------
+# SC_TCL_GETGRNAM_R
+#
+#	Check if we have MT-safe variant of getgrnam() and if yes,
+#	which one exactly.
+#
+# Arguments:
+#	None
+#	
+# Results:
+#
+#	Might define the following vars:
+#		HAVE_GETGRNAM_R
+#		HAVE_GETGRNAM_R_4
+#		HAVE_GETGRNAM_R_5
+#
+#--------------------------------------------------------------------
+
+AC_DEFUN([SC_TCL_GETGRNAM_R], [AC_CHECK_FUNC(getgrnam_r, [
+    AC_CACHE_CHECK([for getgrnam_r with 5 args], tcl_cv_api_getgrnam_r_5, [
+    AC_TRY_COMPILE([
+	#include <sys/types.h>
+	#include <grp.h>
+    ], [
+	char *name;
+	struct group gr, *grp;
+	char buf[512];
+	int buflen = 512;
+
+	(void) getgrnam_r(name, &gr, buf, buflen, &grp);
+    ], tcl_cv_api_getgrnam_r_5=yes, tcl_cv_api_getgrnam_r_5=no)])
+    tcl_ok=$tcl_cv_api_getgrnam_r_5
+    if test "$tcl_ok" = yes; then
+	AC_DEFINE(HAVE_GETGRNAM_R_5)
+    else
+	AC_CACHE_CHECK([for getgrnam_r with 4 args], tcl_cv_api_getgrnam_r_4, [
+	AC_TRY_COMPILE([
+	    #include <sys/types.h>
+	    #include <grp.h>
+	], [
+	    char *name;
+	    struct group gr;
+	    char buf[512];
+	    int buflen = 512;
+
+	    (void)getgrnam_r(name, &gr, buf, buflen);
+	], tcl_cv_api_getgrnam_r_4=yes, tcl_cv_api_getgrnam_r_4=no)])
+	tcl_ok=$tcl_cv_api_getgrnam_r_4
+	if test "$tcl_ok" = yes; then
+	    AC_DEFINE(HAVE_GETGRNAM_R_4)
+	fi
+    fi
+    if test "$tcl_ok" = yes; then
+	AC_DEFINE(HAVE_GETGRNAM_R)
+    fi
+])])

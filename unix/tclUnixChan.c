@@ -10,7 +10,7 @@
  * See the file "license.terms" for information on usage and redistribution
  * of this file, and for a DISCLAIMER OF ALL WARRANTIES.
  *
- * RCS: @(#) $Id: tclUnixChan.c,v 1.42.2.6 2005/11/27 02:34:42 das Exp $
+ * RCS: @(#) $Id$
  */
 
 #include "tclInt.h"	/* Internal definitions for Tcl. */
@@ -2306,10 +2306,10 @@ TcpGetOptionProc(instanceData, interp, optionName, dsPtr)
 		Tcl_DStringStartSublist(dsPtr);
 	    }
 	    Tcl_DStringAppendElement(dsPtr, inet_ntoa(peername.sin_addr));
-	    hostEntPtr = gethostbyaddr(			/* INTL: Native. */
+	    hostEntPtr = TclpGetHostByAddr(			/* INTL: Native. */
 		    (char *) &peername.sin_addr,
 		    sizeof(peername.sin_addr), AF_INET);
-	    if (hostEntPtr != NULL) {
+	    if (hostEntPtr != (struct hostent *) NULL) {
 		Tcl_DString ds;
 
 		Tcl_ExternalToUtfDString(NULL, hostEntPtr->h_name, -1, &ds);
@@ -2353,7 +2353,7 @@ TcpGetOptionProc(instanceData, interp, optionName, dsPtr)
 		Tcl_DStringStartSublist(dsPtr);
 	    }
 	    Tcl_DStringAppendElement(dsPtr, inet_ntoa(sockname.sin_addr));
-	    hostEntPtr = gethostbyaddr(			/* INTL: Native. */
+	    hostEntPtr = TclpGetHostByAddr(			/* INTL: Native. */
 		    (char *) &sockname.sin_addr,
 		    sizeof(sockname.sin_addr), AF_INET);
 	    if (hostEntPtr != (struct hostent *) NULL) {
@@ -2686,8 +2686,8 @@ CreateSocketAddress(sockaddrPtr, host, port)
 	 * on either 32 or 64 bits systems.
 	 */
 	if (addr.s_addr == 0xFFFFFFFF) {
-	    hostent = gethostbyname(native);		/* INTL: Native. */
-	    if (hostent != NULL) {
+	    hostent = TclpGetHostByName(native);		/* INTL: Native. */
+	    if (hostent != (struct hostent *) NULL) {
 		memcpy((VOID *) &addr,
 			(VOID *) hostent->h_addr_list[0],
 			(size_t) hostent->h_length);
@@ -3281,6 +3281,9 @@ TclUnixWaitForFile(fd, mask, timeout)
 	}
 	if (timeout == 0) {
 	    break;
+	}
+	if (timeout < 0) {
+	    continue;
 	}
 
 	/*
