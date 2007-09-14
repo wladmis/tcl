@@ -2,8 +2,8 @@
 %define major 8.4
 
 Name: tcl
-Version: 8.4.13
-Release: alt1.0
+Version: 8.4.14
+Release: alt1
 
 Summary: A Tool Command Language (TCL) 
 License: BSD
@@ -111,6 +111,9 @@ chmod +x %__tclsh
 %_man3dir/*
 
 %changelog
+* Sat Sep 15 2007 Sergey Bolshakov <sbolshakov@altlinux.ru> 8.4.14-alt1
+- 8.4.14
+
 * Mon Apr 16 2007 ALT QA Team Robot <qa-robot@altlinux.org> 8.4.13-alt1.0
 - Automated rebuild.
 
