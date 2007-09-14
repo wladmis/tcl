@@ -289,7 +289,7 @@ CONST char *path;		/* Path to the executable in native
      * executable is run from a develpment directory.
      */
      
-    sprintf(installLib, "lib/tcl%s", TCL_VERSION);
+    sprintf(installLib, "share/tcl/tcl%s", TCL_VERSION);
     sprintf(developLib, "tcl%s/library", TCL_PATCH_LEVEL);
 
     /*
@@ -322,7 +322,7 @@ CONST char *path;		/* Path to the executable in native
 	Tcl_ListObjAppendElement(NULL, pathPtr, objPtr);
 
 	Tcl_SplitPath(str, &pathc, &pathv);
-	if ((pathc > 0) && (strcasecmp(installLib + 4, pathv[pathc-1]) != 0)) {
+	if ((pathc > 0) && (strcasecmp(installLib + 10, pathv[pathc-1]) != 0)) {
 	    /*
 	     * If TCL_LIBRARY is set but refers to a different tcl
 	     * installation than the current version, try fiddling with the
@@ -331,7 +331,7 @@ CONST char *path;		/* Path to the executable in native
 	     * version string.
 	     */
 	    
-	    pathv[pathc - 1] = installLib + 4;
+	    pathv[pathc - 1] = installLib + 10;
 	    str = Tcl_JoinPath(pathc, pathv, &ds);
 	    objPtr = Tcl_NewStringObj(str, Tcl_DStringLength(&ds));
 	    Tcl_ListObjAppendElement(NULL, pathPtr, objPtr);

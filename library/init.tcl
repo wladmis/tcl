@@ -55,11 +55,6 @@ namespace eval tcl {
 	    }
 	}
     }
-    set Dir [file join [file dirname [file dirname \
-	    [info nameofexecutable]]] lib]
-    if {[lsearch -exact $::auto_path $Dir] < 0} {
-	lappend ::auto_path $Dir
-    }
     if {[info exists ::tcl_pkgPath]} {
 	foreach Dir $::tcl_pkgPath {
 	    if {[lsearch -exact $::auto_path $Dir] < 0} {
