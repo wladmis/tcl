@@ -1762,7 +1762,7 @@ CheckVersionAndConvert(interp, string, internal, stable)
     /* 4* assuming that each char is a separator (a,b become ' -x ').
      * 4+ to have spce for an additional -2 at the end
      */
-    char* ibuf = Tcl_Alloc (4+4*strlen(string));
+    char* ibuf = ckalloc (4+4*strlen(string));
     char* ip   = ibuf;
 
     /* Basic rules
@@ -1834,7 +1834,7 @@ CheckVersionAndConvert(interp, string, internal, stable)
 
  error:
 #ifdef TCL_TIP268
-    Tcl_Free (ibuf);
+    ckfree (ibuf);
 #endif
     Tcl_AppendResult(interp, "expected version number but got \"",
 	    string, "\"", (char *) NULL);
@@ -2143,6 +2143,8 @@ AddRequirementsToDString(dstring, reqc, reqv)
 	    Tcl_DStringAppend(dstring, " ", 1);
 	    Tcl_DStringAppend(dstring, TclGetString(reqv[i]), -1);
 	}
+    } else {
+	Tcl_DStringAppend(dstring, " 0-", -1);
     }
 }
 

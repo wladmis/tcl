@@ -9,7 +9,7 @@
  * See the file "license.terms" for information on usage and redistribution
  * of this file, and for a DISCLAIMER OF ALL WARRANTIES.
  *
- * RCS: @(#) $Id: tclUnixTime.c,v 1.15.2.4 2005/03/15 16:29:54 kennykb Exp $
+ * RCS: @(#) $Id$
  */
 
 #include "tclInt.h"
@@ -344,7 +344,7 @@ TclpStrftime(s, maxsize, format, t, useGMT)
 
 struct tm *
 TclpGmtime( tt )
-    CONST TclpTime_t tt;
+    TclpTime_t_CONST tt;
 {
     CONST time_t *timePtr = (CONST time_t *) tt;
 				/* Pointer to the number of seconds
@@ -371,7 +371,7 @@ TclpGmtime( tt )
  */
 struct tm*
 TclpGmtime_unix( timePtr )
-    CONST TclpTime_t timePtr;
+    TclpTime_t_CONST timePtr;
 {
     return TclpGmtime( timePtr );
 }
@@ -395,7 +395,7 @@ TclpGmtime_unix( timePtr )
 
 struct tm *
 TclpLocaltime( tt )
-    CONST TclpTime_t tt;
+    TclpTime_t_CONST tt;
 {
     CONST time_t *timePtr = (CONST time_t *) tt;
 				/* Pointer to the number of seconds
@@ -422,7 +422,7 @@ TclpLocaltime( tt )
  */
 struct tm*
 TclpLocaltime_unix( timePtr )
-    CONST TclpTime_t timePtr;
+    TclpTime_t_CONST timePtr;
 {
     return TclpLocaltime( timePtr );
 }
@@ -461,7 +461,7 @@ SetTZIfNecessary() {
 	} else {
 	    Tcl_Free( lastTZ );
 	}
-	lastTZ = Tcl_Alloc( strlen( newTZ ) + 1 );
+	lastTZ = ckalloc( strlen( newTZ ) + 1 );
 	strcpy( lastTZ, newTZ );
     }
     Tcl_MutexUnlock(&tmMutex);
@@ -488,5 +488,5 @@ SetTZIfNecessary() {
 static void
 CleanupMemory( ClientData ignored )
 {
-    Tcl_Free( lastTZ );
+    ckfree( lastTZ );
 }
