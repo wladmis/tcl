@@ -1123,7 +1123,7 @@ dnl AC_CHECK_TOOL(AR, ar)
 
 	    # AIX v<=4.1 has some different flags than 4.2+
 	    if test "$system" = "AIX-4.1" -o "`uname -v`" -lt "4" ; then
-		LIBOBJS="$LIBOBJS tclLoadAix.o"
+		AC_LIBOBJ([tclLoadAix])
 		DL_LIBS="-lld"
 	    fi
 
@@ -1365,9 +1365,9 @@ dnl AC_CHECK_TOOL(AR, ar)
 	    # is kind of overkill but it works.
 	    # Disable inlining only when one of the
 	    # files in compat/*.c is being linked in.
-	    if test x"${LIBOBJS}" != x ; then
-	        CFLAGS="$CFLAGS -fno-inline"
-	    fi
+	    # if test x"${LIBOBJS}" != x ; then
+	    #    CFLAGS="$CFLAGS -fno-inline"
+	    # fi
 
 	    # XIM peeking works under XFree86.
 	    AC_DEFINE(PEEK_XCLOSEIM)
@@ -2571,7 +2571,7 @@ AC_DEFUN([SC_BUGGY_STRTOD], [
 		}], tcl_cv_strtod_buggy=ok, tcl_cv_strtod_buggy=buggy,
 		    tcl_cv_strtod_buggy=buggy)])
 	if test "$tcl_cv_strtod_buggy" = buggy; then
-	    LIBOBJS="$LIBOBJS fixstrtod.o"
+	    AC_LIBOBJ([fixstrtod])
 	    AC_DEFINE(strtod, fixstrtod)
 	fi
     fi
