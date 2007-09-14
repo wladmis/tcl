@@ -2629,7 +2629,6 @@ AC_DEFUN([SC_TCL_LINK_LIBS], [
     #--------------------------------------------------------------------
 
     AC_CHECK_FUNC(sin, MATH_LIBS="", MATH_LIBS="-lm")
-    AC_CHECK_LIB(ieee, main, [MATH_LIBS="-lieee $MATH_LIBS"])
 
     #--------------------------------------------------------------------
     # Interactive UNIX requires -linet instead of -lsocket, plus it
