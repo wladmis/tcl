@@ -2,7 +2,7 @@
 %define major 8.4
 
 Name: tcl
-Version: 8.4.14
+Version: 8.4.15
 Release: alt1
 
 Summary: A Tool Command Language (TCL) 
@@ -12,7 +12,7 @@ Url: http://www.tcl.tk/
 
 Source: %name-%version-%release.tar
 
-BuildRequires: autoconf_2.5 automake_1.6 rpm-build-tcl
+BuildRequires: rpm-build-tcl
 %{?_with_test:BuildConflicts: tcl-vfs}
 
 Requires: lib%name = %version-%release
@@ -66,8 +66,8 @@ This package includes header files and C programming manuals for Tcl.
 cd unix
 %__autoconf
 %configure
-%__subst 's|-DPACKAGE_[^ ]\+ ||g' tclConfig.sh
-%__make all %{?_with_test:test}
+sed -i  's@-DPACKAGE_[^ ]\+ @@g' tclConfig.sh
+make all %{?_with_test:test}
 
 %install 
 %define __tclsh %buildroot%_bindir/.tclsh
@@ -92,6 +92,7 @@ chmod +x %__tclsh
 %_bindir/tclsh*
 %dir %_tcldatadir/%name%major
 %_tcldatadir/%name%major/*
+%exclude %_tcldatadir/%name%major/ldAix
 %exclude %_tcldatadir/%name%major/%{name}AppInit.c
 %_man1dir/*
 %_mandir/mann/*
@@ -111,8 +112,8 @@ chmod +x %__tclsh
 %_man3dir/*
 
 %changelog
-* Sat Sep 15 2007 Sergey Bolshakov <sbolshakov@altlinux.ru> 8.4.14-alt1
-- 8.4.14
+* Sat Sep 15 2007 Sergey Bolshakov <sbolshakov@altlinux.ru> 8.4.15-alt1
+- 8.4.15
 
 * Mon Apr 16 2007 ALT QA Team Robot <qa-robot@altlinux.org> 8.4.13-alt1.0
 - Automated rebuild.
