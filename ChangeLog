@@ -1,3 +1,172 @@
+2007-09-20  Don Porter  <dgp@users.sourceforge.net>
+
+	*** 8.4.16 TAGGED FOR RELEASE ***
+
+	* doc/load.n:	Backport corrected example.
+
+2007-09-19  Don Porter  <dgp@users.sourceforge.net>
+
+	* unix/Makefile.in:     Update `make dist` so that tclDTrace.d is
+	included in the source code distribution.
+
+	* generic/tclPkg.c:	Backport fix for [1573844] to the
+	* tests/pkg.test:	TCL_TIP268 sections.
+
+2007-09-18  Don Porter  <dgp@users.sourceforge.net>
+
+	* changes: updates for 8.4.16 release.
+
+2007-09-15  Daniel Steffen  <das@users.sourceforge.net>
+
+	* unix/tcl.m4 (SunOS-5.1x): 	replace direct use of '/usr/ccs/bin/ld'
+					in SHLIB_LD by 'cc' compiler driver.
+	* unix/configure: autoconf-2.13
+
+2007-09-14  Daniel Steffen  <das@users.sourceforge.net>
+
+	* generic/tclDTrace.d (new file): add DTrace provider for Tcl; allows
+	* generic/tclCompile.h:		  tracing of proc and command entry &
+	* generic/tclBasic.c: 		  return, bytecode execution, object
+	* generic/tclExecute.c:		  allocation and more; with essentially
+	* generic/tclInt.h:		  zero cost when tracing is inactive;
+	* generic/tclObj.c:		  enable with --enable-dtrace configure
+	* generic/tclProc.c:		  arg (disabled by default, will only
+	* unix/Makefile.in:		  enable if DTrace is present).
+	* unix/configure.in:		  [Patch 1793984]
+
+	* macosx/Makefile:		  enable DTrace support.
+
+	* unix/configure: autoconf-2.13
+
+2007-09-11  Don Porter  <dgp@users.sourceforge.net>
+
+	* library/tcltest/tcltest.tcl:	Accept underscores and colons in
+	* library/tcltest/pkgIndex.tcl:	constraint names.  Properly handle
+	constraint expressions that return non-numeric boolean results like
+	"false".  Bump to tcltest 2.2.9. [Bug 1772989; RFE 1071322]
+
+2007-09-11  Pat Thoyts  <patthoyts@users.sourceforge.net>
+
+	* win/makefile.vc:  AMD64 target fixes for symbols builds.
+	* win/rules.vc:
+
+2007-09-10  Jeff Hobbs  <jeffh@ActiveState.com>
+
+	* generic/tclLink.c (Tcl_UpdateLinkedVar): guard against var being
+	unlinked. [Bug 1740631] (maros)
+
+2007-08-25  Kevin Kenny  <kennykb@acm.org>
+
+	* generic/tclClock.c (FormatClock): Claimed additional space for
+	the %c format code to avoid a buffer overrun when formatting
+	(for example) a Friday in February in the Portuguese locale.
+	[Bug 1751117]
+	
+2007-08-24  Miguel Sofer  <msofer@users.sf.net>
+
+	* generic/tclCompile.c: replaced copy loop that tripped some
+	compilers with memmove [Bug 1780870]
+
+2007-08-14  Don Porter  <dgp@users.sourceforge.net>
+
+	* tests/trace.test:	Backport some tests.
+
+2007-08-14  Daniel Steffen  <das@users.sourceforge.net>
+
+	* unix/tclLoadDyld.c: use dlfcn API on Mac OS X 10.4 and later; fix
+	issues with loading from memory on intel and 64bit; add debug messages.
+
+	* tests/load.test: add test load-10.1 for loading from vfs.
+
+2007-08-07  Daniel Steffen  <das@users.sourceforge.net>
+
+	* generic/tclEnv.c:	improve environ handling on Mac OS X (adapted
+	* unix/tclUnixPort.h:	from Apple changes in Darwin tcl-64).
+
+	* unix/Makefile.in:	add support for compile flags specific to
+				object files linked directly into executables.
+
+	* unix/configure.in (Darwin): only use -seg1addr flag when prebinding;
+	use -mdynamic-no-pic flag for object files linked directly into exes;
+	support overriding TCL_PACKAGE_PATH in environment.
+
+	* unix/configure: autoconf-2.13
+
+2007-07-19  Don Porter  <dgp@users.sourceforge.net>
+
+	* generic/tclParse.c:	In contexts where interp and parsePtr->interp
+	might be different, be sure to use the latter for error reporting.
+
+2007-07-05  Don Porter  <dgp@users.sourceforge.net>
+
+	* library/init.tcl (unknown):	Corrected inconsistent error message
+	in interactive [unknown] when empty command is invoked. [Bug 1743676]
+
+2007-06-30  Donal K. Fellows  <donal.k.fellows@man.ac.uk>
+
+	* generic/tclBinary.c (Tcl_BinaryObjCmd): De-fang an instance of the
+	shared-result anti-pattern. [Bug 1716704]
+
+2007-06-30  Zoran Vasiljevic <vasiljevic@users.sourceforge.net>
+
+	* generic/tclThread.c: Prevent RemeberSyncObj() from growing the sync
+	object lists by reusing already free'd slots, if possible.
+	See discussion on Bug 1726873 for more information.
+
+2007-06-29  Daniel Steffen  <das@users.sourceforge.net>
+
+	* generic/tclAlloc.c:		on Darwin, ensure memory allocated by
+	* generic/tclThreadAlloc.c:	the custom TclpAlloc()s is aligned to
+	16 byte boundaries (as is the case with the Darwin system malloc).
+
+2007-06-27  Don Porter  <dgp@users.sourceforge.net>
+
+	* generic/tclCmdMZ.c:	Corrected broken trace reversal logic in
+	* generic/tclTest.c:	TclCheckInterpTraces that led to infinite loop
+	* tests/basic.test:	when multiple Tcl_CreateTrace traces were set
+	and one of them did not fire due to level restrictions.  [Bug 1743941].
+
+2007-06-23  Daniel Steffen  <das@users.sourceforge.net>
+
+	* macosx/tclMacOSXNotify.c (AtForkChild): don't call CoreFoundation
+	APIs after fork() on systems where that would lead to an abort().
+
+2007-06-10  Jeff Hobbs  <jeffh@ActiveState.com>
+
+	* README: updated links. [Bug 1715081]
+
+2007-06-06  Daniel Steffen  <das@users.sourceforge.net>
+
+	* unix/configure.in (Darwin):		add plist for tclsh; link the
+	* unix/Makefile.in  (Darwin):		Tcl and tclsh plists into their
+	* macosx/Tclsh-Info.plist.in (new):	binaries in all cases.
+
+	* unix/tcl.m4 (Darwin): fix CF checks in fat 32&64bit builds. 
+	* unix/configure: autoconf-2.13
+
+2007-06-05  Don Porter  <dgp@users.sourceforge.net>
+
+	* tests/result.test (result-6.2): Add test for [Bug 1649062] so that
+	8.4 and 8.5 both test the same outcome and we verify compatibility.
+
+2007-05-30  Don Porter  <dgp@users.sourceforge.net>
+
+	* README:		Bump version number to 8.4.16
+	* generic/tcl.h:
+	* tools/tcl.wse.in:
+	* unix/configure.in:
+	* unix/tcl.spec:
+	* win/README.binary:
+	* win/configure.in:
+
+	* unix/configure:	autoconf-2.13
+	* win/configure:
+
+2007-05-29  Jeff Hobbs  <jeffh@ActiveState.com>
+
+	* unix/tclUnixThrd.c (Tcl_JoinThread): fix for 64-bit handling of
+	pthread_join exit return code storage. [Bug 1712723]
+
 2007-05-24  Don Porter  <dgp@users.sourceforge.net>
 
 	*** 8.4.15 TAGGED FOR RELEASE ***
@@ -16,7 +185,7 @@
 	* changes: updates for 8.4.15 release.
 
 	* win/tclWinReg.c:		Bump to registry 1.1.5 to account
-	* library/reg/pkgIndex.tcl:	for [1682211] bug fix.
+	* library/reg/pkgIndex.tcl:	for [Bug 1682211] fix.
 
 2007-05-10  Don Porter  <dgp@users.sourceforge.net>
 
