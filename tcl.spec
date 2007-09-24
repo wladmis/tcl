@@ -2,7 +2,7 @@
 %define major 8.4
 
 Name: tcl
-Version: 8.4.15
+Version: 8.4.16
 Release: alt1
 
 Summary: A Tool Command Language (TCL) 
@@ -113,6 +113,10 @@ chmod +x %__tclsh
 %_man3dir/*
 
 %changelog
+* Tue Sep 25 2007 Sergey Bolshakov <sbolshakov@altlinux.ru> 8.4.16-alt1
+- 8.4.16
+- added rpm-build-tcl to tcl-devel deps (at@)
+
 * Sat Sep 15 2007 Sergey Bolshakov <sbolshakov@altlinux.ru> 8.4.15-alt1
 - 8.4.15
 
