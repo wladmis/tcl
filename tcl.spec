@@ -12,7 +12,7 @@ Url: http://www.tcl.tk/
 
 Source: %name-%version-%release.tar
 
-BuildRequires: rpm-build-tcl
+BuildRequires(pre): rpm-build-tcl
 %{?_with_test:BuildConflicts: tcl-vfs}
 
 Requires: lib%name = %version-%release
