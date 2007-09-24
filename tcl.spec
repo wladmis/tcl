@@ -27,6 +27,7 @@ Provides: %_tcldatadir
 Summary: Header files and C programming manual for TCL
 Group: Development/C
 Requires: %name = %version-%release
+Requires: rpm-build-tcl
 
 %description
 The Tcl (Tool Command Language) provides a powerful platform for
