@@ -768,7 +768,7 @@ install-libraries: libraries $(INSTALL_TZDATA) install-msgs
 	    do \
 	    $(INSTALL_DATA) $(GENERIC_DIR)/$$i $(INCLUDE_INSTALL_DIR); \
 	    done;
-	@for i in tclMath.h tclInt.h tclPort.h tclRegexp.h tclIntDecls.h tclIntPlatDecls.h regex.h tclCompile.h; \
+	@for i in tclInt.h tclPort.h tclRegexp.h tclIntDecls.h tclIntPlatDecls.h regex.h tclCompile.h; \
 	    do \
 	    $(INSTALL_DATA) $(GENERIC_DIR)/$$i $(INCLUDE_INSTALL_DIR)/tcl/generic; \
 	    done;
