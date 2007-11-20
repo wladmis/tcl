@@ -3,7 +3,7 @@
 
 Name: tcl
 Version: 8.5.0
-Release: alt0.1
+Release: alt0.2
 
 Summary: A Tool Command Language (TCL) 
 License: BSD
@@ -17,6 +17,13 @@ BuildRequires(pre): rpm-build-tcl
 
 Requires: lib%name = %version-%release
 Requires: tcl8.4
+
+# FIXME tm modules
+Provides: tcl(http) = 2.5.3
+Provides: tcl(msgcat) = 1.4.2
+Provides: tcl(palform) = 1.0.3
+Provides: tcl(platform::shell) = 1.1.3
+Provides: tcl(tcltest) = 2.3b1
 
 %package -n lib%name
 Summary: A Tool Command Language (TCL) - shared library
@@ -114,6 +121,9 @@ chmod +x %__tclsh
 %_man3dir/*
 
 %changelog
+* Tue Nov 20 2007 Sergey Bolshakov <sbolshakov@altlinux.ru> 8.5.0-alt0.2
+- 8.5b2 released
+
 * Mon Nov 19 2007 Sergey Bolshakov <sbolshakov@altlinux.ru> 8.5.0-alt0.1
 - 8.5b1 released
 
