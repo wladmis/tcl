@@ -181,12 +181,6 @@
 /* Define to 1 if you have the `strtol' function. */
 #undef HAVE_STRTOL
 
-/* Define to 1 if you have the `strtoll' function. */
-#undef HAVE_STRTOLL
-
-/* Define to 1 if you have the `strtoull' function. */
-#undef HAVE_STRTOULL
-
 /* Is 'struct dirent64' in <sys/types.h>? */
 #undef HAVE_STRUCT_DIRENT64
 
@@ -229,9 +223,6 @@
 
 /* Should we use the global timezone variable? */
 #undef HAVE_TIMEZONE_VAR
-
-/* Define to 1 if you have the `tmpnam' function. */
-#undef HAVE_TMPNAM
 
 /* Should we use the tm_gmtoff field of struct tm? */
 #undef HAVE_TM_GMTOFF

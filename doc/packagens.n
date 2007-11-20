@@ -2,7 +2,7 @@
 '\" Copyright (c) 1998-2000 by Scriptics Corporation.
 '\" All rights reserved.
 '\" 
-'\" RCS: @(#) $Id: packagens.n,v 1.5 2004/09/06 09:44:57 dkf Exp $
+'\" RCS: @(#) $Id$
 '\" 
 .so man.macros
 .TH pkg::create n 8.3 Tcl "Tcl Built-In Commands"

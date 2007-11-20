@@ -13,7 +13,7 @@
  * See the file "license.terms" for information on usage and redistribution of
  * this file, and for a DISCLAIMER OF ALL WARRANTIES.
  *
- * RCS: @(#) $Id: tclExecute.c,v 1.337 2007/09/17 10:40:08 dkf Exp $
+ * RCS: @(#) $Id$
  */
 
 #include "tclInt.h"
@@ -2400,7 +2400,7 @@ TclExecuteByteCode(
      *	   Start of INST_LOAD instructions.
      *
      * WARNING: more 'goto' here than your doctor recommended! The different
-     * instructions set the value of some variables and then jump to somme
+     * instructions set the value of some variables and then jump to some
      * common execution code.
      */
     {
@@ -5480,7 +5480,8 @@ TclExecuteByteCode(
 		if (l1 >= 3
 		    && (unsigned long) l1 < (sizeof(Exp32Index)
 			     / sizeof(unsigned short)) - 1) {
-		    unsigned short base = Exp32Index[l1-3] + l2 - 9;
+		    unsigned short base = Exp32Index[l1-3]
+			                + (unsigned short) l2 - 9;
 		    if (base < Exp32Index[l1-2]) {
 			/*
 			 * 32-bit number raised to intermediate power,
@@ -5500,7 +5501,8 @@ TclExecuteByteCode(
 		if (-l1 >= 3
 		    && (unsigned long)(-l1) < (sizeof(Exp32Index)
 			     / sizeof(unsigned short)) - 1) {
-		    unsigned short base = Exp32Index[-l1-3] + l2 - 9;
+		    unsigned short base
+			= Exp32Index[-l1-3] + (unsigned short) l2 - 9;
 		    if (base < Exp32Index[-l1-2]) {
 			long lResult = (oddExponent) ? 
 			    -Exp32Value[base] : Exp32Value[base];
@@ -5624,7 +5626,8 @@ TclExecuteByteCode(
 	    if (w1 >= 3
 		&& (Tcl_WideUInt) w1 < (sizeof(Exp64Index)
 			 / sizeof(unsigned short)) - 1) {
-		unsigned short base = Exp64Index[w1-3] + l2 - 17;
+		unsigned short base
+		    = Exp64Index[w1-3] + (unsigned short) l2 - 17;
 		if (base < Exp64Index[w1-2]) {
 		    /*
 		     * 64-bit number raised to intermediate power,
@@ -5644,7 +5647,8 @@ TclExecuteByteCode(
 	    if (-w1 >= 3
 		&& (Tcl_WideUInt) (-w1) < (sizeof(Exp64Index)
 			  / sizeof(unsigned short)) - 1) {
-		unsigned short base = Exp64Index[-w1-3] + l2 - 17;
+		unsigned short base
+		    = Exp64Index[-w1-3] + (unsigned short) l2 - 17;
 		if (base < Exp64Index[-w1-2]) {
 		    Tcl_WideInt wResult = (oddExponent) ? 
 			-Exp64Value[base] : Exp64Value[base];
