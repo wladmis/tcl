@@ -636,8 +636,18 @@ typedef struct ByteCode {
 
 #define INST_REVERSE			126
 
+/* regexp instruction */
+
+#define INST_REGEXP			127
+
+/* For [info exists] compilation */
+#define INST_EXIST_SCALAR		128
+#define INST_EXIST_ARRAY		129
+#define INST_EXIST_ARRAY_STK		130
+#define INST_EXIST_STK			131
+
 /* The last opcode */
-#define LAST_INST_OPCODE		126
+#define LAST_INST_OPCODE		131
 
 /*
  * Table describing the Tcl bytecode instructions: their name (for displaying
@@ -916,8 +926,6 @@ MODULE_SCOPE void	TclRegisterAuxDataType(AuxDataType *typePtr);
 MODULE_SCOPE int	TclRegisterLiteral(CompileEnv *envPtr,
 			    char *bytes, int length, int flags);
 MODULE_SCOPE void	TclReleaseLiteral(Tcl_Interp *interp, Tcl_Obj *objPtr);
-MODULE_SCOPE void	TclSetCmdNameObj(Tcl_Interp *interp, Tcl_Obj *objPtr,
-			    Command *cmdPtr);
 MODULE_SCOPE int	TclSingleOpCmd(ClientData clientData,
 			    Tcl_Interp *interp, int objc,
 			    Tcl_Obj *CONST objv[]);

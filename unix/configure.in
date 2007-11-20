@@ -27,7 +27,7 @@ m4_ifdef([SC_USE_CONFIG_HEADERS], [
 TCL_VERSION=8.5
 TCL_MAJOR_VERSION=8
 TCL_MINOR_VERSION=5
-TCL_PATCH_LEVEL="b2"
+TCL_PATCH_LEVEL="b3"
 VERSION=${TCL_VERSION}
 
 #------------------------------------------------------------------------
@@ -164,6 +164,8 @@ if test "`uname -s`" = "Darwin" && test "${TCL_THREADS}" = 1 && \
     ac_cv_func_realpath=no
 fi
 AC_CHECK_FUNC(realpath, , [AC_DEFINE(NO_REALPATH, 1, [Do we have realpath()])])
+
+SC_TCL_GETADDRINFO
 
 #-------------------------------------------------------------------- 
 #	Look for thread-safe variants of some library functions.
@@ -656,6 +658,28 @@ if test $tcl_ok = yes; then
     fi
 fi
 AC_MSG_RESULT([$tcl_ok])
+
+#--------------------------------------------------------------------
+#  Does the C stack grow upwards or downwards? Or cross-compiling?
+#--------------------------------------------------------------------
+
+AC_CACHE_CHECK([if the C stack grows upwards in memory], tcl_cv_stack_grows_up, [
+    AC_TRY_RUN([
+	int StackGrowsUp(int *parent) {
+	    int here;
+	    return (&here < parent);
+	}
+	int main (int argc, char *argv[]) {
+	    int foo;
+	    return StackGrowsUp(&foo);
+	}
+    ], tcl_cv_stack_grows_up=yes, tcl_cv_stack_grows_up=no,
+    tcl_cv_stack_grows_up=unknown)])
+if test $tcl_cv_stack_grows_up = unknown; then
+    AC_DEFINE(TCL_CROSS_COMPILE, 1, [Are we cross-compiling?])
+elif test $tcl_cv_stack_grows_up = yes; then
+    AC_DEFINE(TCL_STACK_GROWS_UP, 1, [The C stack grows upwards in memory.])
+fi
 
 #--------------------------------------------------------------------
 #	The statements below define a collection of symbols related to

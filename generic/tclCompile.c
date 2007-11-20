@@ -385,6 +385,20 @@ InstructionDesc tclInstructionTable[] = {
 	/* Compiled bytecodes to signal syntax error. */
     {"reverse",		 5,    0,         1,	{OPERAND_UINT4}},
 	/* Reverse the order of the arg elements at the top of stack */
+
+    {"regexp",		 2,   -1,         1,	{OPERAND_INT1}},
+	/* Regexp:	push (regexp stknext stktop) opnd == nocase */
+
+    {"existScalar",	 5,    1,         1,	{OPERAND_LVT4}},
+	/* Test if scalar variable at index op1 in call frame exists */
+    {"existArray",	 5,    0,         1,	{OPERAND_LVT4}},
+	/* Test if array element exists; array at slot op1, element is
+	 * stktop */
+    {"existArrayStk",	 1,    -1,        0,	{OPERAND_NONE}},
+	/* Test if array element exists; element is stktop, array name is
+	 * stknext */
+    {"existStk",	 1,    0,         0,	{OPERAND_NONE}},
+	/* Test if general variable exists; unparsed variable name is stktop*/
     {0}
 };
 
@@ -484,7 +498,7 @@ TclSetByteCodeFromAny(
     }
 #endif
 
-    stringPtr = Tcl_GetStringFromObj(objPtr, &length);
+    stringPtr = TclGetStringFromObj(objPtr, &length);
 
     /*
      * TIP #280: Pick up the CmdFrame in which the BC compiler was invoked and
@@ -1135,9 +1149,9 @@ TclCompileScript(
     Tcl_DString ds;
     /* TIP #280 */
     ExtCmdLoc *eclPtr = envPtr->extCmdMapPtr;
-    int *wlines;
-    int wlineat, cmdLine;
-    Tcl_Parse *parsePtr = (Tcl_Parse *) TclStackAlloc(interp, sizeof(Tcl_Parse));
+    int *wlines, wlineat, cmdLine;
+    Tcl_Parse *parsePtr = (Tcl_Parse *)
+	    TclStackAlloc(interp, sizeof(Tcl_Parse));
 
     Tcl_DStringInit(&ds);
 
@@ -1164,8 +1178,10 @@ TclCompileScript(
     cmdLine = envPtr->line;
     do {
 	if (Tcl_ParseCommand(interp, p, bytesLeft, 0, parsePtr) != TCL_OK) {
+	    /*
+	     * Compile bytecodes to report the parse error at runtime.
+	     */
 
-	    /* Compile bytecodes to report the parse error at runtime. */
 	    Tcl_LogCommandInfo(interp, script, parsePtr->commandStart,
 		    /* Drop the command terminator (";","]") if appropriate */
 		    (parsePtr->term ==
@@ -1176,8 +1192,8 @@ TclCompileScript(
 	}
 	gotParse = 1;
 	if (parsePtr->numWords > 0) {
-	    int expand = 0;		/* Set if there are dynamic expansions
-					 * to handle */
+	    int expand = 0;	/* Set if there are dynamic expansions to
+				 * handle */
 
 	    /*
 	     * If not the first command, pop the previous command's result
@@ -1261,8 +1277,9 @@ TclCompileScript(
 
 	    TclAdvanceLines(&cmdLine, p, parsePtr->commandStart);
 	    EnterCmdWordData(eclPtr, parsePtr->commandStart - envPtr->source,
-		    parsePtr->tokenPtr, parsePtr->commandStart, parsePtr->commandSize,
-		    parsePtr->numWords, cmdLine, &wlines);
+		    parsePtr->tokenPtr, parsePtr->commandStart,
+		    parsePtr->commandSize, parsePtr->numWords, cmdLine,
+		    &wlines);
 	    wlineat = eclPtr->nuloc - 1;
 
 	    /*
@@ -1316,7 +1333,7 @@ TclCompileScript(
 			    && !(cmdPtr->flags & CMD_HAS_EXEC_TRACES)
 			    && !(iPtr->flags & DONT_COMPILE_CMDS_INLINE)) {
 			int savedNumCmds = envPtr->numCommands;
-			unsigned int savedCodeNext =
+			unsigned savedCodeNext =
 				envPtr->codeNext - envPtr->codeStart;
 			int update = 0, code;
 
@@ -1332,6 +1349,7 @@ TclCompileScript(
 			 * produce such a beast (currently 'while 1' only) set
 			 * envPtr->atCmdStart to 0 in order to signal this
 			 * case. [Bug 1752146]
+			 *
 			 * Note that the environment is initialised with
 			 * atCmdStart=1 to avoid emitting ISC for the first
 			 * command.
@@ -1357,7 +1375,8 @@ TclCompileScript(
 			    update = 1;
 			}
 
-			code = (cmdPtr->compileProc)(interp, parsePtr, envPtr);
+			code = (cmdPtr->compileProc)(interp, parsePtr,
+				cmdPtr, envPtr);
 
 			if (code == TCL_OK) {
 			    if (update) {
@@ -1367,13 +1386,27 @@ TclCompileScript(
 
 				unsigned char *fixPtr = envPtr->codeStart
 					+ savedCodeNext + 1;
-				unsigned int fixLen = envPtr->codeNext
+				unsigned fixLen = envPtr->codeNext
 					- envPtr->codeStart - savedCodeNext;
 
 				TclStoreInt4AtPtr(fixLen, fixPtr);
 			    }
 			    goto finishCommand;
 			} else {
+			    if (envPtr->atCmdStart && savedCodeNext != 0) {
+				/*
+				 * Decrease the number of commands being
+				 * started at the current point. Note that
+				 * this depends on the exact layout of the
+				 * INST_START_CMD's operands, so be careful!
+				 */
+
+				unsigned char *fixPtr = envPtr->codeNext - 4;
+
+				TclStoreInt4AtPtr(TclGetUInt4AtPtr(fixPtr)-1,
+					fixPtr);
+			    }
+
 			    /*
 			     * Restore numCommands and codeNext to their
 			     * correct values, removing any commands compiled
@@ -1560,11 +1593,10 @@ TclCompileTokens(
 	     */
 
 	    if (Tcl_DStringLength(&textBuffer) > 0) {
-		int literal;
-
-		literal = TclRegisterNewLiteral(envPtr,
+		int literal = TclRegisterNewLiteral(envPtr,
 			Tcl_DStringValue(&textBuffer),
 			Tcl_DStringLength(&textBuffer));
+
 		TclEmitPush(literal, envPtr);
 		numObjsToConcat++;
 		Tcl_DStringFree(&textBuffer);
@@ -1842,6 +1874,8 @@ TclCompileNoOp(
     Tcl_Interp *interp,		/* Used for error reporting. */
     Tcl_Parse *parsePtr,	/* Points to a parse structure for the command
 				 * created by Tcl_ParseCommand. */
+    Command *cmdPtr,		/* Points to defintion of command being
+				 * compiled. */
     CompileEnv *envPtr)		/* Holds resulting instructions. */
 {
     Tcl_Token *tokenPtr;
@@ -1906,8 +1940,7 @@ TclInitByteCodeObj(
 #endif
     int numLitObjects = envPtr->literalArrayNext;
     Namespace *namespacePtr;
-    int i;
-    int new;
+    int i, isNew;
     Interp *iPtr;
 
     iPtr = envPtr->iPtr;
@@ -2024,7 +2057,7 @@ TclInitByteCodeObj(
      */
 
     Tcl_SetHashValue(Tcl_CreateHashEntry(iPtr->lineBCPtr, (char *) codePtr,
-	    &new), envPtr->extCmdMapPtr);
+	    &isNew), envPtr->extCmdMapPtr);
     envPtr->extCmdMapPtr = NULL;
 
     codePtr->localCachePtr = NULL;
@@ -2124,8 +2157,8 @@ TclFindCompiledLocal(
 	procPtr->numCompiledLocals++;
     }
     return localVar;
-
 }
+
 /*
  *----------------------------------------------------------------------
  *
@@ -2723,7 +2756,7 @@ TclFixupForwardJump(
 {
     unsigned char *jumpPc, *p;
     int firstCmd, lastCmd, firstRange, lastRange, k;
-    unsigned int numBytes;
+    unsigned numBytes;
 
     if (jumpDist <= distThreshold) {
 	jumpPc = (envPtr->codeStart + jumpFixupPtr->codeOffset);
@@ -3375,10 +3408,10 @@ TclDisassembleByteCodeObj(
     Tcl_AppendPrintfToObj(bufferObj,
 	    "  Code %lu = header %lu+inst %d+litObj %lu+exc %lu+aux %lu+cmdMap %d\n",
 	    (unsigned long) codePtr->structureSize,
-	    (unsigned long) (sizeof(ByteCode) - (sizeof(size_t) + sizeof(Tcl_Time))),
+	    (unsigned long) (sizeof(ByteCode) - sizeof(size_t) - sizeof(Tcl_Time)),
 	    codePtr->numCodeBytes,
 	    (unsigned long) (codePtr->numLitObjects * sizeof(Tcl_Obj *)),
-	    (unsigned long) (codePtr->numExceptRanges * sizeof(ExceptionRange)),
+	    (unsigned long) (codePtr->numExceptRanges*sizeof(ExceptionRange)),
 	    (unsigned long) (codePtr->numAuxDataItems * sizeof(AuxData)),
 	    codePtr->numCmdLocBytes);
 #endif /* TCL_COMPILE_STATS */
@@ -3479,7 +3512,7 @@ TclDisassembleByteCodeObj(
     srcLengthNext = codePtr->srcLengthStart;
     codeOffset = srcOffset = 0;
     for (i = 0;  i < numCmds;  i++) {
-	if ((unsigned int) (*codeDeltaNext) == (unsigned int) 0xFF) {
+	if ((unsigned) *codeDeltaNext == (unsigned) 0xFF) {
 	    codeDeltaNext++;
 	    delta = TclGetInt4AtPtr(codeDeltaNext);
 	    codeDeltaNext += 4;
@@ -3489,7 +3522,7 @@ TclDisassembleByteCodeObj(
 	}
 	codeOffset += delta;
 
-	if ((unsigned int) (*codeLengthNext) == (unsigned int) 0xFF) {
+	if ((unsigned) *codeLengthNext == (unsigned) 0xFF) {
 	    codeLengthNext++;
 	    codeLen = TclGetInt4AtPtr(codeLengthNext);
 	    codeLengthNext += 4;
@@ -3498,7 +3531,7 @@ TclDisassembleByteCodeObj(
 	    codeLengthNext++;
 	}
 
-	if ((unsigned int) (*srcDeltaNext) == (unsigned int) 0xFF) {
+	if ((unsigned) *srcDeltaNext == (unsigned) 0xFF) {
 	    srcDeltaNext++;
 	    delta = TclGetInt4AtPtr(srcDeltaNext);
 	    srcDeltaNext += 4;
@@ -3508,7 +3541,7 @@ TclDisassembleByteCodeObj(
 	}
 	srcOffset += delta;
 
-	if ((unsigned int) (*srcLengthNext) == (unsigned int) 0xFF) {
+	if ((unsigned) *srcLengthNext == (unsigned) 0xFF) {
 	    srcLengthNext++;
 	    srcLen = TclGetInt4AtPtr(srcLengthNext);
 	    srcLengthNext += 4;
@@ -3538,7 +3571,7 @@ TclDisassembleByteCodeObj(
     codeOffset = srcOffset = 0;
     pc = codeStart;
     for (i = 0;  i < numCmds;  i++) {
-	if ((unsigned int) (*codeDeltaNext) == (unsigned int) 0xFF) {
+	if ((unsigned) *codeDeltaNext == (unsigned) 0xFF) {
 	    codeDeltaNext++;
 	    delta = TclGetInt4AtPtr(codeDeltaNext);
 	    codeDeltaNext += 4;
@@ -3548,7 +3581,7 @@ TclDisassembleByteCodeObj(
 	}
 	codeOffset += delta;
 
-	if ((unsigned int) (*srcDeltaNext) == (unsigned int) 0xFF) {
+	if ((unsigned) *srcDeltaNext == (unsigned) 0xFF) {
 	    srcDeltaNext++;
 	    delta = TclGetInt4AtPtr(srcDeltaNext);
 	    srcDeltaNext += 4;
@@ -3558,7 +3591,7 @@ TclDisassembleByteCodeObj(
 	}
 	srcOffset += delta;
 
-	if ((unsigned int) (*srcLengthNext) == (unsigned int) 0xFF) {
+	if ((unsigned) *srcLengthNext == (unsigned) 0xFF) {
 	    srcLengthNext++;
 	    srcLen = TclGetInt4AtPtr(srcLengthNext);
 	    srcLengthNext += 4;
@@ -3614,11 +3647,11 @@ FormatInstruction(
     unsigned char opCode = *pc;
     register InstructionDesc *instDesc = &tclInstructionTable[opCode];
     unsigned char *codeStart = codePtr->codeStart;
-    unsigned int pcOffset = (pc - codeStart);
+    unsigned pcOffset = pc - codeStart;
     int opnd = 0, i, j, numBytes = 1;
     int localCt = procPtr ? procPtr->numCompiledLocals : 0;
     CompiledLocal *localPtr = procPtr ? procPtr->firstLocalPtr : NULL;
-    char suffixBuffer[64];	/* Additional info to print after main opcode
+    char suffixBuffer[128];	/* Additional info to print after main opcode
 				 * and immediates. */
     char *suffixSrc = NULL;
     Tcl_Obj *suffixObj = NULL;
@@ -3651,7 +3684,7 @@ FormatInstruction(
 	    if (opCode == INST_PUSH1) {
 		suffixObj = codePtr->objArrayPtr[opnd];
 	    }
-	    Tcl_AppendPrintfToObj(bufferObj, "%u ", (unsigned int) opnd);
+	    Tcl_AppendPrintfToObj(bufferObj, "%u ", (unsigned) opnd);
 	    break;
 	case OPERAND_AUX4:
 	case OPERAND_UINT4:
@@ -3659,9 +3692,10 @@ FormatInstruction(
 	    if (opCode == INST_PUSH4) {
 		suffixObj = codePtr->objArrayPtr[opnd];
 	    } else if (opCode == INST_START_CMD && opnd != 1) {
-		sprintf(suffixBuffer, ", %u cmds start here", opnd);
+		sprintf(suffixBuffer+strlen(suffixBuffer),
+			", %u cmds start here", opnd);
 	    }
-	    Tcl_AppendPrintfToObj(bufferObj, "%u ", (unsigned int) opnd);
+	    Tcl_AppendPrintfToObj(bufferObj, "%u ", (unsigned) opnd);
 	    if (instDesc->opTypes[i] == OPERAND_AUX4) {
 		auxPtr = &codePtr->auxDataArrayPtr[opnd];
 	    }
@@ -3687,7 +3721,7 @@ FormatInstruction(
 	    if (localPtr != NULL) {
 		if (opnd >= localCt) {
 		    Tcl_Panic("FormatInstruction: bad local var index %u (%u locals)",
-			    (unsigned int) opnd, localCt);
+			    (unsigned) opnd, localCt);
 		}
 		for (j = 0;  j < opnd;  j++) {
 		    localPtr = localPtr->nextPtr;
