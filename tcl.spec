@@ -3,7 +3,7 @@
 
 Name: tcl
 Version: 8.5.0
-Release: alt0.2
+Release: alt0.3
 
 Summary: A Tool Command Language (TCL) 
 License: BSD
@@ -74,7 +74,7 @@ This package includes header files and C programming manuals for Tcl.
 %build
 cd unix
 %__autoconf
-%configure
+%configure --disable-rpath --enable-threads
 sed -i  's@-DPACKAGE_[^ ]\+ @@g' tclConfig.sh
 make all %{?_with_test:test}
 
@@ -121,6 +121,9 @@ chmod +x %__tclsh
 %_man3dir/*
 
 %changelog
+* Fri Nov 23 2007 Sergey Bolshakov <sbolshakov@altlinux.ru> 8.5.0-alt0.3
+- 8.5b3 released
+
 * Tue Nov 20 2007 Sergey Bolshakov <sbolshakov@altlinux.ru> 8.5.0-alt0.2
 - 8.5b2 released
 
@@ -249,3 +252,6 @@ chmod +x %__tclsh
 - ps patch from Viktor Wagner
 - bad requires patch
 
+# local variables:
+# compile-command: "gear --commit --hasher -- hsh --repo=tcl"
+# end:
