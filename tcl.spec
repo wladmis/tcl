@@ -3,7 +3,7 @@
 
 Name: tcl
 Version: 8.5.0
-Release: alt0.3
+Release: alt0.4
 
 Summary: A Tool Command Language (TCL) 
 License: BSD
@@ -75,7 +75,6 @@ This package includes header files and C programming manuals for Tcl.
 cd unix
 %__autoconf
 %configure --disable-rpath --enable-threads
-sed -i  's@-DPACKAGE_[^ ]\+ @@g' tclConfig.sh
 make all %{?_with_test:test}
 
 %install 
@@ -85,6 +84,7 @@ mkdir -p %buildroot%_tcllibdir %buildroot%_tcldatadir
 install -p -m0644 -D tcl.m4 %buildroot%_datadir/aclocal/tea.m4
 ln -sf tclsh%major %buildroot%_bindir/tclsh
 ln -sf lib%name%major.so %buildroot%_libdir/lib%name.so
+ln -s ../unix/tclUnixPort.h %buildroot%_includedir/tcl/generic/tclUnixPort.h
 cat <<EOF > %__tclsh
 #!/bin/sh
 LD_LIBRARY_PATH=%buildroot%_libdir; export LD_LIBRARY_PATH
@@ -121,6 +121,9 @@ chmod +x %__tclsh
 %_man3dir/*
 
 %changelog
+* Sun Nov 25 2007 Sergey Bolshakov <sbolshakov@altlinux.ru> 8.5.0-alt0.4
+- garbage in tclConfig.sh fixed
+
 * Fri Nov 23 2007 Sergey Bolshakov <sbolshakov@altlinux.ru> 8.5.0-alt0.3
 - 8.5b3 released
 
