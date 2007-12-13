@@ -4213,7 +4213,7 @@ TclExecuteByteCode(
 
 	    string1 = Tcl_GetByteArrayFromObj(valuePtr, &length1);
 	    string2 = Tcl_GetByteArrayFromObj(value2Ptr, &length2);
-	    match = TclByteArrayMatch(string1, length1, string2, length2);
+	    match = TclByteArrayMatch(string1, length1, string2, length2, 0);
 	} else {
 	    match = Tcl_StringCaseMatch(TclGetString(valuePtr),
 		    TclGetString(value2Ptr), nocase);
@@ -4231,16 +4231,15 @@ TclExecuteByteCode(
     }
 
     case INST_REGEXP: {
-	int nocase, match;
+	int cflags, match;
 	Tcl_Obj *valuePtr, *value2Ptr;
 	Tcl_RegExp regExpr;
 
-	nocase = TclGetInt1AtPtr(pc+1);
+	cflags = TclGetInt1AtPtr(pc+1); /* RE compile flages like NOCASE */
 	valuePtr = OBJ_AT_TOS;		/* String */
 	value2Ptr = OBJ_UNDER_TOS;	/* Pattern */
 
-	regExpr = Tcl_GetRegExpFromObj(interp, value2Ptr,
-		TCL_REG_ADVANCED | (nocase ? TCL_REG_NOCASE : 0));
+	regExpr = Tcl_GetRegExpFromObj(interp, value2Ptr, cflags);
 	if (regExpr == NULL) {
 	    match = -1;
 	} else {

@@ -59,11 +59,11 @@ extern "C" {
 
 #define TCL_MAJOR_VERSION   8
 #define TCL_MINOR_VERSION   5
-#define TCL_RELEASE_LEVEL   TCL_BETA_RELEASE
-#define TCL_RELEASE_SERIAL  3
+#define TCL_RELEASE_LEVEL   TCL_FINAL_RELEASE
+#define TCL_RELEASE_SERIAL  0
 
 #define TCL_VERSION	    "8.5"
-#define TCL_PATCH_LEVEL	    "8.5b3"
+#define TCL_PATCH_LEVEL	    "8.5.0"
 
 /*
  * The following definitions set up the proper options for Windows compilers.
@@ -516,6 +516,12 @@ typedef void (Tcl_ThreadCreateProc) _ANSI_ARGS_((ClientData clientData));
 #define TCL_THREAD_STACK_DEFAULT (0)    /* Use default size for stack */
 #define TCL_THREAD_NOFLAGS	 (0000) /* Standard flags, default behaviour */
 #define TCL_THREAD_JOINABLE	 (0001) /* Mark the thread as joinable */
+
+/*
+ * Flag values passed to Tcl_StringCaseMatch.
+ */
+
+#define TCL_MATCH_NOCASE	(1<<0)
 
 /*
  * Flag values passed to Tcl_GetRegExpFromObj.
@@ -1264,7 +1270,8 @@ typedef struct Tcl_HashSearch {
  */
 
 typedef struct {
-    Tcl_HashSearch search;	/* Search struct for underlying hash table. */
+    void *next;			/* Search position for underlying hash
+				 * table. */
     int epoch;			/* Epoch marker for dictionary being searched,
 				 * or -1 if search has terminated. */
     Tcl_Dict dictionaryPtr;	/* Reference to dictionary being searched. */

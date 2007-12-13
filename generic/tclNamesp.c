@@ -5407,11 +5407,33 @@ Tcl_SetEnsembleMappingDict(
 	return TCL_ERROR;
     }
     if (mapDict != NULL) {
-	int size;
+	int size, done;
+	Tcl_DictSearch search;
+	Tcl_Obj *valuePtr;
 
 	if (Tcl_DictObjSize(interp, mapDict, &size) != TCL_OK) {
 	    return TCL_ERROR;
 	}
+
+	for (Tcl_DictObjFirst(NULL, mapDict, &search, NULL, &valuePtr, &done);
+		!done; Tcl_DictObjNext(&search, NULL, &valuePtr, &done)) {
+	    Tcl_Obj *cmdPtr;
+	    const char *bytes;
+
+	    if (Tcl_ListObjIndex(interp, valuePtr, 0, &cmdPtr) != TCL_OK) {
+		Tcl_DictObjDone(&search);
+		return TCL_ERROR;
+	    }
+	    bytes = TclGetString(cmdPtr);
+	    if (bytes[0] != ':' || bytes[1] != ':') {
+		Tcl_AppendResult(interp,
+			"ensemble target is not a fully-qualified command",
+			NULL);
+		Tcl_DictObjDone(&search);
+		return TCL_ERROR;
+	    }
+	}
+
 	if (size < 1) {
 	    mapDict = NULL;
 	}
@@ -5870,6 +5892,81 @@ Tcl_IsEnsemble(
 	return 0;
     }
     return 1;
+}
+
+/*
+ *----------------------------------------------------------------------
+ *
+ * TclMakeEnsemble --
+ *
+ *	Create an ensemble from a table of implementation commands. The
+ *	ensemble will be subject to (limited) compilation if any of the
+ *	implementation commands are compilable.
+ *
+ * Results:
+ *	Handle for the ensemble, or NULL if creation of it fails.
+ *
+ * Side effects:
+ *	May advance bytecode compilation epoch.
+ *
+ *----------------------------------------------------------------------
+ */
+
+Tcl_Command
+TclMakeEnsemble(
+    Tcl_Interp *interp,
+    const char *name,
+    const EnsembleImplMap map[])
+{
+    Tcl_Command ensemble;	/* The overall ensemble. */
+    Tcl_Namespace *tclNsPtr;	/* Reference to the "::tcl" namespace. */
+    Tcl_DString buf;
+
+    tclNsPtr = Tcl_FindNamespace(interp, "::tcl", NULL,
+	    TCL_CREATE_NS_IF_UNKNOWN);
+    if (tclNsPtr == NULL) {
+	Tcl_Panic("unable to find or create ::tcl namespace!");
+    }
+    Tcl_DStringInit(&buf);
+    Tcl_DStringAppend(&buf, "::tcl::", -1);
+    Tcl_DStringAppend(&buf, name, -1);
+    tclNsPtr = Tcl_FindNamespace(interp, Tcl_DStringValue(&buf), NULL,
+	    TCL_CREATE_NS_IF_UNKNOWN);
+    if (tclNsPtr == NULL) {
+	Tcl_Panic("unable to find or create %s namespace!",
+		Tcl_DStringValue(&buf));
+    }
+    ensemble = Tcl_CreateEnsemble(interp, Tcl_DStringValue(&buf)+5, tclNsPtr,
+	    TCL_ENSEMBLE_PREFIX);
+    Tcl_DStringAppend(&buf, "::", -1);
+    if (ensemble != NULL) {
+	Tcl_Obj *mapDict;
+	int i, compile = 0;
+
+	TclNewObj(mapDict);
+	for (i=0 ; map[i].name != NULL ; i++) {
+	    Tcl_Obj *fromObj, *toObj;
+	    Command *cmdPtr;
+
+	    fromObj = Tcl_NewStringObj(map[i].name, -1);
+	    TclNewStringObj(toObj, Tcl_DStringValue(&buf),
+		    Tcl_DStringLength(&buf));
+	    Tcl_AppendToObj(toObj, map[i].name, -1);
+	    Tcl_DictObjPut(NULL, mapDict, fromObj, toObj);
+	    cmdPtr = (Command *) Tcl_CreateObjCommand(interp,
+		    TclGetString(toObj), map[i].proc, NULL, NULL);
+	    cmdPtr->compileProc = map[i].compileProc;
+	    compile |= (map[i].compileProc != NULL);
+	}
+	Tcl_SetEnsembleMappingDict(interp, ensemble, mapDict);
+	if (compile) {
+	    Tcl_SetEnsembleFlags(interp, ensemble,
+		    TCL_ENSEMBLE_PREFIX | ENSEMBLE_COMPILE);
+	}
+    }
+    Tcl_DStringFree(&buf);
+
+    return ensemble;
 }
 
 /*

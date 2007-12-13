@@ -26,10 +26,10 @@ testConstraint testindexobj [expr {[info commands testindexobj] != {}}]
 
 test string-1.1 {error conditions} {
     list [catch {string gorp a b} msg] $msg
-} {1 {bad option "gorp": must be bytelength, compare, equal, first, index, is, last, length, map, match, range, repeat, replace, reverse, tolower, toupper, totitle, trim, trimleft, trimright, wordend, or wordstart}}
+} {1 {unknown or ambiguous subcommand "gorp": must be bytelength, compare, equal, first, index, is, last, length, map, match, range, repeat, replace, reverse, tolower, totitle, toupper, trim, trimleft, trimright, wordend, or wordstart}}
 test string-1.2 {error conditions} {
     list [catch {string} msg] $msg
-} {1 {wrong # args: should be "string option arg ?arg ...?"}}
+} {1 {wrong # args: should be "string subcommand ?argument ...?"}}
 
 test string-2.1 {string compare, too few args} {
     list [catch {string compare a} msg] $msg
@@ -821,10 +821,10 @@ test string-10.18 {string map, empty argument} {
 test string-10.19 {string map, empty arguments} {
     string map -nocase {{} abc f bar {} def} foo
 } baroo
-test string-10.20 {string map, dictionaries can alter map ordering} {
+test string-10.20 {string map, dictionaries don't alter map ordering} {
     set map {aa X a Y}
     list [string map [dict create aa X a Y] aaa] [string map $map aaa] [dict size $map] [string map $map aaa]
-} {YYY XY 2 XY}
+} {XY XY 2 XY}
 test string-10.21 {string map, ABR checks} {
     string map {longstring foob} long
 } long
@@ -887,8 +887,53 @@ test string-11.8 {string match} {
 test string-11.9 {string match} {
     string match *3*6*9 0123456789
 } 1
+test string-11.9.1 {string match} {
+    string match *3*6*89 0123456789
+} 1
+test string-11.9.2 {string match} {
+    string match *3*456*89 0123456789
+} 1
+test string-11.9.3 {string match} {
+    string match *3*6* 0123456789
+} 1
+test string-11.9.4 {string match} {
+    string match *3*56* 0123456789
+} 1
+test string-11.9.5 {string match} {
+    string match *3*456*** 0123456789
+} 1
+test string-11.9.6 {string match} {
+    string match **3*456** 0123456789
+} 1
+test string-11.9.7 {string match} {
+    string match *3***456* 0123456789
+} 1
+test string-11.9.8 {string match} {
+    string match *3***\[456]* 0123456789
+} 1
+test string-11.9.9 {string match} {
+    string match *3***\[4-6]* 0123456789
+} 1
+test string-11.9.10 {string match} {
+    string match *3***\[4-6] 0123456789
+} 0
+test string-11.9.11 {string match} {
+    string match *3***\[4-6] 0123456
+} 1
 test string-11.10 {string match} {
     string match *3*6*9 01234567890
+} 0
+test string-11.10.1 {string match} {
+    string match *3*6*89 01234567890
+} 0
+test string-11.10.2 {string match} {
+    string match *3*456*89 01234567890
+} 0
+test string-11.10.3 {string match} {
+    string match **3*456*89 01234567890
+} 0
+test string-11.10.4 {string match} {
+    string match *3*456***89 01234567890
 } 0
 test string-11.11 {string match} {
     string match a?c abc
@@ -979,6 +1024,21 @@ test string-11.38 {string match case, reverse range} {
 } 1
 test string-11.39 {string match, *\ case} {
     string match {*\abc} abc
+} 1
+test string-11.39.1 {string match, *\ case} {
+    string match {*ab\c} abc
+} 1
+test string-11.39.2 {string match, *\ case} {
+    string match {*ab\*} ab*
+} 1
+test string-11.39.3 {string match, *\ case} {
+    string match {*ab\*} abc
+} 0
+test string-11.39.4 {string match, *\ case} {
+    string match {*ab\\*} {ab\c}
+} 1
+test string-11.39.5 {string match, *\ case} {
+    string match {*ab\\*} {ab\*}
 } 1
 test string-11.40 {string match, *special case} {
     string match {*[ab]} abc
@@ -1131,6 +1191,11 @@ test string-12.21 {string range, regenerates correct reps, bug 1410553} {
     binary scan $rxCRC "H*" rxCRC_hex
     list $input_hex $rxBuffer_hex $rxCRC_hex
 } {000341 000341 0341}
+test string-12.22 {string range, shimmering binary/index} {
+    set s 0000000001
+    binary scan $s a* x
+    string range $s $s end
+} 000000001
 
 test string-13.1 {string repeat} {
     list [catch {string repeat} msg] $msg
@@ -1357,7 +1422,7 @@ test string-20.1 {string trimright errors} {
 } {1 {wrong # args: should be "string trimright string ?chars?"}}
 test string-20.2 {string trimright errors} {
     list [catch {string trimg a} msg] $msg
-} {1 {bad option "trimg": must be bytelength, compare, equal, first, index, is, last, length, map, match, range, repeat, replace, reverse, tolower, toupper, totitle, trim, trimleft, trimright, wordend, or wordstart}}
+} {1 {unknown or ambiguous subcommand "trimg": must be bytelength, compare, equal, first, index, is, last, length, map, match, range, repeat, replace, reverse, tolower, totitle, toupper, trim, trimleft, trimright, wordend, or wordstart}}
 test string-20.3 {string trimright} {
     string trimright "    XYZ      "
 } {    XYZ}
@@ -1413,7 +1478,7 @@ test string-21.14 {string wordend, unicode} {
 
 test string-22.1 {string wordstart} {
     list [catch {string word a} msg] $msg
-} {1 {ambiguous option "word": must be bytelength, compare, equal, first, index, is, last, length, map, match, range, repeat, replace, reverse, tolower, toupper, totitle, trim, trimleft, trimright, wordend, or wordstart}}
+} {1 {unknown or ambiguous subcommand "word": must be bytelength, compare, equal, first, index, is, last, length, map, match, range, repeat, replace, reverse, tolower, totitle, toupper, trim, trimleft, trimright, wordend, or wordstart}}
 test string-22.2 {string wordstart} {
     list [catch {string wordstart a} msg] $msg
 } {1 {wrong # args: should be "string wordstart string index"}}

@@ -1,4 +1,303 @@
-2007-11-20  Donal K. Fellows  <donal.k.fellows@manchester.ac.uk>
+2007-12-13  Donal K. Fellows  <donal.k.fellows@manchester.ac.uk>
+
+	*** 8.5.0 TAGGED FOR RELEASE ***
+
+	* doc/trace.n: Clarified documentation of enterstep and leavestep
+	traces, including adding example. [Bug 614282, 1701540, 1755984]
+
+2007-12-12  Don Porter	<dgp@users.sourceforge.net>
+
+	* doc/IntObj.3:	Update docs for the Tcl_GetBignumAndClearObj() ->
+	Tcl_TakeBignumFromObj() revision [TIP 298].  Added docs for the
+	Tcl_InitBignumFromDouble() routine. [Bug 1446971].
+
+	* changes:		Updated for 8.5.0 release.
+
+2007-12-10  Jeff Hobbs  <jeffh@ActiveState.com>
+
+	* generic/tclUtil.c (TclReToGlob): reduce escapes in conversion
+	when not necessary
+
+	* generic/tclInt.decls:  move TclByteArrayMatch and TclReToGlob
+	* generic/tclIntDecls.h: to tclInt.h from stubs.
+	* generic/tclStubInit.c: Add flags var to TclByteArrayMatch for
+	* generic/tclInt.h:      future extensibility
+	* generic/tcl.h:  define TCL_MATCH_EXACT doc for Tcl_StringCaseMatch.
+	* doc/StrMatch.3: It is compatible with existing usage.
+	* generic/tclExecute.c (INST_STR_MATCH): flag for TclByteArrayMatch
+	* generic/tclUtil.c (TclByteArrayMatch, TclStringMatchObj):
+	* generic/tclRegexp.c (Tcl_RegExpExecObj):
+	* generic/tclCmdMZ.c (StringMatchCmd): Use TclStringMatchObj
+	* tests/string.test (11.9.* 11.10.*): more tests
+
+2007-12-10  Joe English  <jenglish@users.sourceforge.net>
+
+	* doc/string.n, doc/UniCharIsAlpha.3: Fix markup errors.
+	* doc/CrtCommand.3, doc/CrtMathFnc.3, doc/FileSystem.3,
+	* doc/GetStdChan.3, doc/OpenFileChnl.3, doc/SetChanErr.3,
+	* doc/eval.n, doc/filename.n: Consistency: Move "KEYWORDS" section
+	after "SEE ALSO".
+
+2007-12-10  Daniel Steffen  <das@users.sourceforge.net>
+
+	* tools/genStubs.tcl:		fix numerous issues handling 'macosx',
+					'aqua' or 'x11' entries interleaved
+					with 'unix' entries [Bug 1834288]; add
+					genStubs::export command
+					[Tk FR 1716117]; cleanup formatting.
+
+	* generic/tcl.decls:		use new genstubs 'export' command to
+	* generic/tclInt.decls:		mark exported symbols not in stubs
+	* generic/tclTomMath.decls:	table [Tk FR 1716117]; cleanup
+					formatting.
+
+	* generic/tclDecls.h:		regen with new genStubs.tcl.
+	* generic/tclIntDecls.h:	[Bug 1834288]
+	* generic/tclIntPlatDecls.h:
+	* generic/tclPlatDecls.h:
+	* generic/tclStubInit.c:
+
+2007-12-09  Jeff Hobbs  <jeffh@ActiveState.com>
+
+	* tests/io.test, tests/chanio.test (io-73.1): Make sure to invalidate
+	* generic/tclIO.c (SetChannelFromAny):        internal rep only after
+	validating channel rep. [Bug 1847044]
+
+2007-12-08  Donal K. Fellows  <dkf@users.sf.net>
+
+	* doc/expr.n, doc/mathop.n: Improved the documentation of the
+	operators. [Bug 1823622]
+
+	* generic/tclBasic.c (builtInCmds): Corrected list of hidden and
+	* doc/interp.n (SAFE INTERPRETERS): exposed commands so that the
+	documentation and reality now match. [Bug 1662436]
+
+2007-12-07  Jeff Hobbs  <jeffh@ActiveState.com>
+
+	* generic/tclExecute.c (TclExecuteByteCode INST_REGEXP):
+	* generic/tclCompCmds.c (TclCompileRegexpCmd): Pass correct RE
+	compile flags at compile time, and use TCL_REG_NOSUB.
+
+	* generic/tclIOCmd.c (FinalizeIOCmdTSD, Tcl_PutsObjCmd): cache
+	stdout channel object for [puts $str] calls.
+
+2007-12-06  Don Porter	<dgp@users.sourceforge.net>
+
+	* README:	Remove mention of dead comp.lang.tcl.announce
+	newsgroup.  [Bug 1846433].
+
+	* unix/README:	Mention the stub library created by `make` and warn
+	about the effect of embedded paths in the installed binaries.
+	Thanks to Larry Virden.  [Bug 1794084]
+
+	* doc/AddErrInfo.3:	Documentation for the new routines in TIP 270.
+	* doc/Interp.3:
+	* doc/StringObj.3:
+
+2007-12-06  Don Porter	<dgp@users.sourceforge.net>
+
+	* doc/namespace.n:	Documentation for zero-argument form of
+	[namespace import] (TIP 261) [Bug 1596416]
+
+2007-12-06  Jeff Hobbs  <jeffh@ActiveState.com>
+
+	* generic/tclInt.h: add TclGetChannelFromObj decl
+	(TclMatchIsTrivial): simplify TclMatchIsTrivial to remove ] check.
+
+2007-12-06  Donal K. Fellows  <donal.k.fellows@manchester.ac.uk>
+
+
+	* generic/tclBasic.c (Tcl_CreateInterp): Simplify the setting up of
+	* generic/tclIOCmd.c (TclInitChanCmd):	 the [chan] ensemble. This
+	* library/init.tcl:			 gets rid of quite a bit of
+	code and makes it possible to understand the whole with less effort.
+
+	* generic/tclCompCmds.c (TclCompileEnsemble): Ensure that the right
+	number of tokens are copied. [Bug 1845320]
+
+	* generic/tclNamesp.c (TclMakeEnsemble): Added missing release of a
+	DString. [Bug 1845397]
+
+2007-12-05  Jeff Hobbs  <jeffh@ActiveState.com>
+
+	* generic/tclIO.h:    Create Tcl_Obj for Tcl channels to reduce
+	* generic/tclIO.c:    overhead in lookup by Tcl_GetChannel.  New
+	* generic/tclIOCmd.c: TclGetChannelFromObj for internal use.
+	* generic/tclIO.c (WriteBytes, WriteChars): add opt check to avoid
+	EOL translation when not linebuffered or using lf. [Bug 1845092]
+
+2007-12-05  Miguel Sofer  <msofer@users.sf.net>
+
+	* tests/stack.test: made the tests for stack overflow not care
+	about which mechanism caused the error (interp's recursion limit
+	or C-stack depth detector).
+
+2007-12-05  Jeff Hobbs  <jeffh@ActiveState.com>
+
+	* win/configure, win/tcl.m4 (LIBS_GUI): mingw needs -lole32
+	-loleaut32 but not msvc for Tk's [send]. [Bug 1844749]
+
+2007-12-05  Donal K. Fellows  <donal.k.fellows@manchester.ac.uk>
+
+	* generic/tclCmdIL.c (Tcl_LsearchObjCmd): Prevent shimmering crash
+	when -exact and -integer/-real are mixed. [Bug 1844789]
+
+2007-12-03  Donal K. Fellows  <dkf@users.sf.net>
+
+	* unix/tclUnixChan.c (CreateSocketAddress): Add extra #ifdef-fery to
+	make code compile on BSD 5. [Bug 1618235, again]
+
+2007-12-03  Don Porter	<dgp@users.sourceforge.net>
+
+	* library/tcltest/tcltest.tcl:	Bump tcltest to version 2.3.0 so that
+	* library/tcltest/pkgIndex.tcl: we release a stable tcltest with a
+	* unix/Makefile.in:	stable Tcl.
+	* win/Makefile.in:
+
+2007-12-03  Jeff Hobbs  <jeffh@ActiveState.com>
+
+	* win/configure, win/tcl.m4 (LIBS_GUI): remove ole32.lib oleaut32.lib
+
+2007-12-03  Donal K. Fellows  <donal.k.fellows@manchester.ac.uk>
+
+	* generic/tclCompCmds.c (TclCompileSwitchCmd): Adjusted the [switch]
+	* generic/tclCmdMZ.c (Tcl_SwitchObjCmd):       command so that when
+	passed two arguments, no check for options are performed. This is OK
+	since in the two-arg case, detecting an option would definitely lead
+	to a syntax error. [Patch 1836519]
+
+2007-11-29  Jeff Hobbs  <jeffh@ActiveState.com>
+
+	* win/makefile.vc: add ws2_32.lib to baselibs
+	* win/configure, win/tcl.m4: add ws2_32.lib / -lws2_32 to build.
+	* win/tclWinSock.c: remove dyn loading of winsock, assume that it is
+	always available now.
+
+2007-11-29  Don Porter	<dgp@users.sourceforge.net>
+
+	* generic/tclWinSock.c (InitializeHostName):	Correct error in
+	buffer length tracking. After gethostname() writes into a buffer,
+	convert only the written string to internal encoding, not the whole
+	buffer.
+
+2007-11-28  Don Porter	<dgp@users.sourceforge.net>
+
+	* generic/tclConfig.c:	Corrected failure of the [::foo::pkgconfig]
+	command to clean up registered configuration data when the query
+	command is deleted from the interp. [Bug 983501]
+
+	* generic/tclNamesp.c (Tcl_SetEnsembleMappingDict):	Added checks
+	that the dict value passed in is in the format required to make the
+	internals of ensembles work. [Bug 1436096]
+
+	* generic/tclIO.c:	Simplify test and improve accuracy of error
+	message in latest changes.
+
+2007-11-28  Pat Thoyts  <patthoyts@users.sourceforge.net>
+
+	* generic/tclIO.c: -eofchar must support no eofchar.
+
+2007-11-27  Miguel Sofer  <msofer@users.sf.net>
+
+	* generic/tclBasic.c: remove unneeded call in Tcl_CreateInterp, add
+	comments.
+
+2007-11-27  Don Porter	<dgp@users.sourceforge.net>
+
+	* win/tclWinSock.c:	Add mising encoding conversion of the [info
+	hostname] value from the system encoding to Tcl's internal encoding.
+
+	* doc/chan.n:		"Fix" the limitation on channel -eofchar
+	* doc/fconfigure.n:	values to single byte characters by documenting
+	* generic/tclIO.c:	it and making it fail loudly. Thanks to Stuart
+	* tests/chan.test:	Cassoff for contributing the fix. [Bug 800753]
+
+2007-11-26  Miguel Sofer  <msofer@users.sf.net>
+
+	* generic/tclBasic.c:
+	* generic/tclInt.h:
+	* unix/tclUnixInit.c:
+	* unix/tclUnixThrd.c: Fix stack checking via workaround for bug in
+	glibc's pthread_attr_get_np, patch from [Bug 1815573]. Many thanks to
+	Sergei Golovan (aka Teo) for detecting the bug and helping diagnose
+	and develop the fix.
+
+2007-11-24  Donal K. Fellows  <dkf@users.sf.net>
+
+	* generic/tclCompCmds.c (TclCompileDictAppendCmd): Fix bug in [dict
+	append] compiler which caused strange stack corruption. [Bug 1837392]
+
+2007-11-23  Andreas Kupries  <andreask@activestate.com>
+
+	* generic/tclIORChan.c: Fixed a problem with reflected channels. 'chan
+	postevent' is defined to work only from within the interpreter
+	containing the handler command. Sensible, we want only handler
+	commands to use it. It identifies the channel by handle. The channel
+	moves to a different interpreter or thread. The interpreter containing
+	the handler command doesn't know the channel any longer. 'chan
+	postevent' fails, not finding the channel any longer. Uhm.
+
+	Fixed by creating a second per-interpreter channel table, just for
+	reflected channels, where each interpreter remembers for which
+	reflected channels it has the handler command. This info does not move
+	with the channel itself. The table is updated by 'chan create', and
+	used by 'chan postevent'.
+
+	* tests/ioCmd.test: Updated the testsuite.
+
+2007-11-23  Jeff Hobbs  <jeffh@ActiveState.com>
+
+	* generic/tclVar.c (Tcl_ArrayObjCmd): handle the right data for
+	* tests/var.test (var-14.2):          [array names $var -glob $ptn]
+
+2007-11-23  Donal K. Fellows  <donal.k.fellows@manchester.ac.uk>
+
+	* generic/tclCmdMZ.c (String*Cmd, TclInitStringCmd): Rebuilt [string]
+	* generic/tclCompCmds.c (TclCompileString*Cmd): as an ensemble.
+
+2007-11-22  Donal K. Fellows  <dkf@users.sf.net>
+
+	* generic/tclDictObj.c (Dict*Cmd,TclInitDictCmd): Rebuilt the [dict]
+	* generic/tclCompCmds.c (TclCompileDict*Cmd): command as an ensemble.
+
+2007-11-22  Donal K. Fellows  <donal.k.fellows@manchester.ac.uk>
+
+	* generic/tclCmdMZ.c (Tcl_StringObjCmd): Rewrote the [string] and
+	* generic/tclDictObj.c (Tcl_DictObjCmd): [dict] implementations to be
+	ready for conversion to ensembles.
+
+	* tests/string.test (string-12.22): Flag shimmering bug found in
+	[string range].
+
+2007-11-21  Donal K. Fellows  <dkf@users.sf.net>
+
+	* generic/tclCompCmds.c (TclCompileEnsemble): Rewrote the ensemble
+	compiler to remove many of the limitations. Can now compile scripts
+	that use unique prefixes of subcommands, and which have mappings of a
+	command to multiple words (provided the first is a compilable command
+	of course).
+
+2007-11-21  Donal K. Fellows  <donal.k.fellows@manchester.ac.uk>
+
+	* generic/tclNamesp.c (TclMakeEnsemble): Factor out the code to set up
+	a core ensemble from a table of information about subcommands, ready
+	for reuse within the core.
+
+	* generic/various: Start to return more useful Error codes, currently
+	mainly on assorted lookup failures.
+
+2007-11-20  Donal K. Fellows  <dkf@users.sf.net>
+
+	* generic/tclDictObj.c: Changed the underlying implementation of the
+	hash table used in dictionaries to additionally keep all entries in
+	the hash table in a linked list, which is only ever added to at the
+	end. This makes iteration over all entries in the dictionary in
+	key insertion order a trivial operation, and so cleans up a great deal
+	of complexity relating to dictionary representation and stability of
+	iteration order.
+
+	***POTENTIAL INCOMPATIBILITY***
+	For any code that depended on the (strange) old iteration order.
 
 	* generic/tclConfig.c (QueryConfigObjCmd): Correct usage of
 	Tcl_WrongNumArgs.
@@ -620,9 +919,13 @@
 
 2007-10-02  Don Porter	<dgp@users.sourceforge.net>
 
-	* generic/tcl.h:	Bump version number to 8.5b1.1 to distinguish
-	* library/init.tcl:	CVS development snapshots from the 8.5b1
-	* unix/configure.in:	release.
+	[core-stabilizer-branch]
+
+	* README:               Bump version number to 8.5.0
+	* generic/tcl.h:
+	* library/init.tcl:
+	* tools/tcl.wse.in:
+	* unix/configure.in:
 	* unix/tcl.spec:
 	* win/configure.in:
 
@@ -1866,6 +2169,21 @@
 
 	* unix/tclUnixThrd.c (Tcl_JoinThread): fix for 64-bit handling of
 	pthread_join exit return code storage. [Bug 1712723]
+
+2007-05-22  Don Porter	<dgp@users.sourceforge.net>
+
+	[core-stabilizer-branch]
+
+	* unix/configure:       autoconf-2.59 (FC6 fork)
+	* win/configure:
+
+	* README:               Bump version number to 8.5b1
+	* generic/tcl.h:
+	* library/init.tcl:
+	* tools/tcl.wse.in:
+	* unix/configure.in:
+	* unix/tcl.spec:
+	* win/configure.in:
 
 2007-05-18  Don Porter	<dgp@users.sourceforge.net>
 
