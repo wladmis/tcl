@@ -3,7 +3,7 @@
 
 Name: tcl
 Version: 8.5.0
-Release: alt0.4
+Release: alt1
 
 Summary: A Tool Command Language (TCL) 
 License: BSD
@@ -12,18 +12,10 @@ Url: http://www.tcl.tk/
 
 Source: %name-%version-%release.tar
 
-BuildRequires(pre): rpm-build-tcl
+BuildRequires(pre): rpm-build-tcl >= 0.3-alt1
 %{?_with_test:BuildConflicts: tcl-vfs}
 
 Requires: lib%name = %version-%release
-Requires: tcl8.4
-
-# FIXME tm modules
-Provides: tcl(http) = 2.5.3
-Provides: tcl(msgcat) = 1.4.2
-Provides: tcl(palform) = 1.0.3
-Provides: tcl(platform::shell) = 1.1.3
-Provides: tcl(tcltest) = 2.3b1
 
 %package -n lib%name
 Summary: A Tool Command Language (TCL) - shared library
@@ -35,7 +27,7 @@ Provides: %_tcldatadir
 Summary: Header files and C programming manual for TCL
 Group: Development/C
 Requires: %name = %version-%release
-Requires: rpm-build-tcl
+Requires: rpm-build-tcl >= 0.3-alt1
 
 %description
 The Tcl (Tool Command Language) provides a powerful platform for
@@ -121,6 +113,9 @@ chmod +x %__tclsh
 %_man3dir/*
 
 %changelog
+* Wed Dec 19 2007 Sergey Bolshakov <sbolshakov@altlinux.ru> 8.5.0-alt1
+- 8.5.0 released
+
 * Sun Nov 25 2007 Sergey Bolshakov <sbolshakov@altlinux.ru> 8.5.0-alt0.4
 - garbage in tclConfig.sh fixed
 
