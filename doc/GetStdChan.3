@@ -22,7 +22,7 @@ Tcl_Channel
 \fBTcl_SetStdChannel\fR(\fIchannel, type\fR)
 .sp
 .SH ARGUMENTS
-.AS Tcl_Channel channel in
+.AS Tcl_Channel channel
 .AP int type in
 The identifier for the standard channel to retrieve or modify.  Must be one of
 \fBTCL_STDIN\fR, \fBTCL_STDOUT\fR, or \fBTCL_STDERR\fR.
@@ -78,7 +78,6 @@ standard error being last.
 .PP
 See \fBTcl_StandardChannels\fR for a general treatise about standard
 channels and the behaviour of the Tcl library with regard to them.
-.PP
 
 .SH "SEE ALSO"
 Tcl_Close(3), Tcl_CreateChannel(3), Tcl_Main(3), tclsh(1)

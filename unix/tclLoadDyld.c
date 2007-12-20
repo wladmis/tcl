@@ -16,7 +16,6 @@
  */
 
 #include "tclInt.h"
-#include "tclPort.h"
 
 #ifndef MODULE_SCOPE
 #define MODULE_SCOPE extern
@@ -62,7 +61,6 @@ extern char *dlerror(void) WEAK_IMPORT_ATTRIBUTE;
 #include <mach-o/swap.h>
 #include <mach-o/arch.h>
 #include <libkern/OSByteOrder.h>
-#undef panic
 #include <mach/mach.h>
 #include <stdbool.h>
 

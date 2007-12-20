@@ -1,8 +1,8 @@
 %def_without test
-%define major 8.4
+%define major 8.5
 
 Name: tcl
-Version: 8.4.16
+Version: 8.5.0
 Release: alt1
 
 Summary: A Tool Command Language (TCL) 
@@ -12,7 +12,7 @@ Url: http://www.tcl.tk/
 
 Source: %name-%version-%release.tar
 
-BuildRequires(pre): rpm-build-tcl
+BuildRequires(pre): rpm-build-tcl >= 0.3-alt1
 %{?_with_test:BuildConflicts: tcl-vfs}
 
 Requires: lib%name = %version-%release
@@ -27,7 +27,7 @@ Provides: %_tcldatadir
 Summary: Header files and C programming manual for TCL
 Group: Development/C
 Requires: %name = %version-%release
-Requires: rpm-build-tcl
+Requires: rpm-build-tcl >= 0.3-alt1
 
 %description
 The Tcl (Tool Command Language) provides a powerful platform for
@@ -66,8 +66,7 @@ This package includes header files and C programming manuals for Tcl.
 %build
 cd unix
 %__autoconf
-%configure
-sed -i  's@-DPACKAGE_[^ ]\+ @@g' tclConfig.sh
+%configure --disable-rpath --enable-threads
 make all %{?_with_test:test}
 
 %install 
@@ -77,6 +76,7 @@ mkdir -p %buildroot%_tcllibdir %buildroot%_tcldatadir
 install -p -m0644 -D tcl.m4 %buildroot%_datadir/aclocal/tea.m4
 ln -sf tclsh%major %buildroot%_bindir/tclsh
 ln -sf lib%name%major.so %buildroot%_libdir/lib%name.so
+ln -s ../unix/tclUnixPort.h %buildroot%_includedir/tcl/generic/tclUnixPort.h
 cat <<EOF > %__tclsh
 #!/bin/sh
 LD_LIBRARY_PATH=%buildroot%_libdir; export LD_LIBRARY_PATH
@@ -91,8 +91,8 @@ chmod +x %__tclsh
 %files
 %doc README license* ChangeLog changes
 %_bindir/tclsh*
-%dir %_tcldatadir/%name%major
-%_tcldatadir/%name%major/*
+%_tcldatadir/tcl8
+%_tcldatadir/%name%major
 %exclude %_tcldatadir/%name%major/ldAix
 %exclude %_tcldatadir/%name%major/%{name}AppInit.c
 %_man1dir/*
@@ -113,6 +113,21 @@ chmod +x %__tclsh
 %_man3dir/*
 
 %changelog
+* Wed Dec 19 2007 Sergey Bolshakov <sbolshakov@altlinux.ru> 8.5.0-alt1
+- 8.5.0 released
+
+* Sun Nov 25 2007 Sergey Bolshakov <sbolshakov@altlinux.ru> 8.5.0-alt0.4
+- garbage in tclConfig.sh fixed
+
+* Fri Nov 23 2007 Sergey Bolshakov <sbolshakov@altlinux.ru> 8.5.0-alt0.3
+- 8.5b3 released
+
+* Tue Nov 20 2007 Sergey Bolshakov <sbolshakov@altlinux.ru> 8.5.0-alt0.2
+- 8.5b2 released
+
+* Mon Nov 19 2007 Sergey Bolshakov <sbolshakov@altlinux.ru> 8.5.0-alt0.1
+- 8.5b1 released
+
 * Tue Sep 25 2007 Sergey Bolshakov <sbolshakov@altlinux.ru> 8.4.16-alt1
 - 8.4.16
 - added rpm-build-tcl to tcl-devel deps (at@)
@@ -235,3 +250,6 @@ chmod +x %__tclsh
 - ps patch from Viktor Wagner
 - bad requires patch
 
+# local variables:
+# compile-command: "gear --commit --hasher -- hsh --repo=tcl"
+# end:

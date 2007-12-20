@@ -53,6 +53,19 @@ provider tcl {
     probe proc__args(char* name, char* arg1, char* arg2, char* arg3,
 	    char* arg4, char* arg5, char* arg6, char* arg7, char* arg8,
 	    char* arg9);
+    /*
+     *	tcl*:::proc-info probe
+     *	    triggered before proc-entry probe, gives access to TIP 280
+     *	    information for the proc invocation (i.e. [info frame 0])
+     *		arg0: TIP 280 cmd			(string)
+     *		arg1: TIP 280 type			(string)
+     *		arg2: TIP 280 proc			(string)
+     *		arg3: TIP 280 file			(string)
+     *		arg4: TIP 280 line			(int)
+     *		arg5: TIP 280 level			(int)
+     */
+    probe proc__info(char* cmd, char* type, char* proc, char* file, int line,
+	    int level);
 
     /***************************** cmd probes ******************************/
     /*
@@ -89,6 +102,19 @@ provider tcl {
     probe cmd__args(char* name, char* arg1, char* arg2, char* arg3,
 	    char* arg4, char* arg5, char* arg6, char* arg7, char* arg8,
 	    char* arg9);
+    /*
+     *	tcl*:::cmd-info probe
+     *	    triggered before cmd-entry probe, gives access to TIP 280
+     *	    information for the command invocation (i.e. [info frame 0])
+     *		arg0: TIP 280 cmd			(string)
+     *		arg1: TIP 280 type			(string)
+     *		arg2: TIP 280 proc			(string)
+     *		arg3: TIP 280 file			(string)
+     *		arg4: TIP 280 line			(int)
+     *		arg5: TIP 280 level			(int)
+     */
+    probe cmd__info(char* cmd, char* type, char* proc, char* file, int line,
+	    int level);
 
     /***************************** inst probes *****************************/
     /*
@@ -159,6 +185,10 @@ struct Tcl_Obj {
 	    void *ptr1;
 	    void *ptr2;
 	} twoPtrValue;
+	struct {
+	    void *ptr;
+	    unsigned long value;
+	} ptrAndLongRep;
     } internalRep;
 };
 
