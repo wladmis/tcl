@@ -12,7 +12,7 @@ Url: http://www.tcl.tk/
 
 Source: %name-%version-%release.tar
 
-BuildRequires(pre): rpm-build-tcl >= 0.3-alt1
+BuildRequires(pre): rpm-build-tcl >= 0.4-alt1
 %{?_with_test:BuildConflicts: tcl-vfs}
 
 Requires: lib%name = %version-%release
@@ -113,7 +113,7 @@ chmod +x %__tclsh
 %_man3dir/*
 
 %changelog
-* Wed Dec 19 2007 Sergey Bolshakov <sbolshakov@altlinux.ru> 8.5.0-alt1
+* Thu Dec 20 2007 Sergey Bolshakov <sbolshakov@altlinux.ru> 8.5.0-alt1
 - 8.5.0 released
 
 * Sun Nov 25 2007 Sergey Bolshakov <sbolshakov@altlinux.ru> 8.5.0-alt0.4
