@@ -3,7 +3,7 @@
 
 Name: tcl
 Version: 8.5.0
-Release: alt1
+Release: alt2
 
 Summary: A Tool Command Language (TCL) 
 License: BSD
@@ -113,6 +113,9 @@ chmod +x %__tclsh
 %_man3dir/*
 
 %changelog
+* Thu Dec 27 2007 Sergey Bolshakov <sbolshakov@altlinux.ru> 8.5.0-alt2
+- fixed backref handling in regsub [SF #1857126]
+
 * Thu Dec 20 2007 Sergey Bolshakov <sbolshakov@altlinux.ru> 8.5.0-alt1
 - 8.5.0 released
 
