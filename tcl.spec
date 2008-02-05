@@ -2,8 +2,8 @@
 %define major 8.5
 
 Name: tcl
-Version: 8.5.0
-Release: alt2
+Version: 8.5.1
+Release: alt1
 
 Summary: A Tool Command Language (TCL) 
 License: BSD
@@ -113,6 +113,9 @@ chmod +x %__tclsh
 %_man3dir/*
 
 %changelog
+* Tue Feb  5 2008 Sergey Bolshakov <sbolshakov@altlinux.ru> 8.5.1-alt1
+- 8.5.1 released
+
 * Thu Dec 27 2007 Sergey Bolshakov <sbolshakov@altlinux.ru> 8.5.0-alt2
 - fixed backref handling in regsub [SF #1857126]
 
