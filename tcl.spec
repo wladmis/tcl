@@ -2,7 +2,7 @@
 %define major 8.5
 
 Name: tcl
-Version: 8.5.1
+Version: 8.5.2
 Release: alt1
 
 Summary: A Tool Command Language (TCL) 
@@ -113,6 +113,9 @@ chmod +x %__tclsh
 %_man3dir/*
 
 %changelog
+* Sat Mar 29 2008 Sergey Bolshakov <sbolshakov@altlinux.ru> 8.5.2-alt1
+- 8.5.2 released
+
 * Tue Feb  5 2008 Sergey Bolshakov <sbolshakov@altlinux.ru> 8.5.1-alt1
 - 8.5.1 released
 
