@@ -807,7 +807,7 @@ install-libraries: libraries $(INSTALL_TZDATA) install-msgs
 	done;
 	@if [ -n "$(TCL_MODULE_PATH)" -a -f $(TOP_DIR)/library/tm.tcl ]; then \
 	    echo "Customizing tcl module path"; \
-	    echo "::tcl::tm::roots {$(TCL_MODULE_PATH)}" >> \
+	    echo "if {![interp issafe]} { ::tcl::tm::roots {$(TCL_MODULE_PATH)} }" >> \
 	        "$(SCRIPT_INSTALL_DIR)"/tm.tcl; \
 	fi
 
@@ -885,7 +885,7 @@ Makefile: $(UNIX_DIR)/Makefile.in $(DLTEST_DIR)/Makefile.in
 
 clean:
 	rm -f *.a *.o libtcl* core errs *~ \#* TAGS *.E a.out \
-		errors tclsh tcltest lib.exp Tcl
+		errors tclsh tcltest lib.exp Tcl @DTRACE_HDR@
 	cd dltest ; $(MAKE) clean
 
 distclean: clean
@@ -1451,7 +1451,7 @@ tclMacOSXNotify.o: $(MAC_OSX_DIR)/tclMacOSXNotify.c
 
 # DTrace support
 
-$(TCL_OBJS): @DTRACE_HDR@
+$(TCL_OBJS) $(STUB_LIB_OBJS) $(TCLSH_OBJS) $(TCLTEST_OBJS) $(XTTEST_OBJS): @DTRACE_HDR@
 
 $(DTRACE_HDR): $(DTRACE_SRC)
 	$(DTRACE) -h $(DTRACE_SWITCHES) -o $@ -s $(DTRACE_SRC)

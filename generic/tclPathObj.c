@@ -1596,7 +1596,21 @@ Tcl_FSGetTranslatedPath(
     srcFsPathPtr = PATHOBJ(pathPtr);
     if (srcFsPathPtr->translatedPathPtr == NULL) {
 	if (PATHFLAGS(pathPtr) != 0) {
-	    retObj = Tcl_FSGetNormalizedPath(interp, pathPtr);
+	    /*
+	     * We lack a translated path result, but we have a directory
+	     * (cwdPtr) and a tail (normPathPtr), and if we join the
+	     * translated version of cwdPtr to normPathPtr, we'll get the
+	     * translated result we need, and can store it for future use.
+	     */
+
+	    Tcl_Obj *translatedCwdPtr = Tcl_FSGetTranslatedPath(interp,
+		    srcFsPathPtr->cwdPtr);
+
+	    retObj = Tcl_FSJoinToPath(translatedCwdPtr, 1,
+		    &(srcFsPathPtr->normPathPtr));
+	    srcFsPathPtr->translatedPathPtr = retObj;
+	    Tcl_IncrRefCount(retObj);
+	    Tcl_DecrRefCount(translatedCwdPtr);
 	} else {
 	    /*
 	     * It is a pure absolute, normalized path object. This is
@@ -1759,6 +1773,16 @@ Tcl_FSGetNormalizedPath(
 
 	if (pathType == TCL_PATH_RELATIVE) {
 	    Tcl_Obj *origDir = fsPathPtr->cwdPtr;
+
+	    /*
+	     * NOTE: here we are (dangerously?) assuming that origDir points
+	     * to a Tcl_Obj with Tcl_ObjType == &tclFsPathType .  The
+	     *     pathType = Tcl_FSGetPathType(fsPathPtr->cwdPtr);
+	     * above that set the pathType value should have established
+	     * that, but it's far less clear on what basis we know there's
+	     * been no shimmering since then.
+	     */
+
 	    FsPath *origDirFsPathPtr = PATHOBJ(origDir);
 
 	    fsPathPtr->cwdPtr = origDirFsPathPtr->cwdPtr;
@@ -1855,6 +1879,7 @@ Tcl_FSGetNormalizedPath(
     if (fsPathPtr->normPathPtr == NULL) {
 	ClientData clientData = NULL;
 	Tcl_Obj *useThisCwd = NULL;
+	int pureNormalized = 1;
 
 	/*
 	 * Since normPathPtr is NULL, but this is a valid path object, we know
@@ -1872,7 +1897,20 @@ Tcl_FSGetNormalizedPath(
 	 * might loop back through here.
 	 */
 
-	if (path[0] != '\0') {
+	if (path[0] == '\0') {
+	    /*
+	     * Special handling for the empty string value.  This one is
+	     * very weird with [file normalize {}] => {}.  (The reasoning
+	     * supporting this is unknown to DGP, but he fears changing it.)
+	     * Attempt here to keep the expectations of other parts of
+	     * Tcl_Filesystem code about state of the FsPath fields satisfied.
+	     *
+	     * In particular, capture the cwd value and save so it can be
+	     * stored in the cwdPtr field below.
+	     */
+	    useThisCwd = Tcl_FSGetCwd(interp);
+
+	} else {
 	    /*
 	     * We don't ask for the type of 'pathPtr' here, because that is
 	     * not correct for our purposes when we have a path like '~'. Tcl
@@ -1890,6 +1928,7 @@ Tcl_FSGetNormalizedPath(
 		    return NULL;
 		}
 
+		pureNormalized = 0;
 		Tcl_DecrRefCount(absolutePath);
 		absolutePath = Tcl_FSJoinToPath(useThisCwd, 1, &absolutePath);
 		Tcl_IncrRefCount(absolutePath);
@@ -1909,6 +1948,7 @@ Tcl_FSGetNormalizedPath(
 		if (absolutePath == NULL) {
 		    return NULL;
 		}
+		pureNormalized = 0;
 #endif /* __WIN32__ */
 	    }
 	}
@@ -1930,7 +1970,7 @@ Tcl_FSGetNormalizedPath(
 	 * is an absolute path).
 	 */
 
-	if (useThisCwd == NULL) {
+	if (pureNormalized) {
 	    if (!strcmp(TclGetString(fsPathPtr->normPathPtr),
 		    TclGetString(pathPtr))) {
 		/*
@@ -1946,7 +1986,8 @@ Tcl_FSGetNormalizedPath(
 
 		fsPathPtr->normPathPtr = pathPtr;
 	    }
-	} else {
+	} 
+	if (useThisCwd != NULL) {
 	    /*
 	     * We just need to free an object we allocated above for relative
 	     * paths (this was returned by Tcl_FSJoinToPath above), and then

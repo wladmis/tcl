@@ -20,6 +20,7 @@
 #include "tclCompile.h"
 #include "tommath.h"
 #include <float.h>
+#include <math.h>
 
 /*
  * Table of all object types.
