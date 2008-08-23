@@ -915,6 +915,7 @@ GrowEvaluationStack(
     int newBytes, newElems, currElems;
     int needed = growth - (esPtr->endPtr - esPtr->tosPtr);
     Tcl_Obj **markerPtr = esPtr->markerPtr, **memStart;
+    int moveWords = 0;
 
     if (move) {
 	if (!markerPtr) {
@@ -949,9 +950,9 @@ GrowEvaluationStack(
      */
 
     if (move) {
-	move = esPtr->tosPtr - MEMSTART(markerPtr) + 1;
+	moveWords = esPtr->tosPtr - MEMSTART(markerPtr) + 1;
     }
-    needed = growth + move + WALLOCALIGN - 1;
+    needed = growth + moveWords + WALLOCALIGN - 1;
 
     /*
      * Check if there is enough room in the next stack (if there is one, it
@@ -1011,8 +1012,8 @@ GrowEvaluationStack(
     esPtr->tosPtr = memStart - 1;
     
     if (move) {
-	memcpy(memStart, MEMSTART(markerPtr), move*sizeof(Tcl_Obj *));
-	esPtr->tosPtr += move;
+	memcpy(memStart, MEMSTART(markerPtr), moveWords*sizeof(Tcl_Obj *));
+	esPtr->tosPtr += moveWords;
 	oldPtr->markerPtr = (Tcl_Obj **) *markerPtr;
 	oldPtr->tosPtr = markerPtr-1;
     }
@@ -1753,6 +1754,8 @@ TclExecuteByteCode(
     bcFramePtr->cmd.str.cmd = NULL;
     bcFramePtr->cmd.str.len = 0;
 
+    TclArgumentBCEnter((Tcl_Interp*) iPtr,codePtr,bcFramePtr);
+
 #ifdef TCL_COMPILE_DEBUG
     if (tclTraceExec >= 2) {
 	PrintByteCodeInfo(codePtr);
@@ -2048,6 +2051,16 @@ TclExecuteByteCode(
 	    CACHE_STACK_INFO();
 	    if (result != TCL_OK) {
 		cleanup = 0;
+		if (result == TCL_ERROR) {
+		    /*
+		     * Tcl_EvalEx already did the task of logging
+		     * the error to the stack trace for us, so set
+		     * a flag to prevent the TEBC exception handling
+		     * machinery from trying to do it again.
+		     * Tcl Bug 2037338.  See test execute-8.4.
+		     */
+		    iPtr->flags |= ERR_ALREADY_LOGGED;
+		}
 		goto processExceptionReturn;
 	    }
 	    opnd = TclGetUInt4AtPtr(pc+1);
@@ -7388,6 +7401,8 @@ TclExecuteByteCode(
 	    Tcl_Panic("TclExecuteByteCode execution failure: end stack top < start stack top");
 	}
     }
+
+    TclArgumentBCRelease((Tcl_Interp*) iPtr,codePtr);
 
     /*
      * Restore the stack to the state it had previous to this bytecode.

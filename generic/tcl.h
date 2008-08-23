@@ -60,10 +60,10 @@ extern "C" {
 #define TCL_MAJOR_VERSION   8
 #define TCL_MINOR_VERSION   5
 #define TCL_RELEASE_LEVEL   TCL_FINAL_RELEASE
-#define TCL_RELEASE_SERIAL  3
+#define TCL_RELEASE_SERIAL  4
 
 #define TCL_VERSION	    "8.5"
-#define TCL_PATCH_LEVEL	    "8.5.3"
+#define TCL_PATCH_LEVEL	    "8.5.4"
 
 /*
  * The following definitions set up the proper options for Windows compilers.
@@ -172,26 +172,27 @@ extern "C" {
 
 #if (defined(__WIN32__) && (defined(_MSC_VER) || (__BORLANDC__ >= 0x0550) || defined(__LCC__) || defined(__WATCOMC__) || (defined(__GNUC__) && defined(__declspec))))
 #   define HAVE_DECLSPEC 1
-#endif
-
-#ifdef STATIC_BUILD
-#   define DLLIMPORT
-#   define DLLEXPORT
-#   if HAVE_DECLSPEC && defined(_DLL)
-#	define CRTIMPORT __declspec(dllimport)
+#   ifdef STATIC_BUILD
+#       define DLLIMPORT
+#       define DLLEXPORT
+#       ifdef _DLL
+#           define CRTIMPORT __declspec(dllimport)
+#       else
+#           define CRTIMPORT
+#       endif
 #   else
-#	define CRTIMPORT
+#       define DLLIMPORT __declspec(dllimport)
+#       define DLLEXPORT __declspec(dllexport)
+#       define CRTIMPORT __declspec(dllimport)
 #   endif
 #else
-#   if HAVE_DECLSPEC
-#	define DLLIMPORT __declspec(dllimport)
-#	define DLLEXPORT __declspec(dllexport)
-#	define CRTIMPORT __declspec(dllimport)
+#   define DLLIMPORT
+#   if defined(__GNUC__) && __GNUC__ > 3
+#       define DLLEXPORT __attribute__ ((visibility("default")))
 #   else
-#	define DLLIMPORT
-#	define DLLEXPORT
-#	define CRTIMPORT
+#       define DLLEXPORT
 #   endif
+#   define CRTIMPORT
 #endif
 
 /*

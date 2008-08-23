@@ -1044,7 +1044,7 @@ InfoFrameCmd(
 	int levels =
 		(iPtr->cmdFramePtr == NULL ? 0 : iPtr->cmdFramePtr->level);
 
-	Tcl_SetIntObj(Tcl_GetObjResult(interp), levels);
+	Tcl_SetObjResult(interp, Tcl_NewIntObj (levels));
 	return TCL_OK;
     } else if (objc != 2) {
 	Tcl_WrongNumArgs(interp, 1, objv, "?number?");
@@ -1158,7 +1158,7 @@ TclInfoFrame(
 	 */
 
 	ADD_PAIR("type", Tcl_NewStringObj(typeString[framePtr->type], -1));
-	ADD_PAIR("line", Tcl_NewIntObj(framePtr->line[0]));
+	ADD_PAIR("line", Tcl_NewIntObj(1));
 
 	/*
 	 * We put a duplicate of the command list obj into the result to
@@ -1202,7 +1202,9 @@ TclInfoFrame(
 	 */
 
 	ADD_PAIR("type", Tcl_NewStringObj(typeString[fPtr->type], -1));
-	ADD_PAIR("line", Tcl_NewIntObj(fPtr->line[0]));
+	if (fPtr->line) {
+	    ADD_PAIR("line", Tcl_NewIntObj(fPtr->line[0]));
+	}
 
 	if (fPtr->type == TCL_LOCATION_SOURCE) {
 	    ADD_PAIR("file", fPtr->data.eval.path);
