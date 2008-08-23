@@ -2,7 +2,7 @@
 %define major 8.5
 
 Name: tcl
-Version: 8.5.3
+Version: 8.5.4
 Release: alt1
 
 Summary: A Tool Command Language (TCL) 
@@ -69,10 +69,12 @@ cd unix
 %configure --disable-rpath --enable-threads
 make all %{?_with_test:test}
 
-%install 
+%install
+%define docdir %_defaultdocdir/%name-%version
 %define __tclsh %buildroot%_bindir/.tclsh
+
 %make_install INSTALL_ROOT=%buildroot install -C unix
-mkdir -p %buildroot%_tcllibdir %buildroot%_tcldatadir
+mkdir -p %buildroot%_tcllibdir %buildroot%_tcldatadir %buildroot%docdir
 install -p -m0644 -D tcl.m4 %buildroot%_datadir/aclocal/tea.m4
 ln -sf tclsh%major %buildroot%_bindir/tclsh
 ln -sf lib%name%major.so %buildroot%_libdir/lib%name.so
@@ -84,17 +86,25 @@ TCL_LIBRARY=%buildroot%_tcldatadir/%name%major; export TCL_LIBRARY
 exec %buildroot%_bindir/tclsh "\$@"
 EOF
 chmod +x %__tclsh
+bzip -9f ChangeLog changes
+install README license.terms changes.bz2 ChangeLog.bz2 %buildroot%docdir
 
 %post -n lib%{name} -p %post_ldconfig
 %postun -n lib%{name} -p %postun_ldconfig
 
 %files
-%doc README license* ChangeLog changes
+%dir %docdir
+%docdir/README
+%docdir/license.terms
+%docdir/changes.*
+
 %_bindir/tclsh*
+
 %_tcldatadir/tcl8
 %_tcldatadir/%name%major
 %exclude %_tcldatadir/%name%major/ldAix
 %exclude %_tcldatadir/%name%major/%{name}AppInit.c
+
 %_man1dir/*
 %_mandir/mann/*
 
@@ -104,6 +114,7 @@ chmod +x %__tclsh
 %_libdir/lib%name%major.so
 
 %files devel
+%docdir/ChangeLog.*
 %_includedir/*
 %_libdir/lib%name.so
 %_libdir/lib%{name}stub%{major}.a
@@ -113,6 +124,9 @@ chmod +x %__tclsh
 %_man3dir/*
 
 %changelog
+* Sat Aug 23 2008 Sergey Bolshakov <sbolshakov@altlinux.ru> 8.5.4-alt1
+- 8.5.4 released
+
 * Mon Jun 30 2008 Sergey Bolshakov <sbolshakov@altlinux.ru> 8.5.3-alt1
 - 8.5.3 released
 
