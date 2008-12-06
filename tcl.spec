@@ -3,7 +3,7 @@
 
 Name: tcl
 Version: 8.5.5
-Release: alt1
+Release: alt2
 
 Summary: A Tool Command Language (TCL) 
 License: BSD
@@ -87,10 +87,7 @@ exec %buildroot%_bindir/tclsh "\$@"
 EOF
 chmod +x %__tclsh
 bzip -9f ChangeLog changes
-install README license.terms changes.bz2 ChangeLog.bz2 %buildroot%docdir
-
-%post -n lib%{name} -p %post_ldconfig
-%postun -n lib%{name} -p %postun_ldconfig
+install -pm0644 README license.terms changes.bz2 ChangeLog.bz2 %buildroot%docdir
 
 %files
 %dir %docdir
@@ -124,6 +121,9 @@ install README license.terms changes.bz2 ChangeLog.bz2 %buildroot%docdir
 %_man3dir/*
 
 %changelog
+* Sat Dec  6 2008 Sergey Bolshakov <sbolshakov@altlinux.ru> 8.5.5-alt2
+- obsolete by filetriggers macros removed
+
 * Tue Oct 14 2008 Sergey Bolshakov <sbolshakov@altlinux.ru> 8.5.5-alt1
 - 8.5.5 released
 
