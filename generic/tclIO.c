@@ -220,6 +220,10 @@ static Tcl_ObjType tclChannelType = {
     ((ChannelState *) (objPtr)->internalRep.otherValuePtr)
 #define SET_CHANNELSTATE(objPtr, storePtr) \
     ((objPtr)->internalRep.otherValuePtr = (void *) (storePtr))
+#define GET_CHANNELINTERP(objPtr) \
+    ((Interp *) (objPtr)->internalRep.twoPtrValue.ptr2)
+#define SET_CHANNELINTERP(objPtr, storePtr) \
+    ((objPtr)->internalRep.twoPtrValue.ptr2 = (void *) (storePtr))
 
 #define BUSY_STATE(st,fl) \
      ((((st)->csPtrR) && ((fl) & TCL_READABLE)) || \
@@ -299,7 +303,7 @@ TclFinalizeIOSubsystem(void)
 		statePtr != NULL;
 		statePtr = statePtr->nextCSPtr) {
 	    chanPtr = statePtr->topChanPtr;
-	    if (!(statePtr->flags & CHANNEL_DEAD)) {
+	    if (!(statePtr->flags & (CHANNEL_INCLOSE|CHANNEL_CLOSED|CHANNEL_DEAD))) {
 		active = 1;
 		break;
 	    }
@@ -9810,8 +9814,11 @@ Tcl_IsChannelExisting(
 	    name = statePtr->channelName;
 	}
 
+	/* Bug 2333466. Include \0 in the compare to prevent partial matching
+	 * on prefixes.
+	 */
 	if ((*chanName == *name) &&
-		(memcmp(name, chanName, (size_t) chanNameLen) == 0)) {
+		(memcmp(name, chanName, (size_t) chanNameLen+1) == 0)) {
 	    return 1;
 	}
     }
@@ -10609,8 +10616,11 @@ DupChannelIntRep(
     register Tcl_Obj *copyPtr)	/* Object with internal rep to set. Must not
 				 * currently have an internal rep.*/
 {
-    ChannelState *statePtr = GET_CHANNELSTATE(srcPtr);
+    ChannelState *statePtr  = GET_CHANNELSTATE(srcPtr);
+    Interp       *interpPtr = GET_CHANNELINTERP(srcPtr);
+
     SET_CHANNELSTATE(copyPtr, statePtr);
+    SET_CHANNELINTERP(copyPtr, interpPtr);
     Tcl_Preserve((ClientData) statePtr);
     copyPtr->typePtr = &tclChannelType;
 }
@@ -10638,15 +10648,21 @@ SetChannelFromAny(
     register Tcl_Obj *objPtr)	/* The object to convert. */
 {
     ChannelState *statePtr;
+    Interp       *interpPtr;
 
     if (objPtr->typePtr == &tclChannelType) {
 	/*
 	 * The channel is valid until any call to DetachChannel occurs.
 	 * Ensure consistency checks are done.
 	 */
-	statePtr = GET_CHANNELSTATE(objPtr);
+	statePtr  = GET_CHANNELSTATE(objPtr);
+	interpPtr = GET_CHANNELINTERP(objPtr);
 	if (statePtr->flags & (CHANNEL_TAINTED|CHANNEL_CLOSED)) {
 	    ResetFlag(statePtr, CHANNEL_TAINTED);
+	    Tcl_Release((ClientData) statePtr);
+	    UpdateStringOfChannel(objPtr);
+	    objPtr->typePtr = NULL;
+	} else if (interpPtr != (Interp*) interp) {
 	    Tcl_Release((ClientData) statePtr);
 	    UpdateStringOfChannel(objPtr);
 	    objPtr->typePtr = NULL;
@@ -10672,6 +10688,7 @@ SetChannelFromAny(
 	statePtr = ((Channel *)chan)->state;
 	Tcl_Preserve((ClientData) statePtr);
 	SET_CHANNELSTATE(objPtr, statePtr);
+	SET_CHANNELINTERP(objPtr, interp);
 	objPtr->typePtr = &tclChannelType;
     }
     return TCL_OK;
