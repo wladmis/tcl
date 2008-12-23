@@ -2,8 +2,8 @@
 %define major 8.5
 
 Name: tcl
-Version: 8.5.5
-Release: alt2
+Version: 8.5.6
+Release: alt1
 
 Summary: A Tool Command Language (TCL) 
 License: BSD
@@ -65,7 +65,7 @@ This package includes header files and C programming manuals for Tcl.
 
 %build
 cd unix
-%__autoconf
+autoconf
 %configure --disable-rpath --enable-threads
 make all %{?_with_test:test}
 
@@ -121,6 +121,9 @@ install -pm0644 README license.terms changes.bz2 ChangeLog.bz2 %buildroot%docdir
 %_man3dir/*
 
 %changelog
+* Tue Dec 23 2008 Sergey Bolshakov <sbolshakov@altlinux.ru> 8.5.6-alt1
+- 8.5.6 released
+
 * Sat Dec  6 2008 Sergey Bolshakov <sbolshakov@altlinux.ru> 8.5.5-alt2
 - obsolete by filetriggers macros removed
 
