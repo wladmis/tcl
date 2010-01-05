@@ -2,8 +2,8 @@
 %define major 8.5
 
 Name: tcl
-Version: 8.5.7
-Release: alt2
+Version: 8.5.8
+Release: alt1
 
 Summary: A Tool Command Language (TCL) 
 License: BSD
@@ -120,6 +120,9 @@ install -pm0644 README license.terms changes.bz2 ChangeLog.bz2 %buildroot%docdir
 %_man3dir/*
 
 %changelog
+* Tue Jan  5 2010 Sergey Bolshakov <sbolshakov@altlinux.ru> 8.5.8-alt1
+- 8.5.8 released
+
 * Sat Apr 18 2009 Sergey Bolshakov <sbolshakov@altlinux.ru> 8.5.7-alt2
 - 8.5.7 released
 
