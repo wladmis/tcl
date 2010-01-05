@@ -909,7 +909,7 @@ TraceVariableObjCmd(
 	    }
 	    ctvarPtr->traceCmdInfo.length = length;
 	    flags |= TCL_TRACE_UNSETS | TCL_TRACE_RESULT_OBJECT;
-	    strcpy(ctvarPtr->traceCmdInfo.command, command);
+	    memcpy(ctvarPtr->traceCmdInfo.command, command, length);
 	    ctvarPtr->traceInfo.traceProc = TraceVarProc;
 	    ctvarPtr->traceInfo.clientData = (ClientData)
 		    &ctvarPtr->traceCmdInfo;
