@@ -3,7 +3,7 @@
 
 Name: tcl
 Version: 8.5.9
-Release: alt1
+Release: alt1.1
 
 Summary: A Tool Command Language (TCL) 
 License: BSD
@@ -120,6 +120,9 @@ install -pm0644 README license.terms changes.bz2 ChangeLog.bz2 %buildroot%docdir
 %_man3dir/*
 
 %changelog
+* Mon Feb 14 2011 Alexey Tourbin <at@altlinux.ru> 8.5.9-alt1.1
+- rebuilt for debuginfo
+
 * Mon Sep 13 2010 Sergey Bolshakov <sbolshakov@altlinux.ru> 8.5.9-alt1
 - 8.5.9 released
 
