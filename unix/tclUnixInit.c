@@ -1093,9 +1093,19 @@ TclpGetCStackParams(
 	if (stackGrowsDown) {
 	    tsdPtr->stackBound = (int *) ((char *)tsdPtr->outerVarPtr -
 		    stackSize);
+	    if (tsdPtr->stackBound > tsdPtr->outerVarPtr) {
+	    	/* Overflow, that should never happen, just set it to NULL.
+	    	 * See [Bug #3166410] */
+	    	tsdPtr->stackBound = NULL;
+	    }
 	} else {
 	    tsdPtr->stackBound = (int *) ((char *)tsdPtr->outerVarPtr +
 		    stackSize);
+	    if (tsdPtr->stackBound < tsdPtr->outerVarPtr) {
+	    	/* Overflow, that should never happen, just set it to NULL.
+	    	 * See [Bug #3166410] */
+	    	tsdPtr->stackBound = NULL;
+	    }
 	}
     }
 
