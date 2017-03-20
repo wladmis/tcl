@@ -1,11 +1,10 @@
-# $Id$
 # This file is the basis for a binary Tcl RPM for Linux.
 
 %{!?directory:%define directory /usr/local}
 
 Name:          tcl
 Summary:       Tcl scripting language development environment
-Version:       8.5.9
+Version:       8.6.6
 Release:       2
 License:       BSD
 Group:         Development/Languages
@@ -31,7 +30,7 @@ CFLAGS="%optflags" ./configure \
 	--prefix=%{directory} \
 	--exec-prefix=%{directory} \
 	--libdir=%{directory}/%{_lib}
-make 
+make
 
 %install
 cd unix

@@ -70,7 +70,3 @@
 #endif
 
 #endif
-
-/* $Source: /srv/pub/scm/cvs.sf.net/tcl/libtommath/tommath_superclass.h,v $ */
-/* $Revision: 1.3 $ */
-/* $Date: 2005/09/26 18:27:14 $ */

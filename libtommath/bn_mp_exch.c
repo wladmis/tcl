@@ -28,7 +28,3 @@ mp_exch (mp_int * a, mp_int * b)
   *b = t;
 }
 #endif
-
-/* $Source: /srv/pub/scm/cvs.sf.net/tcl/libtommath/bn_mp_exch.c,v $ */
-/* $Revision: 1.1.1.3 $ */
-/* $Date: 2006/12/01 00:08:11 $ */
