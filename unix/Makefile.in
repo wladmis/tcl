@@ -949,7 +949,8 @@ install-headers:
 		fi; \
 	    done;
 	@echo "Installing header files to $(INCLUDE_INSTALL_DIR)/";
-	@for i in tcl.h tclDecls.h tclOO.h tclOODecls.h tclPlatDecls.h tclTomMath.h tclTomMathDecls.h; \
+	@for i in tcl.h tclDecls.h tclOO.h tclOODecls.h tclPlatDecls.h tclTomMath.h tclTomMathDecls.h \
+		tclIntDecls.h tclIntPlatDecls.h tclOOInt.h tclOOIntDecls.h; \
 	    do \
 	    $(INSTALL_DATA) $(GENERIC_DIR)/$$i "$(INCLUDE_INSTALL_DIR)"; \
 	    done;
