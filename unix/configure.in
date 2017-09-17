@@ -886,7 +886,7 @@ if test "$FRAMEWORK_BUILD" = "1" ; then
     test -z "$TCL_MODULE_PATH"  && \
 	TCL_MODULE_PATH="~/Library/Tcl /Library/Tcl /System/Library/Tcl"
 else
-    TCL_PACKAGE_PATH="${prefix}/share/tcl"
+    TCL_PACKAGE_PATH="${prefix}/share/tcl ${libdir}/tcl"
 fi
 
 #--------------------------------------------------------------------
