@@ -1,4 +1,4 @@
-%def_without test
+%def_with test
 %define major 8.6
 
 Name: tcl
@@ -72,7 +72,7 @@ This package includes header files and C programming manuals for Tcl.
 pushd unix
 %autoreconf
 %configure --disable-rpath --enable-threads
-make all %{?_with_test:test}
+make all
 popd
 
 %install
@@ -94,6 +94,11 @@ EOF
 chmod +x %__tclsh
 bzip -9f ChangeLog changes
 install -pm0644 README license.terms changes.bz2 ChangeLog.bz2 %buildroot%docdir
+
+%check
+pushd unix
+make test
+popd
 
 %files
 %dir %docdir
