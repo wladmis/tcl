@@ -96,6 +96,8 @@ bzip -9f ChangeLog changes
 install -pm0644 README license.terms changes.bz2 ChangeLog.bz2 %buildroot%docdir
 
 %check
+# skip clock.test due lack of /etc/localtime in the build environment (ALT#35848)
+rm -f tests/clock.test
 pushd unix
 make test
 popd
