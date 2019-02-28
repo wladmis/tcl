@@ -106,6 +106,9 @@ install -pm0644 README license.terms changes.bz2 ChangeLog.bz2 %buildroot%docdir
 %_tcldatadir/tcl8
 %_tcldatadir/%name%major
 %exclude %_tcldatadir/%name%major/%{name}AppInit.c
+%exclude %_tcldatadir/%name%major/auto.tcl
+%exclude %_tcldatadir/%name%major/init.tcl
+%exclude %_tcldatadir/%name%major/package.tcl
 
 %_man1dir/*
 %_mandir/mann/*
@@ -113,7 +116,12 @@ install -pm0644 README license.terms changes.bz2 ChangeLog.bz2 %buildroot%docdir
 %files -n lib%name
 %dir %_tcllibdir
 %dir %_tcldatadir
+%dir %_tcldatadir/%name%major
 %_libdir/lib%name%major.so
+
+%_tcldatadir/%name%major/auto.tcl
+%_tcldatadir/%name%major/init.tcl
+%_tcldatadir/%name%major/package.tcl
 
 %files devel
 %docdir/ChangeLog.*
