@@ -2,8 +2,8 @@
 %define major 8.6
 
 Name: tcl
-Version: 8.6.8
-Release: alt3
+Version: 8.6.9
+Release: alt1
 
 Summary: A Tool Command Language (TCL)
 License: BSD
@@ -17,8 +17,6 @@ BuildRequires(pre): rpm-build-tcl >= 0.4-alt1
 %{?_with_test:BuildConflicts: tcl-vfs}
 BuildRequires: zlib-devel
 
-Requires: lib%name = %version-%release
-
 Conflicts: tcl-readline < 2.1.1-alt8
 
 %package -n lib%name
@@ -30,9 +28,8 @@ Provides: %_tcldatadir
 %package devel
 Summary: Header files and C programming manual for TCL
 Group: Development/C
-Requires: %name = %version-%release
+Requires: %name
 Requires: rpm-build-tcl >= 0.5-alt1
-Requires: zlib-devel
 
 %description
 The Tcl (Tool Command Language) provides a powerful platform for
@@ -143,6 +140,13 @@ popd
 %_man3dir/*
 
 %changelog
+* Mon Apr 15 2019 Vladimir D. Seleznev <vseleznv@altlinux.org> 8.6.9-alt1
+- 8.6.9 released
+- moved auto.tcl, init.tcl and package.tcl to libtcl subpackage
+- removed bundled zlib
+- tcl-devel: fixed provided linkage flags, dropped dependency to zlib-devel
+- enabled check
+
 * Thu Mar 28 2019 Vladimir D. Seleznev <vseleznv@altlinux.org> 8.6.8-alt3
 - tcl-devel: added dependency on zlib-devel
 
