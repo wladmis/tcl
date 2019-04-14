@@ -40,7 +40,7 @@ TCL_SHARED_BUILD=@TCL_SHARED_BUILD@
 TCL_LIB_FILE='@TCL_LIB_FILE@'
 
 # Additional libraries to use when linking Tcl.
-TCL_LIBS='@TCL_LIBS@'
+TCL_LIBS='@TCL_LIB_FLAG@ @TCL_STUB_LIB_FLAG@'
 
 # Top-level directory in which Tcl's platform-independent files are
 # installed.
