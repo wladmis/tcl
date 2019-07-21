@@ -29,6 +29,7 @@ BuildRequires(pre): rpm-build-tcl >= 0.4-alt1
 %{?_with_test:BuildConflicts: tcl-vfs}
 BuildRequires: zlib-devel
 
+Conflicts: tcl-incrtcl < 4 tcl-incrtk < 4
 Conflicts: tcl-readline < 2.1.1-alt8
 
 %package -n lib%name
