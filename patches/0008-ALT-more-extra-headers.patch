@@ -1,0 +1,26 @@
+From 9e964976e10d0295a1e330bbabfea2a906a36755 Mon Sep 17 00:00:00 2001
+From: "Vladimir D. Seleznev" <vseleznv@altlinux.org>
+Date: Tue, 11 Apr 2017 04:11:34 +0300
+Subject: [PATCH 08/12] ALT more extra headers
+
+---
+ tcl/unix/Makefile.in | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/tcl/unix/Makefile.in b/tcl/unix/Makefile.in
+index 83aab787aa..f4a4c45811 100644
+--- a/tcl/unix/Makefile.in
++++ b/tcl/unix/Makefile.in
+@@ -951,7 +951,8 @@ install-headers:
+ 		fi; \
+ 	    done;
+ 	@echo "Installing header files to $(INCLUDE_INSTALL_DIR)/";
+-	@for i in tcl.h tclDecls.h tclOO.h tclOODecls.h tclPlatDecls.h tclTomMath.h tclTomMathDecls.h; \
++	@for i in tcl.h tclDecls.h tclOO.h tclOODecls.h tclPlatDecls.h tclTomMath.h tclTomMathDecls.h \
++		tclIntDecls.h tclIntPlatDecls.h tclOOInt.h tclOOIntDecls.h; \
+ 	    do \
+ 	    $(INSTALL_DATA) $(GENERIC_DIR)/$$i "$(INCLUDE_INSTALL_DIR)"; \
+ 	    done;
+-- 
+2.21.0
+

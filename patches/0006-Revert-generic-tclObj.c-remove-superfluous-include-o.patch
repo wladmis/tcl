@@ -1,0 +1,26 @@
+From c1283c139ac8b46892e34ce325ec5b54d3eb726f Mon Sep 17 00:00:00 2001
+From: Sergey Bolshakov <sbolshakov@altlinux.org>
+Date: Tue, 20 Nov 2007 14:57:52 +0300
+Subject: [PATCH 06/12] Revert "	* generic/tclObj.c: remove superfluous
+ #include of tclCompile.h"
+
+This reverts commit 267adc009b1ac3d1c5bdf495eb434b0503d744f8.
+---
+ tcl/generic/tclObj.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/tcl/generic/tclObj.c b/tcl/generic/tclObj.c
+index a75ecddfc6..e5b35384a7 100644
+--- a/tcl/generic/tclObj.c
++++ b/tcl/generic/tclObj.c
+@@ -15,6 +15,7 @@
+  */
+ 
+ #include "tclInt.h"
++#include "tclCompile.h"
+ #include "tommath.h"
+ #include <math.h>
+ 
+-- 
+2.21.0
+

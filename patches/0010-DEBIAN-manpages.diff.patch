@@ -1,0 +1,42 @@
+From 49757275ebd1f1cde67e303aaa36c4f7cec06703 Mon Sep 17 00:00:00 2001
+From: "Vladimir D. Seleznev" <vseleznv@altlinux.org>
+Date: Tue, 13 Feb 2018 11:04:28 +0300
+Subject: [PATCH 10/12] DEBIAN manpages.diff
+
+Patch by Chris Waters fixes installing of several manual pages which
+aren't installed by upstream script but are referenced inside other
+manual pages.
+
+https://sources.debian.org/src/tcl8.6/8.6.8+dfsg-2/debian/patches/manpages.diff/
+---
+ tcl/unix/installManPage | 8 ++++++++
+ 1 file changed, 8 insertions(+)
+
+diff --git a/tcl/unix/installManPage b/tcl/unix/installManPage
+index 1f1cbde05b..2814259075 100755
+--- a/tcl/unix/installManPage
++++ b/tcl/unix/installManPage
+@@ -92,12 +92,20 @@ case $ManPage in
+ 	exit 2 ;;
+ esac
+ 
++Name=`basename $ManPage .$Section`
+ SrcDir=`dirname $ManPage`
+ 
+ ########################################################################
+ ### Process Page to Create Target Pages
+ ###
+ 
++Specials="DString Thread Notifier RegExp library packagens pkgMkIndex safesock"
++for n in $Specials; do
++    if [ "$Name" = "$n" ] ; then
++	Names="$n $Names"
++    fi
++done
++
+ First=""
+ for Target in $Names; do
+     Target=$Target.$Section$Suffix
+-- 
+2.21.0
+

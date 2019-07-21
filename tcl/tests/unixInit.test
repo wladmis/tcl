@@ -102,7 +102,7 @@ test unixInit-2.1 {TclpInitLibraryPath: value of installLib, developLib} -setup 
     }
 } -body {
     set path [getlibpath]
-    set installLib share/tcl/tcl[info tclversion]
+    set installLib lib/tcl[info tclversion]
     set developLib tcl[info patchlevel]/library
     set prefix [file dirname [file dirname [interpreter]]]
     list [string equal [lindex $path 0] $prefix/$installLib] \
@@ -174,18 +174,16 @@ test unixInit-2.6 {TclpInitLibraryPath: executable relative} -setup {
     makeDirectory [file join tmp sparkly bin]
     file copy [interpreter] [file join [temporaryDirectory] tmp sparkly \
 	    bin tcltest]
-    makeDirectory [file join tmp sparkly share]
-    makeDirectory [file join tmp sparkly share tcl]
-    makeDirectory [file join tmp sparkly share tcl tcl[info tclversion]]
-    makeFile {} [file join tmp sparkly share tcl tcl[info tclversion] init.tcl]
+    makeDirectory [file join tmp sparkly lib]
+    makeDirectory [file join tmp sparkly lib tcl[info tclversion]]
+    makeFile {} [file join tmp sparkly lib tcl[info tclversion] init.tcl]
 } -body {
     lrange [getlibpath [file join [temporaryDirectory] tmp sparkly \
 	    bin tcltest]] 1 2
 } -cleanup {
-    removeFile [file join tmp sparkly share tcl tcl[info tclversion] init.tcl]
-    removeDirectory [file join tmp sparkly share tcl tcl[info tclversion]]
-    removeDirectory [file join tmp sparkly share tcl]
-    removeDirectory [file join tmp sparkly share]
+    removeFile [file join tmp sparkly lib tcl[info tclversion] init.tcl]
+    removeDirectory [file join tmp sparkly lib tcl[info tclversion]]
+    removeDirectory [file join tmp sparkly lib]
     removeDirectory [file join tmp sparkly bin]
     removeDirectory [file join tmp sparkly]
     removeDirectory tmp
@@ -194,7 +192,7 @@ test unixInit-2.6 {TclpInitLibraryPath: executable relative} -setup {
 	set env(TCL_LIBRARY) $oldlibrary
 	unset oldlibrary
     }
-} -result [list [temporaryDirectory]/tmp/sparkly/share/tcl//tcl[info tclversion] [temporaryDirectory]/tmp/share/tcl//tcl[info tclversion]]
+} -result [list [temporaryDirectory]/tmp/sparkly/lib/tcl[info tclversion] [temporaryDirectory]/tmp/lib/tcl[info tclversion]]
 test unixInit-2.7 {TclpInitLibraryPath: compiled-in library path} {
     # would need test command to get defaultLibDir and compare it to
     # [lindex $auto_path end]
@@ -284,7 +282,7 @@ test unixInit-2.9 {TclpInitLibraryPath: paths relative to executable} -setup {
 	set env(TCL_LIBRARY) $oldlibrary
 	unset oldlibrary
     }
-} -result [list /tmp/share/tcl/tcl[info tclversion] /share/tcl/tcl[info tclversion] \
+} -result [list /tmp/lib/tcl[info tclversion] /lib/tcl[info tclversion] \
         /tmp/library /library /tcl[info patchlevel]/library]
 test unixInit-2.10 {TclpInitLibraryPath: executable relative} -setup {
     unset -nocomplain oldlibrary

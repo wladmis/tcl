@@ -1,0 +1,25 @@
+From 83a5aa93cc12f976e13d848cccd04d7aae56ef20 Mon Sep 17 00:00:00 2001
+From: Sergey Bolshakov <sbolshakov@altlinux.org>
+Date: Sat, 15 Sep 2007 00:11:49 +0400
+Subject: [PATCH 02/12] ALT soname
+
+---
+ tcl/unix/tcl.m4 | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/tcl/unix/tcl.m4 b/tcl/unix/tcl.m4
+index 1953798394..8339745a89 100644
+--- a/tcl/unix/tcl.m4
++++ b/tcl/unix/tcl.m4
+@@ -2031,7 +2031,7 @@ dnl # preprocessing tests use only CPPFLAGS.
+ 
+     AS_IF([test "${SHARED_BUILD}" = 1 -a "${SHLIB_SUFFIX}" != ""], [
+         LIB_SUFFIX=${SHARED_LIB_SUFFIX}
+-        MAKE_LIB='${SHLIB_LD} -o [$]@ ${OBJS} ${SHLIB_LD_LIBS} ${TCL_SHLIB_LD_EXTRAS} ${TK_SHLIB_LD_EXTRAS} ${LD_SEARCH_FLAGS}'
++        MAKE_LIB='${SHLIB_LD} -o [$]@ -Wl,-soname,[$]@ ${OBJS} ${SHLIB_LD_LIBS} ${TCL_SHLIB_LD_EXTRAS} ${TK_SHLIB_LD_EXTRAS} ${LD_SEARCH_FLAGS}'
+         AS_IF([test "${SHLIB_SUFFIX}" = ".dll"], [
+             INSTALL_LIB='$(INSTALL_LIBRARY) $(LIB_FILE) "$(BIN_INSTALL_DIR)/$(LIB_FILE)";if test -f $(LIB_FILE).a; then $(INSTALL_DATA) $(LIB_FILE).a "$(LIB_INSTALL_DIR)"; fi;'
+             DLL_INSTALL_DIR="\$(BIN_INSTALL_DIR)"
+-- 
+2.21.0
+

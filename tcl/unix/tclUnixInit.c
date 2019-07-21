@@ -496,7 +496,7 @@ TclpInitLibraryPath(
 	 * installed.
 	 */
 
-	sprintf(installLib, "share/tcl/tcl%s", TCL_VERSION);
+	sprintf(installLib, "lib/tcl%s", TCL_VERSION);
 
 	/*
 	 * If TCL_LIBRARY is set, search there.
@@ -505,7 +505,7 @@ TclpInitLibraryPath(
 	Tcl_ListObjAppendElement(NULL, pathPtr, Tcl_NewStringObj(str, -1));
 
 	Tcl_SplitPath(str, &pathc, &pathv);
-	if ((pathc > 0) && (strcasecmp(installLib + 10, pathv[pathc-1]) != 0)) {
+	if ((pathc > 0) && (strcasecmp(installLib + 4, pathv[pathc-1]) != 0)) {
 	    /*
 	     * If TCL_LIBRARY is set but refers to a different tcl
 	     * installation than the current version, try fiddling with the
@@ -513,7 +513,8 @@ TclpInitLibraryPath(
 	     * removing the old "tclX.Y" and substituting the current version
 	     * string.
 	     */
-	    pathv[pathc - 1] = installLib + 10;
+
+	    pathv[pathc - 1] = installLib + 4;
 	    str = Tcl_JoinPath(pathc, pathv, &ds);
 	    Tcl_ListObjAppendElement(NULL, pathPtr, TclDStringToObj(&ds));
 	}

@@ -10,9 +10,20 @@ License: BSD
 Group: Development/Tcl
 Url: http://www.tcl.tk/
 
-# git://git.altlinux.org/gears/t/tcl.git
-Source: %name-%version-%release.tar
+# repacked ftp://ftp.tcl.tk/pub/tcl/tcl8_6/tcl-core%version-src.tar.gz
+Source: %name-core%version.tar
 Source1: tcl.m4
+Patch1: 0001-ALT-extra-headers.patch
+Patch2: 0002-ALT-soname.patch
+Patch3: 0003-ALT-norpath.patch
+Patch4: 0004-ALT-nostdinc.patch
+Patch5: 0005-ALT-libpath.patch
+Patch6: 0006-Revert-generic-tclObj.c-remove-superfluous-include-o.patch
+Patch7: 0007-ALT-tcl_pkgPath-fixed-to-our-policy.patch
+Patch8: 0008-ALT-more-extra-headers.patch
+Patch9: 0009-ALT-add-libdir-tcl-to-package-search-path.patch
+Patch10: 0010-DEBIAN-manpages.diff.patch
+Patch11: 0011-ALT-add-THREADS_LIBS-to-TCL_LIB_FLAG-tclConfig.sh-pr.patch
 
 BuildRequires(pre): rpm-build-tcl >= 0.4-alt1
 %{?_with_test:BuildConflicts: tcl-vfs}
@@ -64,8 +75,11 @@ powerful command languages for applications.
 This package includes header files and C programming manuals for Tcl.
 
 %prep
-%setup
+%setup -q -n %name%version
+%autopatch -p2
 cp -p %SOURCE1 tcl.m4
+# remove unneeded stuff
+rm -r compat/zlib macosx win
 
 %build
 pushd unix

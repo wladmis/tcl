@@ -40,7 +40,7 @@ TCL_SHARED_BUILD=@TCL_SHARED_BUILD@
 TCL_LIB_FILE='@TCL_LIB_FILE@'
 
 # Additional libraries to use when linking Tcl.
-TCL_LIBS='@TCL_LIB_FLAG@ @TCL_STUB_LIB_FLAG@'
+TCL_LIBS='@TCL_LIBS@'
 
 # Top-level directory in which Tcl's platform-independent files are
 # installed.
@@ -100,7 +100,7 @@ TCL_LIB_FLAG='@TCL_LIB_FLAG@'
 
 # String to pass to linker to pick up the Tcl library from its
 # build directory.
-TCL_BUILD_LIB_SPEC='@TCL_LIB_SPEC@'
+TCL_BUILD_LIB_SPEC='@TCL_BUILD_LIB_SPEC@'
 
 # String to pass to linker to pick up the Tcl library from its
 # installed directory.
@@ -135,8 +135,7 @@ TCL_UNSHARED_LIB_SUFFIX='@CFG_TCL_UNSHARED_LIB_SUFFIX@'
 # different place than the directory containing the source files, this
 # points to the location of the sources, not the location where Tcl was
 # compiled.
-TCL_SRC_DIR='@includedir@/tcl'
-TCL_INC_DIR='@includedir@/tcl/generic'
+TCL_SRC_DIR='@TCL_SRC_DIR@'
 
 # List of standard directories in which to look for packages during
 # "package require" commands.  Contains the "prefix" directory plus also
@@ -154,14 +153,14 @@ TCL_STUB_LIB_FLAG='@TCL_STUB_LIB_FLAG@'
 
 # String to pass to linker to pick up the Tcl stub library from its
 # build directory.
-TCL_BUILD_STUB_LIB_SPEC='@TCL_STUB_LIB_SPEC@'
+TCL_BUILD_STUB_LIB_SPEC='@TCL_BUILD_STUB_LIB_SPEC@'
 
 # String to pass to linker to pick up the Tcl stub library from its
 # installed directory.
 TCL_STUB_LIB_SPEC='@TCL_STUB_LIB_SPEC@'
 
 # Path to the Tcl stub library in the build directory.
-TCL_BUILD_STUB_LIB_PATH='@TCL_STUB_LIB_PATH@'
+TCL_BUILD_STUB_LIB_PATH='@TCL_BUILD_STUB_LIB_PATH@'
 
 # Path to the Tcl stub library in the install directory.
 TCL_STUB_LIB_PATH='@TCL_STUB_LIB_PATH@'

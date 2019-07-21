@@ -1,0 +1,88 @@
+From 767e06af4e657d1af09847bac5f9a9182446cbd5 Mon Sep 17 00:00:00 2001
+From: Sergey Bolshakov <sbolshakov@altlinux.org>
+Date: Sat, 15 Sep 2007 00:11:32 +0400
+Subject: [PATCH 01/12] ALT extra headers
+
+---
+ tcl/unix/Makefile.in     | 15 ++++++++-------
+ tcl/unix/tclConfig.sh.in |  9 +++++----
+ 2 files changed, 13 insertions(+), 11 deletions(-)
+
+diff --git a/tcl/unix/Makefile.in b/tcl/unix/Makefile.in
+index aaff7aedea..83aab787aa 100644
+--- a/tcl/unix/Makefile.in
++++ b/tcl/unix/Makefile.in
+@@ -942,7 +942,7 @@ install-doc: doc
+ 	done
+ 
+ install-headers:
+-	@for i in "$(INCLUDE_INSTALL_DIR)"; \
++	@for i in "$(INCLUDE_INSTALL_DIR)/tcl/generic" "$(INCLUDE_INSTALL_DIR)/tcl/unix" "$(INCLUDE_INSTALL_DIR)"; \
+ 	    do \
+ 	    if [ ! -d "$$i" ] ; then \
+ 		echo "Making directory $$i"; \
+@@ -951,14 +951,15 @@ install-headers:
+ 		fi; \
+ 	    done;
+ 	@echo "Installing header files to $(INCLUDE_INSTALL_DIR)/";
+-	@for i in $(GENERIC_DIR)/tcl.h $(GENERIC_DIR)/tclDecls.h \
+-		$(GENERIC_DIR)/tclOO.h $(GENERIC_DIR)/tclOODecls.h \
+-		$(GENERIC_DIR)/tclPlatDecls.h \
+-		$(GENERIC_DIR)/tclTomMath.h \
+-		$(GENERIC_DIR)/tclTomMathDecls.h ; \
++	@for i in tcl.h tclDecls.h tclOO.h tclOODecls.h tclPlatDecls.h tclTomMath.h tclTomMathDecls.h; \
+ 	    do \
+-	    $(INSTALL_DATA) $$i "$(INCLUDE_INSTALL_DIR)"; \
++	    $(INSTALL_DATA) $(GENERIC_DIR)/$$i "$(INCLUDE_INSTALL_DIR)"; \
+ 	    done;
++	@for i in tclInt.h tclPort.h tclRegexp.h tclIntDecls.h tclIntPlatDecls.h regex.h tclCompile.h; \
++		do \
++		$(INSTALL_DATA) $(GENERIC_DIR)/$$i $(INCLUDE_INSTALL_DIR)/tcl/generic; \
++		done;
++	@$(INSTALL_DATA) $(UNIX_DIR)/tclUnixPort.h $(INCLUDE_INSTALL_DIR)/tcl/unix;
+ 
+ # Optional target to install private headers
+ install-private-headers:
+diff --git a/tcl/unix/tclConfig.sh.in b/tcl/unix/tclConfig.sh.in
+index f768690620..b8aa935323 100644
+--- a/tcl/unix/tclConfig.sh.in
++++ b/tcl/unix/tclConfig.sh.in
+@@ -100,7 +100,7 @@ TCL_LIB_FLAG='@TCL_LIB_FLAG@'
+ 
+ # String to pass to linker to pick up the Tcl library from its
+ # build directory.
+-TCL_BUILD_LIB_SPEC='@TCL_BUILD_LIB_SPEC@'
++TCL_BUILD_LIB_SPEC='@TCL_LIB_SPEC@'
+ 
+ # String to pass to linker to pick up the Tcl library from its
+ # installed directory.
+@@ -135,7 +135,8 @@ TCL_UNSHARED_LIB_SUFFIX='@CFG_TCL_UNSHARED_LIB_SUFFIX@'
+ # different place than the directory containing the source files, this
+ # points to the location of the sources, not the location where Tcl was
+ # compiled.
+-TCL_SRC_DIR='@TCL_SRC_DIR@'
++TCL_SRC_DIR='@includedir@/tcl'
++TCL_INC_DIR='@includedir@/tcl/generic'
+ 
+ # List of standard directories in which to look for packages during
+ # "package require" commands.  Contains the "prefix" directory plus also
+@@ -153,14 +154,14 @@ TCL_STUB_LIB_FLAG='@TCL_STUB_LIB_FLAG@'
+ 
+ # String to pass to linker to pick up the Tcl stub library from its
+ # build directory.
+-TCL_BUILD_STUB_LIB_SPEC='@TCL_BUILD_STUB_LIB_SPEC@'
++TCL_BUILD_STUB_LIB_SPEC='@TCL_STUB_LIB_SPEC@'
+ 
+ # String to pass to linker to pick up the Tcl stub library from its
+ # installed directory.
+ TCL_STUB_LIB_SPEC='@TCL_STUB_LIB_SPEC@'
+ 
+ # Path to the Tcl stub library in the build directory.
+-TCL_BUILD_STUB_LIB_PATH='@TCL_BUILD_STUB_LIB_PATH@'
++TCL_BUILD_STUB_LIB_PATH='@TCL_STUB_LIB_PATH@'
+ 
+ # Path to the Tcl stub library in the install directory.
+ TCL_STUB_LIB_PATH='@TCL_STUB_LIB_PATH@'
+-- 
+2.21.0
+

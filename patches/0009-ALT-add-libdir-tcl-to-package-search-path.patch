@@ -1,0 +1,25 @@
+From f7347db9fd408b66beb76c2e1695a57604b6dc26 Mon Sep 17 00:00:00 2001
+From: "Vladimir D. Seleznev" <vseleznv@altlinux.org>
+Date: Sun, 17 Sep 2017 07:10:07 +0300
+Subject: [PATCH 09/12] ALT add "${libdir}/tcl" to package search path
+
+---
+ tcl/unix/configure.in | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/tcl/unix/configure.in b/tcl/unix/configure.in
+index b6f904dd16..3cd07f1401 100755
+--- a/tcl/unix/configure.in
++++ b/tcl/unix/configure.in
+@@ -866,7 +866,7 @@ if test "$FRAMEWORK_BUILD" = "1" ; then
+     test -z "$TCL_MODULE_PATH"  && \
+ 	TCL_MODULE_PATH="~/Library/Tcl /Library/Tcl /System/Library/Tcl"
+ else
+-    TCL_PACKAGE_PATH="${prefix}/share/tcl"
++    TCL_PACKAGE_PATH="${prefix}/share/tcl ${libdir}/tcl"
+ fi
+ 
+ #--------------------------------------------------------------------
+-- 
+2.21.0
+

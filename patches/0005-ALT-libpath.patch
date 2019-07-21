@@ -1,0 +1,141 @@
+From b0b6cf23391f5c5a7e1083400de6ff1f6df7ae13 Mon Sep 17 00:00:00 2001
+From: Sergey Bolshakov <sbolshakov@altlinux.org>
+Date: Sat, 15 Sep 2007 00:12:52 +0400
+Subject: [PATCH 05/12] ALT libpath
+
+---
+ tcl/library/init.tcl    |  5 -----
+ tcl/tests/unixInit.test | 20 +++++++++++---------
+ tcl/unix/configure.in   |  4 ++--
+ tcl/unix/tclUnixInit.c  |  7 +++----
+ 4 files changed, 16 insertions(+), 20 deletions(-)
+
+diff --git a/tcl/library/init.tcl b/tcl/library/init.tcl
+index 89521721a1..896e01a4d0 100644
+--- a/tcl/library/init.tcl
++++ b/tcl/library/init.tcl
+@@ -52,11 +52,6 @@ namespace eval tcl {
+ 	    lappend ::auto_path $Dir
+ 	}
+     }
+-    set Dir [file join [file dirname [file dirname \
+-	    [info nameofexecutable]]] lib]
+-    if {$Dir ni $::auto_path} {
+-	lappend ::auto_path $Dir
+-    }
+     catch {
+ 	foreach Dir $::tcl_pkgPath {
+ 	    if {$Dir ni $::auto_path} {
+diff --git a/tcl/tests/unixInit.test b/tcl/tests/unixInit.test
+index 05338ede4f..fd0313bbb5 100644
+--- a/tcl/tests/unixInit.test
++++ b/tcl/tests/unixInit.test
+@@ -102,7 +102,7 @@ test unixInit-2.1 {TclpInitLibraryPath: value of installLib, developLib} -setup
+     }
+ } -body {
+     set path [getlibpath]
+-    set installLib lib/tcl[info tclversion]
++    set installLib share/tcl/tcl[info tclversion]
+     set developLib tcl[info patchlevel]/library
+     set prefix [file dirname [file dirname [interpreter]]]
+     list [string equal [lindex $path 0] $prefix/$installLib] \
+@@ -174,16 +174,18 @@ test unixInit-2.6 {TclpInitLibraryPath: executable relative} -setup {
+     makeDirectory [file join tmp sparkly bin]
+     file copy [interpreter] [file join [temporaryDirectory] tmp sparkly \
+ 	    bin tcltest]
+-    makeDirectory [file join tmp sparkly lib]
+-    makeDirectory [file join tmp sparkly lib tcl[info tclversion]]
+-    makeFile {} [file join tmp sparkly lib tcl[info tclversion] init.tcl]
++    makeDirectory [file join tmp sparkly share]
++    makeDirectory [file join tmp sparkly share tcl]
++    makeDirectory [file join tmp sparkly share tcl tcl[info tclversion]]
++    makeFile {} [file join tmp sparkly share tcl tcl[info tclversion] init.tcl]
+ } -body {
+     lrange [getlibpath [file join [temporaryDirectory] tmp sparkly \
+ 	    bin tcltest]] 1 2
+ } -cleanup {
+-    removeFile [file join tmp sparkly lib tcl[info tclversion] init.tcl]
+-    removeDirectory [file join tmp sparkly lib tcl[info tclversion]]
+-    removeDirectory [file join tmp sparkly lib]
++    removeFile [file join tmp sparkly share tcl tcl[info tclversion] init.tcl]
++    removeDirectory [file join tmp sparkly share tcl tcl[info tclversion]]
++    removeDirectory [file join tmp sparkly share tcl]
++    removeDirectory [file join tmp sparkly share]
+     removeDirectory [file join tmp sparkly bin]
+     removeDirectory [file join tmp sparkly]
+     removeDirectory tmp
+@@ -192,7 +194,7 @@ test unixInit-2.6 {TclpInitLibraryPath: executable relative} -setup {
+ 	set env(TCL_LIBRARY) $oldlibrary
+ 	unset oldlibrary
+     }
+-} -result [list [temporaryDirectory]/tmp/sparkly/lib/tcl[info tclversion] [temporaryDirectory]/tmp/lib/tcl[info tclversion]]
++} -result [list [temporaryDirectory]/tmp/sparkly/share/tcl//tcl[info tclversion] [temporaryDirectory]/tmp/share/tcl//tcl[info tclversion]]
+ test unixInit-2.7 {TclpInitLibraryPath: compiled-in library path} {
+     # would need test command to get defaultLibDir and compare it to
+     # [lindex $auto_path end]
+@@ -282,7 +284,7 @@ test unixInit-2.9 {TclpInitLibraryPath: paths relative to executable} -setup {
+ 	set env(TCL_LIBRARY) $oldlibrary
+ 	unset oldlibrary
+     }
+-} -result [list /tmp/lib/tcl[info tclversion] /lib/tcl[info tclversion] \
++} -result [list /tmp/share/tcl/tcl[info tclversion] /share/tcl/tcl[info tclversion] \
+         /tmp/library /library /tcl[info patchlevel]/library]
+ test unixInit-2.10 {TclpInitLibraryPath: executable relative} -setup {
+     unset -nocomplain oldlibrary
+diff --git a/tcl/unix/configure.in b/tcl/unix/configure.in
+index db3abd6d11..140b83034e 100755
+--- a/tcl/unix/configure.in
++++ b/tcl/unix/configure.in
+@@ -773,7 +773,7 @@ eval "TCL_LIB_FILE=libtcl${LIB_SUFFIX}"
+ 
+ eval "TCL_LIB_FILE=${TCL_LIB_FILE}"
+ 
+-TCL_LIBRARY='$(prefix)/lib/tcl$(VERSION)'
++TCL_LIBRARY='$(prefix)/share/tcl/tcl$(VERSION)'
+ PRIVATE_INCLUDE_DIR='$(includedir)'
+ HTML_DIR='$(DISTDIR)/html'
+ 
+@@ -868,7 +868,7 @@ if test "$FRAMEWORK_BUILD" = "1" ; then
+ elif test "$prefix/lib" != "$libdir"; then
+     TCL_PACKAGE_PATH="${libdir} ${prefix}/lib ${TCL_PACKAGE_PATH}"
+ else
+-    TCL_PACKAGE_PATH="${prefix}/lib ${TCL_PACKAGE_PATH}"
++    TCL_PACKAGE_PATH="${prefix}/share/tcl"
+ fi
+ 
+ #--------------------------------------------------------------------
+diff --git a/tcl/unix/tclUnixInit.c b/tcl/unix/tclUnixInit.c
+index 4fd41a710e..b74effd34a 100644
+--- a/tcl/unix/tclUnixInit.c
++++ b/tcl/unix/tclUnixInit.c
+@@ -496,7 +496,7 @@ TclpInitLibraryPath(
+ 	 * installed.
+ 	 */
+ 
+-	sprintf(installLib, "lib/tcl%s", TCL_VERSION);
++	sprintf(installLib, "share/tcl/tcl%s", TCL_VERSION);
+ 
+ 	/*
+ 	 * If TCL_LIBRARY is set, search there.
+@@ -505,7 +505,7 @@ TclpInitLibraryPath(
+ 	Tcl_ListObjAppendElement(NULL, pathPtr, Tcl_NewStringObj(str, -1));
+ 
+ 	Tcl_SplitPath(str, &pathc, &pathv);
+-	if ((pathc > 0) && (strcasecmp(installLib + 4, pathv[pathc-1]) != 0)) {
++	if ((pathc > 0) && (strcasecmp(installLib + 10, pathv[pathc-1]) != 0)) {
+ 	    /*
+ 	     * If TCL_LIBRARY is set but refers to a different tcl
+ 	     * installation than the current version, try fiddling with the
+@@ -513,8 +513,7 @@ TclpInitLibraryPath(
+ 	     * removing the old "tclX.Y" and substituting the current version
+ 	     * string.
+ 	     */
+-
+-	    pathv[pathc - 1] = installLib + 4;
++	    pathv[pathc - 1] = installLib + 10;
+ 	    str = Tcl_JoinPath(pathc, pathv, &ds);
+ 	    Tcl_ListObjAppendElement(NULL, pathPtr, TclDStringToObj(&ds));
+ 	}
+-- 
+2.21.0
+
