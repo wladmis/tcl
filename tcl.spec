@@ -12,6 +12,7 @@ Url: http://www.tcl.tk/
 
 # git://git.altlinux.org/gears/t/tcl.git
 Source: %name-%version-%release.tar
+Source1: tcl.m4
 
 BuildRequires(pre): rpm-build-tcl >= 0.4-alt1
 %{?_with_test:BuildConflicts: tcl-vfs}
@@ -64,6 +65,7 @@ This package includes header files and C programming manuals for Tcl.
 
 %prep
 %setup
+cp -p %SOURCE1 tcl.m4
 
 %build
 pushd unix

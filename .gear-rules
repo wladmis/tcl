@@ -1,1 +1,2 @@
-tar: . name=@name@-@version@-@release@ base=@name@-@version@
+tar: tcl name=@name@-@version@-@release@ base=@name@-@version@
+copy: tcl.m4
