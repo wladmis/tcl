@@ -134,7 +134,7 @@ BuildCharSet(
 	     * as well as the dash.
 	     */
 
-	    if (*format == ']') {
+	    if (*format == ']' || !cset->ranges) {
 		cset->chars[cset->nchars++] = start;
 		cset->chars[cset->nchars++] = ch;
 	    } else {
@@ -260,7 +260,7 @@ ValidateFormat(
     Tcl_UniChar ch = 0;
     int objIndex, xpgSize, nspace = numVars;
     int *nassign = TclStackAlloc(interp, nspace * sizeof(int));
-    char buf[TCL_UTF_MAX+1];
+    char buf[TCL_UTF_MAX+1] = "";
     Tcl_Obj *errorMsg;		/* Place to build an error messages. Note that
 				 * these are messy operations because we do
 				 * not want to use the formatting engine;
@@ -362,8 +362,10 @@ ValidateFormat(
 		format += TclUtfToUniChar(format, &ch);
 		break;
 	    }
+	    /* FALLTHRU */
 	case 'L':
 	    flags |= SCAN_LONGER;
+	    /* FALLTHRU */
 	case 'h':
 	    format += TclUtfToUniChar(format, &ch);
 	}
@@ -385,9 +387,7 @@ ValidateFormat(
 		Tcl_SetErrorCode(interp, "TCL", "FORMAT", "BADWIDTH", NULL);
 		goto error;
 	    }
-	    /*
-	     * Fall through!
-	     */
+	    /* FALLTHRU */
 	case 'n':
 	case 's':
 	    if (flags & (SCAN_LONGER|SCAN_BIG)) {
@@ -709,11 +709,10 @@ Tcl_ScanObjCmd(
 		format += TclUtfToUniChar(format, &ch);
 		break;
 	    }
+	    /* FALLTHRU */
 	case 'L':
 	    flags |= SCAN_LONGER;
-	    /*
-	     * Fall through so we skip to the next character.
-	     */
+	    /* FALLTHRU */
 	case 'h':
 	    format += TclUtfToUniChar(format, &ch);
 	}
@@ -888,8 +887,8 @@ Tcl_ScanObjCmd(
 	    offset = TclUtfToUniChar(string, &sch);
 	    i = (int)sch;
 #if TCL_UTF_MAX == 4
-	    if (!offset) {
-		offset = Tcl_UtfToUniChar(string, &sch);
+	    if ((sch >= 0xD800) && (offset < 3)) {
+		offset += TclUtfToUniChar(string+offset, &sch);
 		i = (((i<<10) & 0x0FFC00) + 0x10000) + (sch & 0x3FF);
 	    }
 #endif
