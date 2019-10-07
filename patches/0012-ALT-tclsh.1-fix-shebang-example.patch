@@ -1,0 +1,32 @@
+From 66d2f115650b8436628b42df2549a11638f8c618 Mon Sep 17 00:00:00 2001
+From: "Vladimir D. Seleznev" <vseleznv@altlinux.org>
+Date: Thu, 5 Sep 2019 00:45:46 +0300
+Subject: [PATCH 12/12] ALT tclsh.1: fix shebang example
+
+---
+ tcl/doc/tclsh.1 | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/tcl/doc/tclsh.1 b/tcl/doc/tclsh.1
+index 6ed5eb6312..034d5ae665 100644
+--- a/tcl/doc/tclsh.1
++++ b/tcl/doc/tclsh.1
+@@ -55,13 +55,13 @@ line, but the script file can always \fBsource\fR it if desired.
+ If you create a Tcl script in a file whose first line is
+ .PP
+ .CS
+-\fB#!/usr/local/bin/tclsh\fR
++\fB#!/usr/bin/tclsh\fR
+ .CE
+ .PP
+ then you can invoke the script file directly from your shell if
+ you mark the file as executable.
+ This assumes that \fBtclsh\fR has been installed in the default
+-location in /usr/local/bin;  if it is installed somewhere else
++location in /usr/bin;  if it is installed somewhere else
+ then you will have to modify the above line to match.
+ Many UNIX systems do not allow the \fB#!\fR line to exceed about
+ 30 characters in length, so be sure that the \fBtclsh\fR
+-- 
+2.21.0
+

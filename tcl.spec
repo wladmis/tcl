@@ -24,6 +24,7 @@ Patch8: 0008-ALT-more-extra-headers.patch
 Patch9: 0009-ALT-add-libdir-tcl-to-package-search-path.patch
 Patch10: 0010-DEBIAN-manpages.diff.patch
 Patch11: 0011-ALT-add-THREADS_LIBS-to-TCL_LIB_FLAG-tclConfig.sh-pr.patch
+Patch12: 0012-ALT-tclsh.1-fix-shebang-example.patch
 
 BuildRequires(pre): rpm-build-tcl >= 0.4-alt1
 %{?_with_test:BuildConflicts: tcl-vfs}
