@@ -1,7 +1,7 @@
-From 767e06af4e657d1af09847bac5f9a9182446cbd5 Mon Sep 17 00:00:00 2001
+From b07e6f422d74f6f0d57cd0ed15be17c68bf44ba1 Mon Sep 17 00:00:00 2001
 From: Sergey Bolshakov <sbolshakov@altlinux.org>
 Date: Sat, 15 Sep 2007 00:11:32 +0400
-Subject: [PATCH 01/12] ALT extra headers
+Subject: [PATCH 01/17] ALT extra headers
 
 ---
  tcl/unix/Makefile.in     | 15 ++++++++-------
@@ -9,10 +9,10 @@ Subject: [PATCH 01/12] ALT extra headers
  2 files changed, 13 insertions(+), 11 deletions(-)
 
 diff --git a/tcl/unix/Makefile.in b/tcl/unix/Makefile.in
-index aaff7aedea..83aab787aa 100644
+index 2d94bf9c68..7c7b89c4cf 100644
 --- a/tcl/unix/Makefile.in
 +++ b/tcl/unix/Makefile.in
-@@ -942,7 +942,7 @@ install-doc: doc
+@@ -947,7 +947,7 @@ install-doc: doc
  	done
  
  install-headers:
@@ -21,7 +21,7 @@ index aaff7aedea..83aab787aa 100644
  	    do \
  	    if [ ! -d "$$i" ] ; then \
  		echo "Making directory $$i"; \
-@@ -951,14 +951,15 @@ install-headers:
+@@ -956,14 +956,15 @@ install-headers:
  		fi; \
  	    done;
  	@echo "Installing header files to $(INCLUDE_INSTALL_DIR)/";

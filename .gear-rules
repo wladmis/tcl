@@ -1,3 +1,3 @@
-tar: tcl name=@name@-core@version@ base=@name@@version@
+tar: tcl name=@name@@version@-src base=@name@@version@
 copy: tcl.m4
 copy: patches/*

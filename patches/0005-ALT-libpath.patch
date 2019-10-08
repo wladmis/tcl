@@ -1,7 +1,7 @@
-From b0b6cf23391f5c5a7e1083400de6ff1f6df7ae13 Mon Sep 17 00:00:00 2001
+From f9607e5a4074dd730690f6e1ab3e7e4413e92d21 Mon Sep 17 00:00:00 2001
 From: Sergey Bolshakov <sbolshakov@altlinux.org>
 Date: Sat, 15 Sep 2007 00:12:52 +0400
-Subject: [PATCH 05/12] ALT libpath
+Subject: [PATCH 05/17] ALT libpath
 
 ---
  tcl/library/init.tcl    |  5 -----
@@ -11,7 +11,7 @@ Subject: [PATCH 05/12] ALT libpath
  4 files changed, 16 insertions(+), 20 deletions(-)
 
 diff --git a/tcl/library/init.tcl b/tcl/library/init.tcl
-index 89521721a1..896e01a4d0 100644
+index 5cda0d9574..77a239cce3 100644
 --- a/tcl/library/init.tcl
 +++ b/tcl/library/init.tcl
 @@ -52,11 +52,6 @@ namespace eval tcl {
@@ -27,7 +27,7 @@ index 89521721a1..896e01a4d0 100644
  	foreach Dir $::tcl_pkgPath {
  	    if {$Dir ni $::auto_path} {
 diff --git a/tcl/tests/unixInit.test b/tcl/tests/unixInit.test
-index 05338ede4f..fd0313bbb5 100644
+index 681a931dca..bcfdc56cf1 100644
 --- a/tcl/tests/unixInit.test
 +++ b/tcl/tests/unixInit.test
 @@ -102,7 +102,7 @@ test unixInit-2.1 {TclpInitLibraryPath: value of installLib, developLib} -setup
@@ -83,7 +83,7 @@ index 05338ede4f..fd0313bbb5 100644
  test unixInit-2.10 {TclpInitLibraryPath: executable relative} -setup {
      unset -nocomplain oldlibrary
 diff --git a/tcl/unix/configure.in b/tcl/unix/configure.in
-index db3abd6d11..140b83034e 100755
+index 668f141b3e..60b99607b5 100755
 --- a/tcl/unix/configure.in
 +++ b/tcl/unix/configure.in
 @@ -773,7 +773,7 @@ eval "TCL_LIB_FILE=libtcl${LIB_SUFFIX}"
@@ -105,7 +105,7 @@ index db3abd6d11..140b83034e 100755
  
  #--------------------------------------------------------------------
 diff --git a/tcl/unix/tclUnixInit.c b/tcl/unix/tclUnixInit.c
-index 4fd41a710e..b74effd34a 100644
+index aac8a8df9f..82981f2915 100644
 --- a/tcl/unix/tclUnixInit.c
 +++ b/tcl/unix/tclUnixInit.c
 @@ -496,7 +496,7 @@ TclpInitLibraryPath(

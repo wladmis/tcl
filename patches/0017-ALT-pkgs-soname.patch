@@ -1,0 +1,109 @@
+From 4c075d730cef73c932b4d75a641362e32c690c7b Mon Sep 17 00:00:00 2001
+From: "Vladimir D. Seleznev" <vseleznv@altlinux.org>
+Date: Wed, 9 Oct 2019 17:49:53 +0300
+Subject: [PATCH 17/17] ALT pkgs soname
+
+---
+ tcl/pkgs/itcl4.2.0/configure         | 2 +-
+ tcl/pkgs/tdbc1.1.1/configure         | 2 +-
+ tcl/pkgs/tdbcmysql1.1.1/configure    | 2 +-
+ tcl/pkgs/tdbcodbc1.1.1/configure     | 2 +-
+ tcl/pkgs/tdbcpostgres1.1.1/configure | 2 +-
+ tcl/pkgs/tdbcsqlite3-1.1.1/configure | 2 +-
+ tcl/pkgs/thread2.8.5/configure       | 2 +-
+ 7 files changed, 7 insertions(+), 7 deletions(-)
+
+diff --git a/tcl/pkgs/itcl4.2.0/configure b/tcl/pkgs/itcl4.2.0/configure
+index 479a1fc473..fc006c44b9 100755
+--- a/tcl/pkgs/itcl4.2.0/configure
++++ b/tcl/pkgs/itcl4.2.0/configure
+@@ -6651,7 +6651,7 @@ fi
+ 
+ 	    # TEA specific: use LDFLAGS_DEFAULT instead of LDFLAGS
+ 	    SHLIB_LD='${CC} ${CFLAGS} ${LDFLAGS_DEFAULT} -shared'
+-	    LDFLAGS="$LDFLAGS -Wl,--export-dynamic"
++	    LDFLAGS="$LDFLAGS -Wl,--export-dynamic,-soname,\${@}"
+ 	    if test $doRpath = yes; then :
+ 
+ 		CC_SEARCH_FLAGS='-Wl,-rpath,${LIB_RUNTIME_DIR}'
+diff --git a/tcl/pkgs/tdbc1.1.1/configure b/tcl/pkgs/tdbc1.1.1/configure
+index 8df9179ae5..7af15e1d89 100755
+--- a/tcl/pkgs/tdbc1.1.1/configure
++++ b/tcl/pkgs/tdbc1.1.1/configure
+@@ -6764,7 +6764,7 @@ fi
+ 
+ 	    # TEA specific: use LDFLAGS_DEFAULT instead of LDFLAGS
+ 	    SHLIB_LD='${CC} ${CFLAGS} ${LDFLAGS_DEFAULT} -shared'
+-	    LDFLAGS="$LDFLAGS -Wl,--export-dynamic"
++	    LDFLAGS="$LDFLAGS -Wl,--export-dynamic,-soname,\${@}"
+ 	    if test $doRpath = yes; then :
+ 
+ 		CC_SEARCH_FLAGS='-Wl,-rpath,${LIB_RUNTIME_DIR}'
+diff --git a/tcl/pkgs/tdbcmysql1.1.1/configure b/tcl/pkgs/tdbcmysql1.1.1/configure
+index cdb0e2dc7a..ce3a052910 100755
+--- a/tcl/pkgs/tdbcmysql1.1.1/configure
++++ b/tcl/pkgs/tdbcmysql1.1.1/configure
+@@ -7108,7 +7108,7 @@ fi
+ 
+ 	    # TEA specific: use LDFLAGS_DEFAULT instead of LDFLAGS
+ 	    SHLIB_LD='${CC} ${CFLAGS} ${LDFLAGS_DEFAULT} -shared'
+-	    LDFLAGS="$LDFLAGS -Wl,--export-dynamic"
++	    LDFLAGS="$LDFLAGS -Wl,--export-dynamic,-soname,\${@}"
+ 	    if test $doRpath = yes; then :
+ 
+ 		CC_SEARCH_FLAGS='-Wl,-rpath,${LIB_RUNTIME_DIR}'
+diff --git a/tcl/pkgs/tdbcodbc1.1.1/configure b/tcl/pkgs/tdbcodbc1.1.1/configure
+index fa60d58337..f769dbf538 100755
+--- a/tcl/pkgs/tdbcodbc1.1.1/configure
++++ b/tcl/pkgs/tdbcodbc1.1.1/configure
+@@ -7108,7 +7108,7 @@ fi
+ 
+ 	    # TEA specific: use LDFLAGS_DEFAULT instead of LDFLAGS
+ 	    SHLIB_LD='${CC} ${CFLAGS} ${LDFLAGS_DEFAULT} -shared'
+-	    LDFLAGS="$LDFLAGS -Wl,--export-dynamic"
++	    LDFLAGS="$LDFLAGS -Wl,--export-dynamic,-soname,\${@}"
+ 	    if test $doRpath = yes; then :
+ 
+ 		CC_SEARCH_FLAGS='-Wl,-rpath,${LIB_RUNTIME_DIR}'
+diff --git a/tcl/pkgs/tdbcpostgres1.1.1/configure b/tcl/pkgs/tdbcpostgres1.1.1/configure
+index b5792ec906..07d1ce7263 100755
+--- a/tcl/pkgs/tdbcpostgres1.1.1/configure
++++ b/tcl/pkgs/tdbcpostgres1.1.1/configure
+@@ -7108,7 +7108,7 @@ fi
+ 
+ 	    # TEA specific: use LDFLAGS_DEFAULT instead of LDFLAGS
+ 	    SHLIB_LD='${CC} ${CFLAGS} ${LDFLAGS_DEFAULT} -shared'
+-	    LDFLAGS="$LDFLAGS -Wl,--export-dynamic"
++	    LDFLAGS="$LDFLAGS -Wl,--export-dynamic,-soname,\${@}"
+ 	    if test $doRpath = yes; then :
+ 
+ 		CC_SEARCH_FLAGS='-Wl,-rpath,${LIB_RUNTIME_DIR}'
+diff --git a/tcl/pkgs/tdbcsqlite3-1.1.1/configure b/tcl/pkgs/tdbcsqlite3-1.1.1/configure
+index dce65eee91..01a4102373 100755
+--- a/tcl/pkgs/tdbcsqlite3-1.1.1/configure
++++ b/tcl/pkgs/tdbcsqlite3-1.1.1/configure
+@@ -4941,7 +4941,7 @@ fi
+ 
+ 	    # TEA specific: use LDFLAGS_DEFAULT instead of LDFLAGS
+ 	    SHLIB_LD='${CC} ${CFLAGS} ${LDFLAGS_DEFAULT} -shared'
+-	    LDFLAGS="$LDFLAGS -Wl,--export-dynamic"
++	    LDFLAGS="$LDFLAGS -Wl,--export-dynamic,-soname,\${@}"
+ 	    if test $doRpath = yes; then :
+ 
+ 		CC_SEARCH_FLAGS='-Wl,-rpath,${LIB_RUNTIME_DIR}'
+diff --git a/tcl/pkgs/thread2.8.5/configure b/tcl/pkgs/thread2.8.5/configure
+index 13563f7af1..47b3ee5833 100755
+--- a/tcl/pkgs/thread2.8.5/configure
++++ b/tcl/pkgs/thread2.8.5/configure
+@@ -6664,7 +6664,7 @@ fi
+ 
+ 	    # TEA specific: use LDFLAGS_DEFAULT instead of LDFLAGS
+ 	    SHLIB_LD='${CC} ${CFLAGS} ${LDFLAGS_DEFAULT} -shared'
+-	    LDFLAGS="$LDFLAGS -Wl,--export-dynamic"
++	    LDFLAGS="$LDFLAGS -Wl,--export-dynamic,-soname,\${@}"
+ 	    if test $doRpath = yes; then :
+ 
+ 		CC_SEARCH_FLAGS='-Wl,-rpath,${LIB_RUNTIME_DIR}'
+-- 
+2.21.0
+

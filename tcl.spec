@@ -1,17 +1,20 @@
 %def_with test
 %define major 8.6
+%define itcl 4.2.0
+%define tdbc 1.1.1
+%define thread 2.8.5
 
 Name: tcl
-Version: 8.6.9
-Release: alt1
+Version: 8.6.10
+Release: alt0.rc0.1
 
-Summary: A Tool Command Language (TCL)
-License: BSD
+Summary: The Tool Command Language (TCL)
+License: TCL
 Group: Development/Tcl
 Url: http://www.tcl.tk/
 
-# repacked ftp://ftp.tcl.tk/pub/tcl/tcl8_6/tcl-core%version-src.tar.gz
-Source: %name-core%version.tar
+# repacked ftp://ftp.tcl.tk/pub/tcl/tcl8_6/tcl%version-src.tar.gz
+Source: %name%version-src.tar
 Source1: tcl.m4
 Patch1: 0001-ALT-extra-headers.patch
 Patch2: 0002-ALT-soname.patch
@@ -25,6 +28,11 @@ Patch9: 0009-ALT-add-libdir-tcl-to-package-search-path.patch
 Patch10: 0010-DEBIAN-manpages.diff.patch
 Patch11: 0011-ALT-add-THREADS_LIBS-to-TCL_LIB_FLAG-tclConfig.sh-pr.patch
 Patch12: 0012-ALT-tclsh.1-fix-shebang-example.patch
+Patch13: 0013-ALT-TEA-for-pkgs.patch
+Patch14: 0014-ALT-itcl-uses-tclInt.h-from-TCL-sources-instead-of-s.patch
+Patch15: 0015-ALT-make-pkgs-test-work.patch
+Patch16: 0016-ALT-set-LDFLAGS-to-link-pkgs-against-tclstub.patch
+Patch17: 0017-ALT-pkgs-soname.patch
 
 BuildRequires(pre): rpm-build-tcl >= 0.4-alt1
 %{?_with_test:BuildConflicts: tcl-vfs}
@@ -33,8 +41,24 @@ BuildRequires: zlib-devel
 Conflicts: tcl-incrtcl < 4 tcl-incrtk < 4
 Conflicts: tcl-readline < 2.1.1-alt8
 
+%package pkgs
+Summary: The Tool Command Language (TCL) - packages
+Group: Development/Tcl
+# tcl-incrtcl4 and tcl-thread are bundled in tcl sources
+Conflicts: tcl-incrtcl4 <= 4.1.1-alt1
+Conflicts: tcl-thread <= 2.8.2-alt1
+Obsoletes: tcl-incrtcl4 tcl-thread
+Provides: tcl(TclOO)
+Provides: tcl-incrtcl4 = %itcl
+Provides: tcl-incrtcl = %itcl
+Provides: tcl-tdbc = %tdbc
+Provides: tcl-tdbcmysql = %tdbc
+Provides: tcl-tdbcodbc = %tdbc
+Provides: tcl-tdbcpostgres = %tdbc
+Provides: tcl-thread = %thread
+
 %package -n lib%name
-Summary: A Tool Command Language (TCL) - shared library
+Summary: The Tool Command Language (TCL) - shared library
 Group: System/Libraries
 Provides: %_tcllibdir
 Provides: %_tcldatadir
@@ -44,6 +68,18 @@ Summary: Header files and C programming manual for TCL
 Group: Development/C
 Requires: %name
 Requires: rpm-build-tcl >= 0.5-alt1
+Conflicts: tcl-incrtcl4-devel <= 4.1.1-alt1
+Conflicts: tcl-thread-devel <= 2.8.2-alt1
+
+%package pkgs-devel
+Summary: Meta package for TCL pkgs devel
+Group: Development/C
+Requires: %name-devel
+Requires: %name-pkgs
+Obsoletes: tcl-incrtcl4-devel tcl-thread-devel
+Provides: tcl-incrtcl4-devel = %itcl
+Provides: tcl-tdbc-devel = %tdbc
+Provides: tcl-thread-devel = %thread
 
 %description
 The Tcl (Tool Command Language) provides a powerful platform for
@@ -53,6 +89,17 @@ the Tk toolkit, Tcl provides the fastest and most powerful way to
 create GUI applications that run on PCs, Unix, and the Macintosh.  Tcl
 can also be used for a variety of web-related tasks and for creating
 powerful command languages for applications.
+
+%description pkgs
+The Tcl (Tool Command Language) provides a powerful platform for
+creating integration applications that tie together diverse
+applications, protocols, devices, and frameworks.  When paired with
+the Tk toolkit, Tcl provides the fastest and most powerful way to
+create GUI applications that run on PCs, Unix, and the Macintosh.  Tcl
+can also be used for a variety of web-related tasks and for creating
+powerful command languages for applications.
+
+This package includes packages shipped with Tcl distribution.
 
 %description -n lib%name
 The Tcl (Tool Command Language) provides a powerful platform for
@@ -76,17 +123,35 @@ powerful command languages for applications.
 
 This package includes header files and C programming manuals for Tcl.
 
+%description pkgs-devel
+The Tcl (Tool Command Language) provides a powerful platform for
+creating integration applications that tie together diverse
+applications, protocols, devices, and frameworks.  When paired with
+the Tk toolkit, Tcl provides the fastest and most powerful way to
+create GUI applications that run on PCs, Unix, and the Macintosh.  Tcl
+can also be used for a variety of web-related tasks and for creating
+powerful command languages for applications.
+
+This package is metapackage for TCL pkgs devel.
+
 %prep
 %setup -q -n %name%version
 %autopatch -p2
 cp -p %SOURCE1 tcl.m4
 # remove unneeded stuff
 rm -r compat/zlib macosx win
+# sqlite extension is built from sqlite3 package
+rm -r pkgs/sqlite*
 
 %build
 pushd unix
 %autoreconf
-%configure --disable-rpath --enable-threads
+%configure \
+	--disable-rpath \
+	--enable-symbols \
+	--enable-threads \
+	--without-tzdata \
+	#
 make all
 popd
 
@@ -107,8 +172,12 @@ TCL_LIBRARY=%buildroot%_tcldatadir/%name%major; export TCL_LIBRARY
 exec %buildroot%_bindir/tclsh "\$@"
 EOF
 chmod +x %__tclsh
-bzip -9f ChangeLog changes
-install -pm0644 README license.terms changes.bz2 ChangeLog.bz2 %buildroot%docdir
+xz ChangeLog changes
+install -pm0644 README.md license.terms changes.xz ChangeLog.xz %buildroot%docdir
+
+# collect man pages
+find pkgs/*/doc -name '*.n' -type f -fprintf pkgsmans '%%%%_mandir/mann/%%f*\n'
+sed 's/^/%%exclude\ /' pkgsmans > exclude_pkgsmans
 
 %check
 # skip clock.test due lack of /etc/localtime in the build environment (ALT#35848)
@@ -117,9 +186,9 @@ pushd unix
 make test
 popd
 
-%files
+%files -f exclude_pkgsmans
 %dir %docdir
-%docdir/README
+%docdir/README.md
 %docdir/license.terms
 %docdir/changes.*
 
@@ -134,6 +203,22 @@ popd
 
 %_man1dir/*
 %_mandir/mann/*
+
+%files pkgs -f pkgsmans
+%_tcllibdir/libitcl%itcl.so
+%_tcllibdir/libtdbc%tdbc.so
+%_tcllibdir/libtdbcmysql%tdbc.so
+%_tcllibdir/libtdbcodbc%tdbc.so
+%_tcllibdir/libtdbcpostgres%tdbc.so
+%_tcllibdir/libthread%thread.so
+
+%_tcllibdir/itcl%itcl
+%_tcllibdir/tdbc%tdbc
+%_tcllibdir/tdbcmysql%tdbc
+%_tcllibdir/tdbcodbc%tdbc
+%_tcllibdir/tdbcpostgres%tdbc
+%_tcllibdir/thread%thread
+%_libdir/tcl8/%major/tdbc/sqlite3-%tdbc.tm
 
 %files -n lib%name
 %dir %_tcllibdir
@@ -151,13 +236,30 @@ popd
 %_pkgconfigdir/%name.pc
 %_libdir/lib%name.so
 %_libdir/lib%{name}stub%{major}.a
+%_tcllibdir/libitclstub%itcl.a
+%_tcllibdir/libtdbcstub%tdbc.a
 %_libdir/%{name}Config.sh
 %_libdir/%{name}ooConfig.sh
+%_libdir/itclConfig.sh
+%_libdir/tdbcConfig.sh
 %_tcldatadir/%name%major/%{name}AppInit.c
 %_datadir/aclocal/*.m4
 %_man3dir/*
 
+%files pkgs-devel
+
 %changelog
+* Tue Oct 08 2019 Vladimir D. Seleznev <vseleznv@altlinux.org> 8.6.10-alt0.rc0.1
+- Updated to 8.6.10rc0.
+- Changed build schema: TCL now built from tcl%%version-src.tar.gz with
+  bundled packages instead of tcl-core%%version-src.tar.gz.
+- Enabled debugging symbols.
+- Updated tcl.m4 to TEA (tclconfig) cbe95d1d87.
+- Added conflicts to tcl-incrtcl < 4 and tcl-incrtk < 4 (spec).
+- Added --without-tzdata to configure options in %%build (spec).
+- Fixed sebang example in tclsh1.
+- Fixed license field and summary.
+
 * Mon Apr 15 2019 Vladimir D. Seleznev <vseleznv@altlinux.org> 8.6.9-alt1
 - 8.6.9 released
 - moved auto.tcl, init.tcl and package.tcl to libtcl subpackage

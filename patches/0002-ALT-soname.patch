@@ -1,17 +1,17 @@
-From 83a5aa93cc12f976e13d848cccd04d7aae56ef20 Mon Sep 17 00:00:00 2001
+From 7d258e23e47ec41ae4aa8bc13f31e0bde61937b2 Mon Sep 17 00:00:00 2001
 From: Sergey Bolshakov <sbolshakov@altlinux.org>
 Date: Sat, 15 Sep 2007 00:11:49 +0400
-Subject: [PATCH 02/12] ALT soname
+Subject: [PATCH 02/17] ALT soname
 
 ---
  tcl/unix/tcl.m4 | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/tcl/unix/tcl.m4 b/tcl/unix/tcl.m4
-index 1953798394..8339745a89 100644
+index f451d0e08d..a8ef5e62dc 100644
 --- a/tcl/unix/tcl.m4
 +++ b/tcl/unix/tcl.m4
-@@ -2031,7 +2031,7 @@ dnl # preprocessing tests use only CPPFLAGS.
+@@ -2027,7 +2027,7 @@ dnl # preprocessing tests use only CPPFLAGS.
  
      AS_IF([test "${SHARED_BUILD}" = 1 -a "${SHLIB_SUFFIX}" != ""], [
          LIB_SUFFIX=${SHARED_LIB_SUFFIX}
