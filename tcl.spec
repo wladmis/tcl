@@ -6,7 +6,7 @@
 
 Name: tcl
 Version: 8.6.10
-Release: alt0.rc0.1
+Release: alt0.rc0.2
 
 Summary: The Tool Command Language (TCL)
 License: TCL
@@ -38,24 +38,31 @@ BuildRequires(pre): rpm-build-tcl >= 0.4-alt1
 %{?_with_test:BuildConflicts: tcl-vfs}
 BuildRequires: zlib-devel
 
+Provides: tcl(TclOO)
+
 Conflicts: tcl-incrtcl < 4 tcl-incrtk < 4
 Conflicts: tcl-readline < 2.1.1-alt8
 
 %package pkgs
 Summary: The Tool Command Language (TCL) - packages
 Group: Development/Tcl
-# tcl-incrtcl4 and tcl-thread are bundled in tcl sources
-Conflicts: tcl-incrtcl4 <= 4.1.1-alt1
-Conflicts: tcl-thread <= 2.8.2-alt1
-Obsoletes: tcl-incrtcl4 tcl-thread
-Provides: tcl(TclOO)
-Provides: tcl-incrtcl4 = %itcl
-Provides: tcl-incrtcl = %itcl
 Provides: tcl-tdbc = %tdbc
 Provides: tcl-tdbcmysql = %tdbc
 Provides: tcl-tdbcodbc = %tdbc
 Provides: tcl-tdbcpostgres = %tdbc
+# tcl-thread is bundled in tcl sources
 Provides: tcl-thread = %thread
+Conflicts: tcl-thread <= 2.8.2-alt1
+Obsoletes: tcl-thread
+
+%package pkg-incrtcl4
+Summary: The Tool Command Language (TCL) - Itcl package
+Group: Development/Tcl
+# tcl-incrtcl4 is bundled in tcl sources
+Provides: tcl-incrtcl4 = %itcl
+Provides: tcl-incrtcl = %itcl
+Conflicts: tcl-incrtcl4 <= 4.1.1-alt1
+Obsoletes: tcl-incrtcl4
 
 %package -n lib%name
 Summary: The Tool Command Language (TCL) - shared library
@@ -76,6 +83,7 @@ Summary: Meta package for TCL pkgs devel
 Group: Development/C
 Requires: %name-devel
 Requires: %name-pkgs
+Requires: %name-pkg-incrtcl4
 Obsoletes: tcl-incrtcl4-devel tcl-thread-devel
 Provides: tcl-incrtcl4-devel = %itcl
 Provides: tcl-tdbc-devel = %tdbc
@@ -100,6 +108,17 @@ can also be used for a variety of web-related tasks and for creating
 powerful command languages for applications.
 
 This package includes packages shipped with Tcl distribution.
+
+%description pkg-incrtcl4
+The Tcl (Tool Command Language) provides a powerful platform for
+creating integration applications that tie together diverse
+applications, protocols, devices, and frameworks.  When paired with
+the Tk toolkit, Tcl provides the fastest and most powerful way to
+create GUI applications that run on PCs, Unix, and the Macintosh.  Tcl
+can also be used for a variety of web-related tasks and for creating
+powerful command languages for applications.
+
+This package includes intrtcl package shipped with Tcl distribution.
 
 %description -n lib%name
 The Tcl (Tool Command Language) provides a powerful platform for
@@ -177,7 +196,10 @@ install -pm0644 README.md license.terms changes.xz ChangeLog.xz %buildroot%docdi
 
 # collect man pages
 find pkgs/*/doc -name '*.n' -type f -fprintf pkgsmans '%%%%_mandir/mann/%%f*\n'
+find pkgs/itcl*/doc -name '*.n' -type f -fprintf itclmans '%%%%_mandir/mann/%%f*\n'
 sed 's/^/%%exclude\ /' pkgsmans > exclude_pkgsmans
+join -v1 pkgsmans itclmans >pkgsmans.tmp
+mv pkgsmans{.tmp,}
 
 %check
 # skip clock.test due lack of /etc/localtime in the build environment (ALT#35848)
@@ -205,20 +227,22 @@ popd
 %_mandir/mann/*
 
 %files pkgs -f pkgsmans
-%_tcllibdir/libitcl%itcl.so
 %_tcllibdir/libtdbc%tdbc.so
 %_tcllibdir/libtdbcmysql%tdbc.so
 %_tcllibdir/libtdbcodbc%tdbc.so
 %_tcllibdir/libtdbcpostgres%tdbc.so
 %_tcllibdir/libthread%thread.so
 
-%_tcllibdir/itcl%itcl
 %_tcllibdir/tdbc%tdbc
 %_tcllibdir/tdbcmysql%tdbc
 %_tcllibdir/tdbcodbc%tdbc
 %_tcllibdir/tdbcpostgres%tdbc
 %_tcllibdir/thread%thread
 %_libdir/tcl8/%major/tdbc/sqlite3-%tdbc.tm
+
+%files pkg-incrtcl4 -f itclmans
+%_tcllibdir/libitcl%itcl.so
+%_tcllibdir/itcl%itcl
 
 %files -n lib%name
 %dir %_tcllibdir
@@ -249,6 +273,9 @@ popd
 %files pkgs-devel
 
 %changelog
+* Wed Oct 23 2019 Vladimir D. Seleznev <vseleznv@altlinux.org> 8.6.10-alt0.rc0.2
+- Separated tcl-pkg-incrtcl4 subpackage.
+
 * Tue Oct 08 2019 Vladimir D. Seleznev <vseleznv@altlinux.org> 8.6.10-alt0.rc0.1
 - Updated to 8.6.10rc0.
 - Changed build schema: TCL now built from tcl%%version-src.tar.gz with
