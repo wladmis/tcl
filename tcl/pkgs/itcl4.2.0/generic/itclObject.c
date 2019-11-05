@@ -53,7 +53,7 @@ static char* ItclTraceItclHullVar(ClientData cdata, Tcl_Interp *interp,
 	const char *name1, const char *name2, int flags);
 
 static void ItclDestroyObject(ClientData clientData);
-static Tcl_FreeProc FreeObject;
+static void FreeObject(char *cdata);
 
 static int ItclDestructBase(Tcl_Interp *interp, ItclObject *contextObj,
         ItclClass *contextClass, int flags);
@@ -248,7 +248,7 @@ ItclCreateObject(
      *  Create a new object and initialize it.
      */
     ioPtr = (ItclObject*)Itcl_Alloc(sizeof(ItclObject));
-    Itcl_EventuallyFree(ioPtr, FreeObject);
+    Itcl_EventuallyFree(ioPtr, (Tcl_FreeProc *)FreeObject);
     ioPtr->iclsPtr = iclsPtr;
     ioPtr->interp = interp;
     ioPtr->infoPtr = infoPtr;
@@ -873,7 +873,7 @@ ItclInitObjectVariables(
 		    goto errorCleanup;
                 }
 	    }
-            hPtr2 = Tcl_FindHashEntry(&ivPtr->iclsPtr->resolveVars, varName);
+            hPtr2 = ItclResolveVarEntry(ivPtr->iclsPtr, varName);
             if (hPtr2 == NULL) {
                 hPtr = Tcl_NextHashEntry(&place);
 	        continue;
@@ -1626,7 +1626,7 @@ ItclGetInstanceVar(
         iclsPtr = contextIclsPtr;
     }
     ivPtr = NULL;
-    hPtr = Tcl_FindHashEntry(&iclsPtr->resolveVars, (char *)name1);
+    hPtr = ItclResolveVarEntry(iclsPtr, (char *)name1);
     if (hPtr != NULL) {
         vlookup = (ItclVarLookup *)Tcl_GetHashValue(hPtr);
         ivPtr = vlookup->ivPtr;
@@ -1641,7 +1641,7 @@ ItclGetInstanceVar(
 	Tcl_GetVariableFullName(interp, varPtr, varName);
 
 	val = Tcl_GetVar2(interp, Tcl_GetString(varName), name2,
-		TCL_LEAVE_ERR_MSG);
+		TCL_LEAVE_ERR_MSG | TCL_GLOBAL_ONLY);
 	Tcl_DecrRefCount(varName);
 	if (val) {
 	    return val;
@@ -1842,7 +1842,7 @@ ItclSetInstanceVar(
     } else {
         iclsPtr = contextIclsPtr;
     }
-    hPtr = Tcl_FindHashEntry(&iclsPtr->resolveVars, (char *)name1);
+    hPtr = ItclResolveVarEntry(iclsPtr, (char *)name1);
     if (hPtr != NULL) {
         vlookup = (ItclVarLookup *)Tcl_GetHashValue(hPtr);
         ivPtr = vlookup->ivPtr;
@@ -3496,7 +3496,7 @@ GetConstructorVar(
     ItclVariable *ivPtr;
     const char *val;
 
-    hPtr = Tcl_FindHashEntry(&iclsPtr->resolveVars, (char *)varName);
+    hPtr = ItclResolveVarEntry(iclsPtr, (char *)varName);
     if (hPtr == NULL) {
 	/* no such variable */
         return NULL;

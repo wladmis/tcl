@@ -8497,7 +8497,7 @@ ExecuteExtendedBinaryMathOp(
 	    Tcl_TakeBignumFromObj(NULL, value2Ptr, &big2);
 
 	    /* TODO: internals intrusion */
-	    if ((w1 > ((Tcl_WideInt) 0)) ^ (big2.sign == MP_ZPOS)) {
+	    if ((w1 > ((Tcl_WideInt) 0)) ^ !mp_isneg(&big2)) {
 		/*
 		 * Arguments are opposite sign; remainder is sum.
 		 */
@@ -9028,7 +9028,7 @@ ExecuteExtendedBinaryMathOp(
 	}
 	Tcl_TakeBignumFromObj(NULL, valuePtr, &big1);
 	mp_init(&bigResult);
-	mp_expt_d(&big1, (mp_digit)w2, &bigResult);
+	mp_expt_u32(&big1, (unsigned int)w2, &bigResult);
 	mp_clear(&big1);
 	BIG_RESULT(&bigResult);
     }

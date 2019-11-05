@@ -67,12 +67,11 @@
  */
 
 #undef  assert
-#define DEBUG 1
-#ifndef  DEBUG
+#if defined(NDEBUG) && !defined(DEBUG)
 #define assert(EX) ((void)0)
-#else
+#else /* !NDEBUG || DEBUG */
 #define assert(EX) (void)((EX) || (Itcl_Assert(STRINGIFY(EX), __FILE__, __LINE__), 0))
-#endif  /* DEBUG */
+#endif
 
 #define ITCL_INTERP_DATA "itcl_data"
 #define ITCL_TK_VERSION "8.6"
@@ -100,8 +99,10 @@
 
 #define ALLOC_CHUNK 8
 
-#define ITCL_VARIABLES_NAMESPACE "::itcl::internal::variables"
-#define ITCL_COMMANDS_NAMESPACE "::itcl::internal::commands"
+#define ITCL_INT_NAMESPACE	    ITCL_NAMESPACE"::internal"
+#define ITCL_INTDICTS_NAMESPACE	    ITCL_INT_NAMESPACE"::dicts"
+#define ITCL_VARIABLES_NAMESPACE    ITCL_INT_NAMESPACE"::variables"
+#define ITCL_COMMANDS_NAMESPACE	    ITCL_INT_NAMESPACE"::commands"
 
 typedef struct ItclFoundation {
     Itcl_Stack methodCallStack;
@@ -693,6 +694,9 @@ MODULE_SCOPE void ItclDeleteClassVariablesNamespace(Tcl_Interp *interp,
         ItclClass *iclsPtr);
 MODULE_SCOPE int ItclInfoInit(Tcl_Interp *interp, ItclObjectInfo *infoPtr);
 
+MODULE_SCOPE Tcl_HashEntry *ItclResolveVarEntry(
+	ItclClass* iclsPtr, const char *varName);
+
 struct Tcl_ResolvedVarInfo;
 MODULE_SCOPE int Itcl_ClassCmdResolver(Tcl_Interp *interp, const char* name,
 	Tcl_Namespace *nsPtr, int flags, Tcl_Command *rPtr);
@@ -712,6 +716,9 @@ MODULE_SCOPE int ItclSetParserResolver(Tcl_Namespace *nsPtr);
 MODULE_SCOPE void ItclProcErrorProc(Tcl_Interp *interp, Tcl_Obj *procNameObj);
 MODULE_SCOPE int Itcl_CreateOption (Tcl_Interp *interp, ItclClass *iclsPtr,
 	ItclOption *ioptPtr);
+MODULE_SCOPE int ItclCreateMethodVariable(Tcl_Interp *interp,
+	ItclVariable *ivPtr, Tcl_Obj* defaultPtr, Tcl_Obj* callbackPtr,
+	ItclMethodVariable** imvPtrPtr);
 MODULE_SCOPE int Itcl_CreateMethodVariable (Tcl_Interp *interp,
         ItclClass *iclsPtr, Tcl_Obj *name, Tcl_Obj *defaultPtr,
 	Tcl_Obj *callbackPtr, ItclMethodVariable **imvPtr);
