@@ -1,17 +1,17 @@
-From 6bcd966e4c66b7cd6d4f7461172a3814a7d5fdd3 Mon Sep 17 00:00:00 2001
+From c3e7c66bb662c5ba22a5b5019de85fd564012e1f Mon Sep 17 00:00:00 2001
 From: "Vladimir D. Seleznev" <vseleznv@altlinux.org>
 Date: Wed, 9 Oct 2019 02:08:00 +0300
-Subject: [PATCH 16/17] ALT set LDFLAGS to link pkgs against tclstub
+Subject: [PATCH 15/16] ALT set LDFLAGS to link pkgs against tclstub
 
 ---
  tcl/unix/Makefile.in | 3 ++-
  1 file changed, 2 insertions(+), 1 deletion(-)
 
 diff --git a/tcl/unix/Makefile.in b/tcl/unix/Makefile.in
-index 2528f1d114..f550680fb9 100644
+index a59b0698ee..9fa59a06df 100644
 --- a/tcl/unix/Makefile.in
 +++ b/tcl/unix/Makefile.in
-@@ -1736,7 +1736,8 @@ configure-packages:
+@@ -1815,7 +1815,8 @@ configure-packages:
  	      echo "Configuring package '$$pkg'"; \
  	      mkdir -p $(PKG_DIR)/$$pkg; \
  	      if [ ! -f $(PKG_DIR)/$$pkg/Makefile ]; then \

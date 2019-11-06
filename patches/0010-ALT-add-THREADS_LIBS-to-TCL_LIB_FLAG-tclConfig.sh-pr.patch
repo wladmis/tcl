@@ -1,7 +1,7 @@
-From 5a0b4610edff58c3464c3c6f47dee284fbf692a5 Mon Sep 17 00:00:00 2001
+From 60feca0d21612eff9d1381703f8cae82ef76b4d9 Mon Sep 17 00:00:00 2001
 From: "Vladimir D. Seleznev" <vseleznv@altlinux.org>
 Date: Mon, 15 Apr 2019 02:33:09 +0300
-Subject: [PATCH 11/17] ALT add THREADS_LIBS to TCL_LIB_FLAG, tclConfig.sh
+Subject: [PATCH 10/16] ALT add THREADS_LIBS to TCL_LIB_FLAG, tclConfig.sh
  provides flags for shared linkage
 
 ---
@@ -10,7 +10,7 @@ Subject: [PATCH 11/17] ALT add THREADS_LIBS to TCL_LIB_FLAG, tclConfig.sh
  2 files changed, 3 insertions(+), 3 deletions(-)
 
 diff --git a/tcl/unix/configure.in b/tcl/unix/configure.in
-index dc2383c245..658a880d6f 100755
+index 08b92717eb..54d1fa6a6c 100755
 --- a/tcl/unix/configure.in
 +++ b/tcl/unix/configure.in
 @@ -841,9 +841,9 @@ else

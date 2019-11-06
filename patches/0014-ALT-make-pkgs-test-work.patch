@@ -1,11 +1,11 @@
-From 934cbbc79465d571d390ab1fe324ff1a62616693 Mon Sep 17 00:00:00 2001
+From eda5619beca1ffe018dac969896e1d20af267ecc Mon Sep 17 00:00:00 2001
 From: "Vladimir D. Seleznev" <vseleznv@altlinux.org>
 Date: Tue, 8 Oct 2019 18:35:46 +0300
-Subject: [PATCH 15/17] ALT make pkgs test work
+Subject: [PATCH 14/16] ALT make pkgs test work
 
 ---
  tcl/pkgs/itcl4.2.0/Makefile.in         | 3 ++-
- tcl/pkgs/sqlite3.29.0/Makefile.in      | 2 +-
+ tcl/pkgs/sqlite3.30.1/Makefile.in      | 2 +-
  tcl/pkgs/tdbc1.1.1/Makefile.in         | 3 ++-
  tcl/pkgs/tdbcmysql1.1.1/Makefile.in    | 3 ++-
  tcl/pkgs/tdbcodbc1.1.1/Makefile.in     | 3 ++-
@@ -36,10 +36,10 @@ index 00b31d8e16..e876bbb03a 100644
  
  $(PKG_STUB_LIB_FILE): $(PKG_STUB_OBJECTS)
  	-rm -f $(PKG_STUB_LIB_FILE)
-diff --git a/tcl/pkgs/sqlite3.29.0/Makefile.in b/tcl/pkgs/sqlite3.29.0/Makefile.in
+diff --git a/tcl/pkgs/sqlite3.30.1/Makefile.in b/tcl/pkgs/sqlite3.30.1/Makefile.in
 index 6ae745ff26..7edfb0e48a 100644
---- a/tcl/pkgs/sqlite3.29.0/Makefile.in
-+++ b/tcl/pkgs/sqlite3.29.0/Makefile.in
+--- a/tcl/pkgs/sqlite3.30.1/Makefile.in
++++ b/tcl/pkgs/sqlite3.30.1/Makefile.in
 @@ -132,7 +132,7 @@ TCL_SRC_DIR	= @TCL_SRC_DIR@
  EXTRA_PATH	= $(top_builddir):$(TCL_BIN_DIR)
  #EXTRA_PATH	= $(top_builddir):$(TCL_BIN_DIR):$(TK_BIN_DIR)
@@ -176,10 +176,10 @@ index 1355ab6199..b80ec8074d 100644
  $(PKG_STUB_LIB_FILE): $(PKG_STUB_OBJECTS)
  	-rm -f $(PKG_STUB_LIB_FILE)
 diff --git a/tcl/unix/Makefile.in b/tcl/unix/Makefile.in
-index bfe8a9b912..2528f1d114 100644
+index c7d1c64c32..a59b0698ee 100644
 --- a/tcl/unix/Makefile.in
 +++ b/tcl/unix/Makefile.in
-@@ -237,7 +237,7 @@ PKGS_DIR		= $(TOP_DIR)/pkgs
+@@ -238,7 +238,7 @@ PKGS_DIR		= $(TOP_DIR)/pkgs
  # Must be absolute because of the cd dltest $(DLTEST_DIR)/configure below.
  DLTEST_DIR		= @TCL_SRC_DIR@/unix/dltest
  # Must be absolute to so the corresponding tcltest's tcl_library is absolute.

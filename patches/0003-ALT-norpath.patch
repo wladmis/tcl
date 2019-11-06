@@ -1,17 +1,17 @@
-From cc6aa5e029da4e8ab64e3dbd2d524595ef13764b Mon Sep 17 00:00:00 2001
+From ac0c44a5d7e503263a97f5735b6068c7591d9925 Mon Sep 17 00:00:00 2001
 From: Sergey Bolshakov <sbolshakov@altlinux.org>
 Date: Sat, 15 Sep 2007 00:12:08 +0400
-Subject: [PATCH 03/17] ALT norpath
+Subject: [PATCH 03/16] ALT norpath
 
 ---
  tcl/unix/tcl.m4 | 4 ++--
  1 file changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/tcl/unix/tcl.m4 b/tcl/unix/tcl.m4
-index a8ef5e62dc..9acd5a443d 100644
+index ee20409a7d..204e5f8b02 100644
 --- a/tcl/unix/tcl.m4
 +++ b/tcl/unix/tcl.m4
-@@ -1412,8 +1412,8 @@ AC_DEFUN([SC_CONFIG_CFLAGS], [
+@@ -1415,8 +1415,8 @@ AC_DEFUN([SC_CONFIG_CFLAGS], [
  	    DL_LIBS="-ldl"
  	    LDFLAGS="$LDFLAGS -Wl,--export-dynamic"
  	    AS_IF([test $doRpath = yes], [

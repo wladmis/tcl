@@ -1,7 +1,7 @@
-From f9607e5a4074dd730690f6e1ab3e7e4413e92d21 Mon Sep 17 00:00:00 2001
+From e8c41b202b331a5ab07d4c147e9c5d577fe548d4 Mon Sep 17 00:00:00 2001
 From: Sergey Bolshakov <sbolshakov@altlinux.org>
 Date: Sat, 15 Sep 2007 00:12:52 +0400
-Subject: [PATCH 05/17] ALT libpath
+Subject: [PATCH 05/16] ALT libpath
 
 ---
  tcl/library/init.tcl    |  5 -----
@@ -83,24 +83,24 @@ index 681a931dca..bcfdc56cf1 100644
  test unixInit-2.10 {TclpInitLibraryPath: executable relative} -setup {
      unset -nocomplain oldlibrary
 diff --git a/tcl/unix/configure.in b/tcl/unix/configure.in
-index 668f141b3e..60b99607b5 100755
+index 8893cf6d40..ed9119679f 100755
 --- a/tcl/unix/configure.in
 +++ b/tcl/unix/configure.in
 @@ -773,7 +773,7 @@ eval "TCL_LIB_FILE=libtcl${LIB_SUFFIX}"
  
  eval "TCL_LIB_FILE=${TCL_LIB_FILE}"
  
--TCL_LIBRARY='$(prefix)/lib/tcl$(VERSION)'
-+TCL_LIBRARY='$(prefix)/share/tcl/tcl$(VERSION)'
+-test -z "$TCL_LIBRARY" && TCL_LIBRARY='$(prefix)/lib/tcl$(VERSION)'
++test -z "$TCL_LIBRARY" && TCL_LIBRARY='$(prefix)/share/tcl/tcl$(VERSION)'
  PRIVATE_INCLUDE_DIR='$(includedir)'
  HTML_DIR='$(DISTDIR)/html'
  
 @@ -868,7 +868,7 @@ if test "$FRAMEWORK_BUILD" = "1" ; then
  elif test "$prefix/lib" != "$libdir"; then
-     TCL_PACKAGE_PATH="${libdir} ${prefix}/lib ${TCL_PACKAGE_PATH}"
+     test -z "$TCL_PACKAGE_PATH" && TCL_PACKAGE_PATH="${libdir} ${prefix}/lib ${TCL_PACKAGE_PATH}"
  else
--    TCL_PACKAGE_PATH="${prefix}/lib ${TCL_PACKAGE_PATH}"
-+    TCL_PACKAGE_PATH="${prefix}/share/tcl"
+-    test -z "$TCL_PACKAGE_PATH" && TCL_PACKAGE_PATH="${prefix}/lib ${TCL_PACKAGE_PATH}"
++    test -z "$TCL_PACKAGE_PATH" && TCL_PACKAGE_PATH="${prefix}/share/tcl"
  fi
  
  #--------------------------------------------------------------------

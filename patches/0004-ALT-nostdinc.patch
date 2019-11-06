@@ -1,14 +1,14 @@
-From 82fed4e50b90b8bcb6293dedb54b3fa7a49ef385 Mon Sep 17 00:00:00 2001
+From d1a9a51b996376fd764149d623c322b1ca31c948 Mon Sep 17 00:00:00 2001
 From: Sergey Bolshakov <sbolshakov@altlinux.org>
 Date: Sat, 15 Sep 2007 00:12:23 +0400
-Subject: [PATCH 04/17] ALT nostdinc
+Subject: [PATCH 04/16] ALT nostdinc
 
 ---
  tcl/unix/configure.in | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/tcl/unix/configure.in b/tcl/unix/configure.in
-index 17f7655083..668f141b3e 100755
+index 0d3f426e2c..8893cf6d40 100755
 --- a/tcl/unix/configure.in
 +++ b/tcl/unix/configure.in
 @@ -895,7 +895,7 @@ TCL_BUILD_STUB_LIB_PATH="`pwd`/${TCL_STUB_LIB_FILE}"

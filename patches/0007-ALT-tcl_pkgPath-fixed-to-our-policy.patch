@@ -1,24 +1,24 @@
-From a8b40c76e9fb08b089ff8f430b2eca75ec333708 Mon Sep 17 00:00:00 2001
+From ffa5e99e93e9ac0eccf0cfe56abc855fa1892fab Mon Sep 17 00:00:00 2001
 From: Sergey Bolshakov <sbolshakov@altlinux.org>
 Date: Tue, 20 Nov 2007 17:56:05 +0300
-Subject: [PATCH 07/17] ALT tcl_pkgPath fixed to our policy
+Subject: [PATCH 07/16] ALT tcl_pkgPath fixed to our policy
 
 ---
  tcl/unix/configure.in | 2 --
  1 file changed, 2 deletions(-)
 
 diff --git a/tcl/unix/configure.in b/tcl/unix/configure.in
-index 60b99607b5..d37fe94a0d 100755
+index ed9119679f..080aecb3aa 100755
 --- a/tcl/unix/configure.in
 +++ b/tcl/unix/configure.in
 @@ -865,8 +865,6 @@ if test "$FRAMEWORK_BUILD" = "1" ; then
- 	TCL_PACKAGE_PATH="~/Library/Tcl /Library/Tcl /System/Library/Tcl ~/Library/Frameworks /Library/Frameworks /System/Library/Frameworks"
+ 	TCL_PACKAGE_PATH="~/Library/Tcl /Library/Tcl ~/Library/Frameworks /Library/Frameworks"
      test -z "$TCL_MODULE_PATH"  && \
- 	TCL_MODULE_PATH="~/Library/Tcl /Library/Tcl /System/Library/Tcl"
+ 	TCL_MODULE_PATH="~/Library/Tcl /Library/Tcl"
 -elif test "$prefix/lib" != "$libdir"; then
--    TCL_PACKAGE_PATH="${libdir} ${prefix}/lib ${TCL_PACKAGE_PATH}"
+-    test -z "$TCL_PACKAGE_PATH" && TCL_PACKAGE_PATH="${libdir} ${prefix}/lib ${TCL_PACKAGE_PATH}"
  else
-     TCL_PACKAGE_PATH="${prefix}/share/tcl"
+     test -z "$TCL_PACKAGE_PATH" && TCL_PACKAGE_PATH="${prefix}/share/tcl"
  fi
 -- 
 2.21.0

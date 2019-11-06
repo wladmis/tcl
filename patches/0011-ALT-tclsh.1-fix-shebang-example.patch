@@ -1,7 +1,7 @@
-From dc2f6aebe1c44f604f51fae6de8320ff0031271b Mon Sep 17 00:00:00 2001
+From 77971ef1d0414b373ae11e096c17cb835a369ada Mon Sep 17 00:00:00 2001
 From: "Vladimir D. Seleznev" <vseleznv@altlinux.org>
 Date: Thu, 5 Sep 2019 00:45:46 +0300
-Subject: [PATCH 12/17] ALT tclsh.1: fix shebang example
+Subject: [PATCH 11/16] ALT tclsh.1: fix shebang example
 
 ---
  tcl/doc/tclsh.1 | 4 ++--

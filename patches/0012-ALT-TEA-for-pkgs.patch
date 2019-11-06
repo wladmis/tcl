@@ -1,13 +1,13 @@
-From 216da01f9a218f02737ac60acfb0f34f856cab69 Mon Sep 17 00:00:00 2001
+From 1db92b2b05820da6572860c63a7a8767ae90d841 Mon Sep 17 00:00:00 2001
 From: "Vladimir D. Seleznev" <vseleznv@altlinux.org>
 Date: Tue, 8 Oct 2019 18:29:40 +0300
-Subject: [PATCH 13/17] ALT TEA for pkgs
+Subject: [PATCH 12/16] ALT TEA for pkgs
 
 ---
  tcl/pkgs/itcl4.2.0/Makefile.in             | 15 ++++++++-------
  tcl/pkgs/itcl4.2.0/configure               |  2 +-
  tcl/pkgs/itcl4.2.0/pkgIndex.tcl.in         |  4 ++--
- tcl/pkgs/sqlite3.29.0/Makefile.in          |  4 ++--
+ tcl/pkgs/sqlite3.30.1/Makefile.in          |  4 ++--
  tcl/pkgs/tdbc1.1.1/Makefile.in             | 19 ++++++++++---------
  tcl/pkgs/tdbc1.1.1/configure               |  2 +-
  tcl/pkgs/tdbc1.1.1/pkgIndex.tcl.in         |  2 +-
@@ -68,10 +68,10 @@ index ab22866704..00b31d8e16 100644
  #========================================================================
  # Install binary executables (e.g. .exe files and dependent .dll files)
 diff --git a/tcl/pkgs/itcl4.2.0/configure b/tcl/pkgs/itcl4.2.0/configure
-index d5450aba02..cdeee876ea 100755
+index ce759dae98..05910ea970 100755
 --- a/tcl/pkgs/itcl4.2.0/configure
 +++ b/tcl/pkgs/itcl4.2.0/configure
-@@ -8243,7 +8243,7 @@ $as_echo "${TCLSH_PROG}" >&6; }
+@@ -8476,7 +8476,7 @@ $as_echo "${TCLSH_PROG}" >&6; }
      #--------------------------------------------------------------------
  
      # pkglibdir must be a fully qualified path and (not ${exec_prefix}/lib)
@@ -81,21 +81,21 @@ index d5450aba02..cdeee876ea 100755
  	eval itcl_LIB_FLAG="-litcl${PACKAGE_VERSION}${DBGX}"
  	eval itcl_STUB_LIB_FLAG="-litclstub${PACKAGE_VERSION}${DBGX}"
 diff --git a/tcl/pkgs/itcl4.2.0/pkgIndex.tcl.in b/tcl/pkgs/itcl4.2.0/pkgIndex.tcl.in
-index 31fe6b1986..f21107f403 100644
+index 0d6ec0eb38..e7d3a95e48 100644
 --- a/tcl/pkgs/itcl4.2.0/pkgIndex.tcl.in
 +++ b/tcl/pkgs/itcl4.2.0/pkgIndex.tcl.in
-@@ -2,5 +2,5 @@
+@@ -17,5 +17,5 @@
  
- if {![package vsatisfies [package provide Tcl] 8.6-]} {return}
+ if {![package vsatisfies [package provide Tcl] 8.6]} {return}
  
 -package ifneeded itcl @PACKAGE_VERSION@ [list load [file join $dir "@PKG_LIB_FILE@"] itcl]
 -package ifneeded Itcl @PACKAGE_VERSION@ [list load [file join $dir "@PKG_LIB_FILE@"] itcl]
 +package ifneeded itcl @PACKAGE_VERSION@ [list load [file join $dir .. "@PKG_LIB_FILE@"] itcl]
 +package ifneeded Itcl @PACKAGE_VERSION@ [list load [file join $dir .. "@PKG_LIB_FILE@"] itcl]
-diff --git a/tcl/pkgs/sqlite3.29.0/Makefile.in b/tcl/pkgs/sqlite3.29.0/Makefile.in
+diff --git a/tcl/pkgs/sqlite3.30.1/Makefile.in b/tcl/pkgs/sqlite3.30.1/Makefile.in
 index 196ae0c8f4..6ae745ff26 100644
---- a/tcl/pkgs/sqlite3.29.0/Makefile.in
-+++ b/tcl/pkgs/sqlite3.29.0/Makefile.in
+--- a/tcl/pkgs/sqlite3.30.1/Makefile.in
++++ b/tcl/pkgs/sqlite3.30.1/Makefile.in
 @@ -395,8 +395,8 @@ install-lib-binaries: binaries
  	  fi; \
  	done
@@ -163,10 +163,10 @@ index 4a7665edce..054a06ece7 100644
  #========================================================================
  # Install binary executables (e.g. .exe files and dependent .dll files)
 diff --git a/tcl/pkgs/tdbc1.1.1/configure b/tcl/pkgs/tdbc1.1.1/configure
-index 8588556e2a..8df9179ae5 100755
+index bf9c81d280..25345193a1 100755
 --- a/tcl/pkgs/tdbc1.1.1/configure
 +++ b/tcl/pkgs/tdbc1.1.1/configure
-@@ -8327,7 +8327,7 @@ fi
+@@ -8560,7 +8560,7 @@ fi
      #--------------------------------------------------------------------
  
      # pkglibdir must be a fully qualified path and (not ${exec_prefix}/lib)
@@ -239,10 +239,10 @@ index 3365c76abf..235b773937 100644
 -    [list load [file join $dir @PKG_LIB_FILE@] @PACKAGE_NAME@]"
 +    [list load [file join $dir .. @PKG_LIB_FILE@] @PACKAGE_NAME@]"
 diff --git a/tcl/pkgs/tdbcmysql1.1.1/tclconfig/tcl.m4 b/tcl/pkgs/tdbcmysql1.1.1/tclconfig/tcl.m4
-index fb180ab2fb..73031a6041 100644
+index 21e8f25403..f519cfdc4c 100644
 --- a/tcl/pkgs/tdbcmysql1.1.1/tclconfig/tcl.m4
 +++ b/tcl/pkgs/tdbcmysql1.1.1/tclconfig/tcl.m4
-@@ -3826,7 +3826,7 @@ AC_DEFUN([TEA_EXPORT_CONFIG], [
+@@ -3876,7 +3876,7 @@ AC_DEFUN([TEA_EXPORT_CONFIG], [
      #--------------------------------------------------------------------
  
      # pkglibdir must be a fully qualified path and (not ${exec_prefix}/lib)
