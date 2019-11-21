@@ -367,7 +367,6 @@ TOMMATHOBJS = \
 	$(TMP_DIR)\bn_mp_zero.obj \
 	$(TMP_DIR)\bn_s_mp_add.obj \
 	$(TMP_DIR)\bn_s_mp_balance_mul.obj \
-	$(TMP_DIR)\bn_s_mp_get_bit.obj \
 	$(TMP_DIR)\bn_s_mp_karatsuba_mul.obj \
 	$(TMP_DIR)\bn_s_mp_karatsuba_sqr.obj \
 	$(TMP_DIR)\bn_s_mp_mul_digs.obj \
@@ -893,8 +892,6 @@ install-libraries: tclConfig tcl-nmake install-msgs install-tzdata
 	@$(CPY) "$(GENERICDIR)\tclPlatDecls.h"    "$(INCLUDE_INSTALL_DIR)\"
 	@$(CPY) "$(GENERICDIR)\tclTomMath.h"      "$(INCLUDE_INSTALL_DIR)\"
 	@$(CPY) "$(GENERICDIR)\tclTomMathDecls.h" "$(INCLUDE_INSTALL_DIR)\"
-	@$(CPY) "$(TOMMATHDIR)\tommath_class.h"   "$(INCLUDE_INSTALL_DIR)\"
-	@$(CPY) "$(TOMMATHDIR)\tommath_superclass.h" "$(INCLUDE_INSTALL_DIR)\"
 	@echo Installing library files to $(SCRIPT_INSTALL_DIR)
 	@$(CPY) "$(ROOT)\library\history.tcl"     "$(SCRIPT_INSTALL_DIR)\"
 	@$(CPY) "$(ROOT)\library\init.tcl"        "$(SCRIPT_INSTALL_DIR)\"
