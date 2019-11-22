@@ -1,8 +1,7 @@
-From 364bea8064e6685f217f442017de345a270bdc60 Mon Sep 17 00:00:00 2001
+From d7cda88a57c080110789b60f448274c0c78f6594 Mon Sep 17 00:00:00 2001
 From: "Vladimir D. Seleznev" <vseleznv@altlinux.org>
 Date: Tue, 8 Oct 2019 18:31:22 +0300
-Subject: [PATCH 13/16] ALT itcl uses tclInt.h from TCL sources instead of
- system include dir
+Subject: [PATCH 10/13] ALT itcl TCL_INCLUDES
 
 TCL devel package is not installed when itcl is building, so it should use
 private headers from the TCL source instead of system include directory.
@@ -11,7 +10,7 @@ private headers from the TCL source instead of system include directory.
  1 file changed, 2 insertions(+), 1 deletion(-)
 
 diff --git a/tcl/pkgs/itcl4.2.0/configure b/tcl/pkgs/itcl4.2.0/configure
-index 05910ea970..36362d6ca2 100755
+index b9b600a531..618e7030a5 100755
 --- a/tcl/pkgs/itcl4.2.0/configure
 +++ b/tcl/pkgs/itcl4.2.0/configure
 @@ -5316,7 +5316,8 @@ $as_echo_n "checking for Tcl private include files... " >&6; }
@@ -25,5 +24,5 @@ index 05910ea970..36362d6ca2 100755
              # If Tcl was built as a framework, attempt to use
              # the framework's Headers and PrivateHeaders directories
 -- 
-2.21.0
+2.24.0
 

@@ -1,14 +1,15 @@
-From e8c41b202b331a5ab07d4c147e9c5d577fe548d4 Mon Sep 17 00:00:00 2001
+From 678aed4b165763bced3a8f9cbe4f0a8f08afc70f Mon Sep 17 00:00:00 2001
 From: Sergey Bolshakov <sbolshakov@altlinux.org>
 Date: Sat, 15 Sep 2007 00:12:52 +0400
-Subject: [PATCH 05/16] ALT libpath
+Subject: [PATCH 05/13] ALT libpath
 
+Co-Authored-by: Vladimir D. Seleznev <vseleznv@altlinux.org>
 ---
  tcl/library/init.tcl    |  5 -----
  tcl/tests/unixInit.test | 20 +++++++++++---------
- tcl/unix/configure.in   |  4 ++--
+ tcl/unix/configure.in   |  6 ++----
  tcl/unix/tclUnixInit.c  |  7 +++----
- 4 files changed, 16 insertions(+), 20 deletions(-)
+ 4 files changed, 16 insertions(+), 22 deletions(-)
 
 diff --git a/tcl/library/init.tcl b/tcl/library/init.tcl
 index 5cda0d9574..77a239cce3 100644
@@ -83,7 +84,7 @@ index 681a931dca..bcfdc56cf1 100644
  test unixInit-2.10 {TclpInitLibraryPath: executable relative} -setup {
      unset -nocomplain oldlibrary
 diff --git a/tcl/unix/configure.in b/tcl/unix/configure.in
-index 8893cf6d40..ed9119679f 100755
+index 8893cf6d40..08b92717eb 100755
 --- a/tcl/unix/configure.in
 +++ b/tcl/unix/configure.in
 @@ -773,7 +773,7 @@ eval "TCL_LIB_FILE=libtcl${LIB_SUFFIX}"
@@ -95,12 +96,15 @@ index 8893cf6d40..ed9119679f 100755
  PRIVATE_INCLUDE_DIR='$(includedir)'
  HTML_DIR='$(DISTDIR)/html'
  
-@@ -868,7 +868,7 @@ if test "$FRAMEWORK_BUILD" = "1" ; then
- elif test "$prefix/lib" != "$libdir"; then
-     test -z "$TCL_PACKAGE_PATH" && TCL_PACKAGE_PATH="${libdir} ${prefix}/lib ${TCL_PACKAGE_PATH}"
+@@ -865,10 +865,8 @@ if test "$FRAMEWORK_BUILD" = "1" ; then
+ 	TCL_PACKAGE_PATH="~/Library/Tcl /Library/Tcl ~/Library/Frameworks /Library/Frameworks"
+     test -z "$TCL_MODULE_PATH"  && \
+ 	TCL_MODULE_PATH="~/Library/Tcl /Library/Tcl"
+-elif test "$prefix/lib" != "$libdir"; then
+-    test -z "$TCL_PACKAGE_PATH" && TCL_PACKAGE_PATH="${libdir} ${prefix}/lib ${TCL_PACKAGE_PATH}"
  else
 -    test -z "$TCL_PACKAGE_PATH" && TCL_PACKAGE_PATH="${prefix}/lib ${TCL_PACKAGE_PATH}"
-+    test -z "$TCL_PACKAGE_PATH" && TCL_PACKAGE_PATH="${prefix}/share/tcl"
++    test -z "$TCL_PACKAGE_PATH" && TCL_PACKAGE_PATH="${prefix}/share/tcl ${libdir}/tcl"
  fi
  
  #--------------------------------------------------------------------
@@ -137,5 +141,5 @@ index aac8a8df9f..82981f2915 100644
  	    Tcl_ListObjAppendElement(NULL, pathPtr, TclDStringToObj(&ds));
  	}
 -- 
-2.21.0
+2.24.0
 

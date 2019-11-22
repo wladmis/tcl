@@ -1,7 +1,7 @@
-From d1a9a51b996376fd764149d623c322b1ca31c948 Mon Sep 17 00:00:00 2001
+From a6ffdd981740355f0bbefd6c028ccae74af363f9 Mon Sep 17 00:00:00 2001
 From: Sergey Bolshakov <sbolshakov@altlinux.org>
 Date: Sat, 15 Sep 2007 00:12:23 +0400
-Subject: [PATCH 04/16] ALT nostdinc
+Subject: [PATCH 04/13] ALT nostdinc
 
 ---
  tcl/unix/configure.in | 2 +-
@@ -21,5 +21,5 @@ index 0d3f426e2c..8893cf6d40 100755
  #------------------------------------------------------------------------
  # tclConfig.sh refers to this by a different name
 -- 
-2.21.0
+2.24.0
 

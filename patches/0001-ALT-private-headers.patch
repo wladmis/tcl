@@ -1,48 +1,38 @@
-From b9b29fdd68a88c99f2211681fdd4e31017c4aad0 Mon Sep 17 00:00:00 2001
-From: Sergey Bolshakov <sbolshakov@altlinux.org>
-Date: Sat, 15 Sep 2007 00:11:32 +0400
-Subject: [PATCH 01/16] ALT extra headers
+From e857eb7753b8a2917836a55fdf11e0aae2d13c34 Mon Sep 17 00:00:00 2001
+From: "Vladimir D. Seleznev" <vseleznv@altlinux.org>
+Date: Fri, 8 Nov 2019 01:19:10 +0300
+Subject: [PATCH 01/13] ALT private headers
 
+Based on original tcl-8.5b1-alt-extra-headers.patch, which was heavily
+rewritten.
 ---
- tcl/unix/Makefile.in     | 15 ++++++++-------
- tcl/unix/tclConfig.sh.in |  9 +++++----
- 2 files changed, 13 insertions(+), 11 deletions(-)
+ tcl/unix/Makefile.in     | 5 +++--
+ tcl/unix/tclConfig.sh.in | 9 +++++----
+ 2 files changed, 8 insertions(+), 6 deletions(-)
 
 diff --git a/tcl/unix/Makefile.in b/tcl/unix/Makefile.in
-index 321b0e254b..43e5162889 100644
+index 99bdf052d0..de80bd4dc5 100644
 --- a/tcl/unix/Makefile.in
 +++ b/tcl/unix/Makefile.in
-@@ -1038,7 +1038,7 @@ install-doc: doc
- 	done
+@@ -60,7 +60,7 @@ INCLUDE_INSTALL_DIR	= $(INSTALL_ROOT)$(includedir)
+ PRIVATE_INCLUDE_DIR	= @PRIVATE_INCLUDE_DIR@
  
- install-headers:
--	@for i in "$(INCLUDE_INSTALL_DIR)"; \
-+	@for i in "$(INCLUDE_INSTALL_DIR)/tcl/generic" "$(INCLUDE_INSTALL_DIR)/tcl/unix" "$(INCLUDE_INSTALL_DIR)"; \
- 	    do \
- 	    if [ ! -d "$$i" ] ; then \
- 		echo "Making directory $$i"; \
-@@ -1047,14 +1047,15 @@ install-headers:
- 		fi; \
- 	    done;
- 	@echo "Installing header files to $(INCLUDE_INSTALL_DIR)/";
--	@for i in $(GENERIC_DIR)/tcl.h $(GENERIC_DIR)/tclDecls.h \
--		$(GENERIC_DIR)/tclOO.h $(GENERIC_DIR)/tclOODecls.h \
--		$(GENERIC_DIR)/tclPlatDecls.h \
--		$(GENERIC_DIR)/tclTomMath.h \
--		$(GENERIC_DIR)/tclTomMathDecls.h ; \
-+	@for i in tcl.h tclDecls.h tclOO.h tclOODecls.h tclPlatDecls.h tclTomMath.h tclTomMathDecls.h; \
- 	    do \
--	    $(INSTALL_DATA) $$i "$(INCLUDE_INSTALL_DIR)"; \
-+	    $(INSTALL_DATA) $(GENERIC_DIR)/$$i "$(INCLUDE_INSTALL_DIR)"; \
- 	    done;
-+	@for i in tclInt.h tclPort.h tclRegexp.h tclIntDecls.h tclIntPlatDecls.h regex.h tclCompile.h; \
-+		do \
-+		$(INSTALL_DATA) $(GENERIC_DIR)/$$i $(INCLUDE_INSTALL_DIR)/tcl/generic; \
-+		done;
-+	@$(INSTALL_DATA) $(UNIX_DIR)/tclUnixPort.h $(INCLUDE_INSTALL_DIR)/tcl/unix;
+ # Directory in which to (optionally) install the private tcl headers:
+-PRIVATE_INCLUDE_INSTALL_DIR = $(INSTALL_ROOT)$(PRIVATE_INCLUDE_DIR)
++PRIVATE_INCLUDE_INSTALL_DIR = $(INSTALL_ROOT)$(PRIVATE_INCLUDE_DIR)/tcl
  
- # Optional target to install private headers
- install-private-headers:
+ # Top-level directory in which to install manual entries:
+ MAN_INSTALL_DIR		= $(INSTALL_ROOT)$(mandir)
+@@ -1072,7 +1072,8 @@ install-private-headers:
+ 		$(GENERIC_DIR)/tclOOInt.h $(GENERIC_DIR)/tclOOIntDecls.h \
+ 		$(UNIX_DIR)/tclUnixPort.h; \
+ 	    do \
+-	    $(INSTALL_DATA) $$i "$(PRIVATE_INCLUDE_INSTALL_DIR)"; \
++	    $(INSTALL_DATA_DIR) "$(PRIVATE_INCLUDE_INSTALL_DIR)/$$(basename $$(dirname $$i))"; \
++	    $(INSTALL_DATA) $$i "$(PRIVATE_INCLUDE_INSTALL_DIR)/$$(basename $$(dirname $$i))"; \
+ 	    done;
+ 	@if test -f tclConfig.h; then\
+ 	    $(INSTALL_DATA) tclConfig.h "$(PRIVATE_INCLUDE_INSTALL_DIR)"; \
 diff --git a/tcl/unix/tclConfig.sh.in b/tcl/unix/tclConfig.sh.in
 index f768690620..b8aa935323 100644
 --- a/tcl/unix/tclConfig.sh.in
@@ -84,5 +74,5 @@ index f768690620..b8aa935323 100644
  # Path to the Tcl stub library in the install directory.
  TCL_STUB_LIB_PATH='@TCL_STUB_LIB_PATH@'
 -- 
-2.21.0
+2.24.0
 

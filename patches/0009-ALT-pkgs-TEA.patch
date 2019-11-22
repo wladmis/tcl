@@ -1,13 +1,13 @@
-From 1db92b2b05820da6572860c63a7a8767ae90d841 Mon Sep 17 00:00:00 2001
+From 057be22de265d0a17d9c5db1f0b92e19b4b4f942 Mon Sep 17 00:00:00 2001
 From: "Vladimir D. Seleznev" <vseleznv@altlinux.org>
 Date: Tue, 8 Oct 2019 18:29:40 +0300
-Subject: [PATCH 12/16] ALT TEA for pkgs
+Subject: [PATCH 09/13] ALT pkgs TEA
 
 ---
  tcl/pkgs/itcl4.2.0/Makefile.in             | 15 ++++++++-------
  tcl/pkgs/itcl4.2.0/configure               |  2 +-
  tcl/pkgs/itcl4.2.0/pkgIndex.tcl.in         |  4 ++--
- tcl/pkgs/sqlite3.30.1/Makefile.in          |  4 ++--
+ tcl/pkgs/sqlite3.30.1.2/Makefile.in        |  4 ++--
  tcl/pkgs/tdbc1.1.1/Makefile.in             | 19 ++++++++++---------
  tcl/pkgs/tdbc1.1.1/configure               |  2 +-
  tcl/pkgs/tdbc1.1.1/pkgIndex.tcl.in         |  2 +-
@@ -68,10 +68,10 @@ index ab22866704..00b31d8e16 100644
  #========================================================================
  # Install binary executables (e.g. .exe files and dependent .dll files)
 diff --git a/tcl/pkgs/itcl4.2.0/configure b/tcl/pkgs/itcl4.2.0/configure
-index ce759dae98..05910ea970 100755
+index 070003c992..b9b600a531 100755
 --- a/tcl/pkgs/itcl4.2.0/configure
 +++ b/tcl/pkgs/itcl4.2.0/configure
-@@ -8476,7 +8476,7 @@ $as_echo "${TCLSH_PROG}" >&6; }
+@@ -8451,7 +8451,7 @@ $as_echo "${TCLSH_PROG}" >&6; }
      #--------------------------------------------------------------------
  
      # pkglibdir must be a fully qualified path and (not ${exec_prefix}/lib)
@@ -92,10 +92,10 @@ index 0d6ec0eb38..e7d3a95e48 100644
 -package ifneeded Itcl @PACKAGE_VERSION@ [list load [file join $dir "@PKG_LIB_FILE@"] itcl]
 +package ifneeded itcl @PACKAGE_VERSION@ [list load [file join $dir .. "@PKG_LIB_FILE@"] itcl]
 +package ifneeded Itcl @PACKAGE_VERSION@ [list load [file join $dir .. "@PKG_LIB_FILE@"] itcl]
-diff --git a/tcl/pkgs/sqlite3.30.1/Makefile.in b/tcl/pkgs/sqlite3.30.1/Makefile.in
+diff --git a/tcl/pkgs/sqlite3.30.1.2/Makefile.in b/tcl/pkgs/sqlite3.30.1.2/Makefile.in
 index 196ae0c8f4..6ae745ff26 100644
---- a/tcl/pkgs/sqlite3.30.1/Makefile.in
-+++ b/tcl/pkgs/sqlite3.30.1/Makefile.in
+--- a/tcl/pkgs/sqlite3.30.1.2/Makefile.in
++++ b/tcl/pkgs/sqlite3.30.1.2/Makefile.in
 @@ -395,8 +395,8 @@ install-lib-binaries: binaries
  	  fi; \
  	done
@@ -163,10 +163,10 @@ index 4a7665edce..054a06ece7 100644
  #========================================================================
  # Install binary executables (e.g. .exe files and dependent .dll files)
 diff --git a/tcl/pkgs/tdbc1.1.1/configure b/tcl/pkgs/tdbc1.1.1/configure
-index bf9c81d280..25345193a1 100755
+index e5f6d7d174..22c0898ee8 100755
 --- a/tcl/pkgs/tdbc1.1.1/configure
 +++ b/tcl/pkgs/tdbc1.1.1/configure
-@@ -8560,7 +8560,7 @@ fi
+@@ -8535,7 +8535,7 @@ fi
      #--------------------------------------------------------------------
  
      # pkglibdir must be a fully qualified path and (not ${exec_prefix}/lib)
@@ -239,10 +239,10 @@ index 3365c76abf..235b773937 100644
 -    [list load [file join $dir @PKG_LIB_FILE@] @PACKAGE_NAME@]"
 +    [list load [file join $dir .. @PKG_LIB_FILE@] @PACKAGE_NAME@]"
 diff --git a/tcl/pkgs/tdbcmysql1.1.1/tclconfig/tcl.m4 b/tcl/pkgs/tdbcmysql1.1.1/tclconfig/tcl.m4
-index 21e8f25403..f519cfdc4c 100644
+index 7d901f9d23..5e402d7fd4 100644
 --- a/tcl/pkgs/tdbcmysql1.1.1/tclconfig/tcl.m4
 +++ b/tcl/pkgs/tdbcmysql1.1.1/tclconfig/tcl.m4
-@@ -3876,7 +3876,7 @@ AC_DEFUN([TEA_EXPORT_CONFIG], [
+@@ -3854,7 +3854,7 @@ AC_DEFUN([TEA_EXPORT_CONFIG], [
      #--------------------------------------------------------------------
  
      # pkglibdir must be a fully qualified path and (not ${exec_prefix}/lib)
@@ -449,5 +449,5 @@ index 22f5f8ff47..a2efb503e3 100644
  # package Ttrace uses some support machinery.
  
 -- 
-2.21.0
+2.24.0
 

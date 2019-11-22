@@ -1,9 +1,10 @@
-From 60feca0d21612eff9d1381703f8cae82ef76b4d9 Mon Sep 17 00:00:00 2001
+From ec960ed1dc64ae3513167687141ea48c7cec5ebd Mon Sep 17 00:00:00 2001
 From: "Vladimir D. Seleznev" <vseleznv@altlinux.org>
 Date: Mon, 15 Apr 2019 02:33:09 +0300
-Subject: [PATCH 10/16] ALT add THREADS_LIBS to TCL_LIB_FLAG, tclConfig.sh
- provides flags for shared linkage
+Subject: [PATCH 07/13] ALT TCL_LIBS for shared linkage
 
+Add THREADS_LIBS to TCL_LIB_FLAG, tclConfig.sh provides flags for shared
+linkage.
 ---
  tcl/unix/configure.in    | 4 ++--
  tcl/unix/tclConfig.sh.in | 2 +-
@@ -39,5 +40,5 @@ index b8aa935323..a116b0e927 100644
  # Top-level directory in which Tcl's platform-independent files are
  # installed.
 -- 
-2.21.0
+2.24.0
 

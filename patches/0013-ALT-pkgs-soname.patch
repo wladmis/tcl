@@ -1,7 +1,7 @@
-From ad49fc2a82e4e1cb9ade949a5eac7816a007540c Mon Sep 17 00:00:00 2001
+From 3da8fd0db32a3a30f422b3b0a91e810c43f0fb19 Mon Sep 17 00:00:00 2001
 From: "Vladimir D. Seleznev" <vseleznv@altlinux.org>
 Date: Wed, 9 Oct 2019 17:49:53 +0300
-Subject: [PATCH 16/16] ALT pkgs soname
+Subject: [PATCH 13/13] ALT pkgs soname
 
 ---
  tcl/pkgs/itcl4.2.0/configure         | 2 +-
@@ -14,10 +14,10 @@ Subject: [PATCH 16/16] ALT pkgs soname
  7 files changed, 7 insertions(+), 7 deletions(-)
 
 diff --git a/tcl/pkgs/itcl4.2.0/configure b/tcl/pkgs/itcl4.2.0/configure
-index 36362d6ca2..7419d690d6 100755
+index 618e7030a5..d43d3f13bc 100755
 --- a/tcl/pkgs/itcl4.2.0/configure
 +++ b/tcl/pkgs/itcl4.2.0/configure
-@@ -6856,7 +6856,7 @@ fi
+@@ -6831,7 +6831,7 @@ fi
  
  	    # TEA specific: use LDFLAGS_DEFAULT instead of LDFLAGS
  	    SHLIB_LD='${CC} ${CFLAGS} ${LDFLAGS_DEFAULT} -shared'
@@ -27,10 +27,10 @@ index 36362d6ca2..7419d690d6 100755
  
  		CC_SEARCH_FLAGS='-Wl,-rpath,${LIB_RUNTIME_DIR}'
 diff --git a/tcl/pkgs/tdbc1.1.1/configure b/tcl/pkgs/tdbc1.1.1/configure
-index 25345193a1..2a7f66d7cc 100755
+index 22c0898ee8..0d24725fc1 100755
 --- a/tcl/pkgs/tdbc1.1.1/configure
 +++ b/tcl/pkgs/tdbc1.1.1/configure
-@@ -6969,7 +6969,7 @@ fi
+@@ -6944,7 +6944,7 @@ fi
  
  	    # TEA specific: use LDFLAGS_DEFAULT instead of LDFLAGS
  	    SHLIB_LD='${CC} ${CFLAGS} ${LDFLAGS_DEFAULT} -shared'
@@ -40,10 +40,10 @@ index 25345193a1..2a7f66d7cc 100755
  
  		CC_SEARCH_FLAGS='-Wl,-rpath,${LIB_RUNTIME_DIR}'
 diff --git a/tcl/pkgs/tdbcmysql1.1.1/configure b/tcl/pkgs/tdbcmysql1.1.1/configure
-index c68fd06159..ea4b716d54 100755
+index 8b49795633..459b5c7191 100755
 --- a/tcl/pkgs/tdbcmysql1.1.1/configure
 +++ b/tcl/pkgs/tdbcmysql1.1.1/configure
-@@ -7313,7 +7313,7 @@ fi
+@@ -7288,7 +7288,7 @@ fi
  
  	    # TEA specific: use LDFLAGS_DEFAULT instead of LDFLAGS
  	    SHLIB_LD='${CC} ${CFLAGS} ${LDFLAGS_DEFAULT} -shared'
@@ -53,10 +53,10 @@ index c68fd06159..ea4b716d54 100755
  
  		CC_SEARCH_FLAGS='-Wl,-rpath,${LIB_RUNTIME_DIR}'
 diff --git a/tcl/pkgs/tdbcodbc1.1.1/configure b/tcl/pkgs/tdbcodbc1.1.1/configure
-index 9a19bf1003..ec5e754ed2 100755
+index 0795639a62..762d6be9a7 100755
 --- a/tcl/pkgs/tdbcodbc1.1.1/configure
 +++ b/tcl/pkgs/tdbcodbc1.1.1/configure
-@@ -7313,7 +7313,7 @@ fi
+@@ -7288,7 +7288,7 @@ fi
  
  	    # TEA specific: use LDFLAGS_DEFAULT instead of LDFLAGS
  	    SHLIB_LD='${CC} ${CFLAGS} ${LDFLAGS_DEFAULT} -shared'
@@ -66,10 +66,10 @@ index 9a19bf1003..ec5e754ed2 100755
  
  		CC_SEARCH_FLAGS='-Wl,-rpath,${LIB_RUNTIME_DIR}'
 diff --git a/tcl/pkgs/tdbcpostgres1.1.1/configure b/tcl/pkgs/tdbcpostgres1.1.1/configure
-index 08e0e177d8..4e0b8550bf 100755
+index 4f5024e48f..9d98a7706a 100755
 --- a/tcl/pkgs/tdbcpostgres1.1.1/configure
 +++ b/tcl/pkgs/tdbcpostgres1.1.1/configure
-@@ -7313,7 +7313,7 @@ fi
+@@ -7288,7 +7288,7 @@ fi
  
  	    # TEA specific: use LDFLAGS_DEFAULT instead of LDFLAGS
  	    SHLIB_LD='${CC} ${CFLAGS} ${LDFLAGS_DEFAULT} -shared'
@@ -79,10 +79,10 @@ index 08e0e177d8..4e0b8550bf 100755
  
  		CC_SEARCH_FLAGS='-Wl,-rpath,${LIB_RUNTIME_DIR}'
 diff --git a/tcl/pkgs/tdbcsqlite3-1.1.1/configure b/tcl/pkgs/tdbcsqlite3-1.1.1/configure
-index 88d10d34b2..7a4ad052ce 100755
+index 2018c91e36..6e6bec53eb 100755
 --- a/tcl/pkgs/tdbcsqlite3-1.1.1/configure
 +++ b/tcl/pkgs/tdbcsqlite3-1.1.1/configure
-@@ -5653,7 +5653,7 @@ fi
+@@ -5628,7 +5628,7 @@ fi
  
  	    # TEA specific: use LDFLAGS_DEFAULT instead of LDFLAGS
  	    SHLIB_LD='${CC} ${CFLAGS} ${LDFLAGS_DEFAULT} -shared'
@@ -92,10 +92,10 @@ index 88d10d34b2..7a4ad052ce 100755
  
  		CC_SEARCH_FLAGS='-Wl,-rpath,${LIB_RUNTIME_DIR}'
 diff --git a/tcl/pkgs/thread2.8.5/configure b/tcl/pkgs/thread2.8.5/configure
-index 4ac6e586be..09bcd7f28a 100755
+index 768486bb99..7706f526f8 100755
 --- a/tcl/pkgs/thread2.8.5/configure
 +++ b/tcl/pkgs/thread2.8.5/configure
-@@ -6869,7 +6869,7 @@ fi
+@@ -6844,7 +6844,7 @@ fi
  
  	    # TEA specific: use LDFLAGS_DEFAULT instead of LDFLAGS
  	    SHLIB_LD='${CC} ${CFLAGS} ${LDFLAGS_DEFAULT} -shared'
@@ -105,5 +105,5 @@ index 4ac6e586be..09bcd7f28a 100755
  
  		CC_SEARCH_FLAGS='-Wl,-rpath,${LIB_RUNTIME_DIR}'
 -- 
-2.21.0
+2.24.0
 
