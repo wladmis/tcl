@@ -1,7 +1,7 @@
-From e857eb7753b8a2917836a55fdf11e0aae2d13c34 Mon Sep 17 00:00:00 2001
+From fcfca6db49855dd58496aaf4412221d1b05bceb0 Mon Sep 17 00:00:00 2001
 From: "Vladimir D. Seleznev" <vseleznv@altlinux.org>
 Date: Fri, 8 Nov 2019 01:19:10 +0300
-Subject: [PATCH 01/13] ALT private headers
+Subject: [PATCH] ALT private headers
 
 Based on original tcl-8.5b1-alt-extra-headers.patch, which was heavily
 rewritten.
@@ -11,10 +11,10 @@ rewritten.
  2 files changed, 8 insertions(+), 6 deletions(-)
 
 diff --git a/tcl/unix/Makefile.in b/tcl/unix/Makefile.in
-index 99bdf052d0..de80bd4dc5 100644
+index 85acc1f9de..2f2ac53b23 100644
 --- a/tcl/unix/Makefile.in
 +++ b/tcl/unix/Makefile.in
-@@ -60,7 +60,7 @@ INCLUDE_INSTALL_DIR	= $(INSTALL_ROOT)$(includedir)
+@@ -63,7 +63,7 @@ INCLUDE_INSTALL_DIR	= $(INSTALL_ROOT)$(includedir)
  PRIVATE_INCLUDE_DIR	= @PRIVATE_INCLUDE_DIR@
  
  # Directory in which to (optionally) install the private tcl headers:
@@ -23,7 +23,7 @@ index 99bdf052d0..de80bd4dc5 100644
  
  # Top-level directory in which to install manual entries:
  MAN_INSTALL_DIR		= $(INSTALL_ROOT)$(mandir)
-@@ -1072,7 +1072,8 @@ install-private-headers:
+@@ -1078,7 +1078,8 @@ install-private-headers:
  		$(GENERIC_DIR)/tclOOInt.h $(GENERIC_DIR)/tclOOIntDecls.h \
  		$(UNIX_DIR)/tclUnixPort.h; \
  	    do \
@@ -74,5 +74,5 @@ index f768690620..b8aa935323 100644
  # Path to the Tcl stub library in the install directory.
  TCL_STUB_LIB_PATH='@TCL_STUB_LIB_PATH@'
 -- 
-2.24.0
+2.29.2
 

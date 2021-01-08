@@ -1,21 +1,21 @@
-From 70de73d1ac55c665371ea08ac720605b663fe0a1 Mon Sep 17 00:00:00 2001
+From c4995e6aec474b65b398364d6e9a1889835c48fa Mon Sep 17 00:00:00 2001
 From: Sergey Bolshakov <sbolshakov@altlinux.org>
 Date: Sat, 15 Sep 2007 00:12:08 +0400
-Subject: [PATCH 03/13] ALT norpath
+Subject: [PATCH] ALT norpath
 
 ---
  tcl/unix/tcl.m4 | 4 ++--
  1 file changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/tcl/unix/tcl.m4 b/tcl/unix/tcl.m4
-index ee20409a7d..204e5f8b02 100644
+index 84cf2514d8..a9a8bd8803 100644
 --- a/tcl/unix/tcl.m4
 +++ b/tcl/unix/tcl.m4
-@@ -1415,8 +1415,8 @@ AC_DEFUN([SC_CONFIG_CFLAGS], [
+@@ -1384,8 +1384,8 @@ AC_DEFUN([SC_CONFIG_CFLAGS], [
  	    DL_LIBS="-ldl"
  	    LDFLAGS="$LDFLAGS -Wl,--export-dynamic"
  	    AS_IF([test $doRpath = yes], [
--		CC_SEARCH_FLAGS='-Wl,-rpath,${LIB_RUNTIME_DIR}'])
+-		CC_SEARCH_FLAGS='"-Wl,-rpath,${LIB_RUNTIME_DIR}"'])
 -	    LD_SEARCH_FLAGS=${CC_SEARCH_FLAGS}
 +		CC_SEARCH_FLAGS=''])
 +	    LD_SEARCH_FLAGS=
@@ -23,5 +23,5 @@ index ee20409a7d..204e5f8b02 100644
  	    AS_IF([test $do64bit = yes], [
  		AC_CACHE_CHECK([if compiler accepts -m64 flag], tcl_cv_cc_m64, [
 -- 
-2.24.0
+2.29.2
 

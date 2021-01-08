@@ -1,7 +1,7 @@
-From 678aed4b165763bced3a8f9cbe4f0a8f08afc70f Mon Sep 17 00:00:00 2001
+From 03d13fe4a34c4c2c5aedb831a505e7b1630fedbb Mon Sep 17 00:00:00 2001
 From: Sergey Bolshakov <sbolshakov@altlinux.org>
 Date: Sat, 15 Sep 2007 00:12:52 +0400
-Subject: [PATCH 05/13] ALT libpath
+Subject: [PATCH] ALT libpath
 
 Co-Authored-by: Vladimir D. Seleznev <vseleznv@altlinux.org>
 ---
@@ -12,23 +12,23 @@ Co-Authored-by: Vladimir D. Seleznev <vseleznv@altlinux.org>
  4 files changed, 16 insertions(+), 22 deletions(-)
 
 diff --git a/tcl/library/init.tcl b/tcl/library/init.tcl
-index 5cda0d9574..77a239cce3 100644
+index 1bfca4c6da..5a8b0c6e59 100644
 --- a/tcl/library/init.tcl
 +++ b/tcl/library/init.tcl
-@@ -52,11 +52,6 @@ namespace eval tcl {
- 	    lappend ::auto_path $Dir
+@@ -57,11 +57,6 @@ namespace eval tcl {
+ 		lappend ::auto_path $Dir
+ 	    }
  	}
-     }
--    set Dir [file join [file dirname [file dirname \
--	    [info nameofexecutable]]] lib]
--    if {$Dir ni $::auto_path} {
--	lappend ::auto_path $Dir
--    }
-     catch {
- 	foreach Dir $::tcl_pkgPath {
- 	    if {$Dir ni $::auto_path} {
+-	set Dir [file join [file dirname [file dirname \
+-		[info nameofexecutable]]] lib]
+-	if {$Dir ni $::auto_path} {
+-	    lappend ::auto_path $Dir
+-	}
+ 	if {[info exists ::tcl_pkgPath]} { catch {
+ 	    foreach Dir $::tcl_pkgPath {
+ 		if {$Dir ni $::auto_path} {
 diff --git a/tcl/tests/unixInit.test b/tcl/tests/unixInit.test
-index 681a931dca..bcfdc56cf1 100644
+index 51ecafe438..1f2b07603c 100644
 --- a/tcl/tests/unixInit.test
 +++ b/tcl/tests/unixInit.test
 @@ -102,7 +102,7 @@ test unixInit-2.1 {TclpInitLibraryPath: value of installLib, developLib} -setup
@@ -84,10 +84,10 @@ index 681a931dca..bcfdc56cf1 100644
  test unixInit-2.10 {TclpInitLibraryPath: executable relative} -setup {
      unset -nocomplain oldlibrary
 diff --git a/tcl/unix/configure.in b/tcl/unix/configure.in
-index 8893cf6d40..08b92717eb 100755
+index 33227d6810..003a38d9e4 100644
 --- a/tcl/unix/configure.in
 +++ b/tcl/unix/configure.in
-@@ -773,7 +773,7 @@ eval "TCL_LIB_FILE=libtcl${LIB_SUFFIX}"
+@@ -772,7 +772,7 @@ eval "TCL_LIB_FILE=libtcl${LIB_SUFFIX}"
  
  eval "TCL_LIB_FILE=${TCL_LIB_FILE}"
  
@@ -96,23 +96,23 @@ index 8893cf6d40..08b92717eb 100755
  PRIVATE_INCLUDE_DIR='$(includedir)'
  HTML_DIR='$(DISTDIR)/html'
  
-@@ -865,10 +865,8 @@ if test "$FRAMEWORK_BUILD" = "1" ; then
+@@ -864,10 +864,8 @@ if test "$FRAMEWORK_BUILD" = "1" ; then
  	TCL_PACKAGE_PATH="~/Library/Tcl /Library/Tcl ~/Library/Frameworks /Library/Frameworks"
      test -z "$TCL_MODULE_PATH"  && \
  	TCL_MODULE_PATH="~/Library/Tcl /Library/Tcl"
 -elif test "$prefix/lib" != "$libdir"; then
--    test -z "$TCL_PACKAGE_PATH" && TCL_PACKAGE_PATH="${libdir} ${prefix}/lib ${TCL_PACKAGE_PATH}"
+-    test -z "$TCL_PACKAGE_PATH" && TCL_PACKAGE_PATH="{${libdir}} {${prefix}/lib} ${TCL_PACKAGE_PATH}"
  else
--    test -z "$TCL_PACKAGE_PATH" && TCL_PACKAGE_PATH="${prefix}/lib ${TCL_PACKAGE_PATH}"
-+    test -z "$TCL_PACKAGE_PATH" && TCL_PACKAGE_PATH="${prefix}/share/tcl ${libdir}/tcl"
+-    test -z "$TCL_PACKAGE_PATH" && TCL_PACKAGE_PATH="{${prefix}/lib} ${TCL_PACKAGE_PATH}"
++    test -z "$TCL_PACKAGE_PATH" && TCL_PACKAGE_PATH="{${prefix}/share/tcl} {${libdir}/tcl}"
  fi
  
  #--------------------------------------------------------------------
 diff --git a/tcl/unix/tclUnixInit.c b/tcl/unix/tclUnixInit.c
-index aac8a8df9f..82981f2915 100644
+index 72039ac628..178fef13f2 100644
 --- a/tcl/unix/tclUnixInit.c
 +++ b/tcl/unix/tclUnixInit.c
-@@ -496,7 +496,7 @@ TclpInitLibraryPath(
+@@ -500,7 +500,7 @@ TclpInitLibraryPath(
  	 * installed.
  	 */
  
@@ -121,7 +121,7 @@ index aac8a8df9f..82981f2915 100644
  
  	/*
  	 * If TCL_LIBRARY is set, search there.
-@@ -505,7 +505,7 @@ TclpInitLibraryPath(
+@@ -509,7 +509,7 @@ TclpInitLibraryPath(
  	Tcl_ListObjAppendElement(NULL, pathPtr, Tcl_NewStringObj(str, -1));
  
  	Tcl_SplitPath(str, &pathc, &pathv);
@@ -130,7 +130,7 @@ index aac8a8df9f..82981f2915 100644
  	    /*
  	     * If TCL_LIBRARY is set but refers to a different tcl
  	     * installation than the current version, try fiddling with the
-@@ -513,8 +513,7 @@ TclpInitLibraryPath(
+@@ -517,8 +517,7 @@ TclpInitLibraryPath(
  	     * removing the old "tclX.Y" and substituting the current version
  	     * string.
  	     */
@@ -141,5 +141,5 @@ index aac8a8df9f..82981f2915 100644
  	    Tcl_ListObjAppendElement(NULL, pathPtr, TclDStringToObj(&ds));
  	}
 -- 
-2.24.0
+2.29.2
 

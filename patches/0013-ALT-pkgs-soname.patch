@@ -1,109 +1,109 @@
-From 3da8fd0db32a3a30f422b3b0a91e810c43f0fb19 Mon Sep 17 00:00:00 2001
+From f8b2b0f222a0af3049862acdaf4e0d263e82448e Mon Sep 17 00:00:00 2001
 From: "Vladimir D. Seleznev" <vseleznv@altlinux.org>
 Date: Wed, 9 Oct 2019 17:49:53 +0300
-Subject: [PATCH 13/13] ALT pkgs soname
+Subject: [PATCH] ALT pkgs soname
 
 ---
- tcl/pkgs/itcl4.2.0/configure         | 2 +-
- tcl/pkgs/tdbc1.1.1/configure         | 2 +-
- tcl/pkgs/tdbcmysql1.1.1/configure    | 2 +-
- tcl/pkgs/tdbcodbc1.1.1/configure     | 2 +-
- tcl/pkgs/tdbcpostgres1.1.1/configure | 2 +-
- tcl/pkgs/tdbcsqlite3-1.1.1/configure | 2 +-
- tcl/pkgs/thread2.8.5/configure       | 2 +-
+ tcl/pkgs/itcl4.2.1/configure         | 2 +-
+ tcl/pkgs/tdbc1.1.2/configure         | 2 +-
+ tcl/pkgs/tdbcmysql1.1.2/configure    | 2 +-
+ tcl/pkgs/tdbcodbc1.1.2/configure     | 2 +-
+ tcl/pkgs/tdbcpostgres1.1.2/configure | 2 +-
+ tcl/pkgs/tdbcsqlite3-1.1.2/configure | 2 +-
+ tcl/pkgs/thread2.8.6/configure       | 2 +-
  7 files changed, 7 insertions(+), 7 deletions(-)
 
-diff --git a/tcl/pkgs/itcl4.2.0/configure b/tcl/pkgs/itcl4.2.0/configure
-index 618e7030a5..d43d3f13bc 100755
---- a/tcl/pkgs/itcl4.2.0/configure
-+++ b/tcl/pkgs/itcl4.2.0/configure
-@@ -6831,7 +6831,7 @@ fi
+diff --git a/tcl/pkgs/itcl4.2.1/configure b/tcl/pkgs/itcl4.2.1/configure
+index 369bf47c7f..73edb38067 100755
+--- a/tcl/pkgs/itcl4.2.1/configure
++++ b/tcl/pkgs/itcl4.2.1/configure
+@@ -6789,7 +6789,7 @@ fi
  
  	    # TEA specific: use LDFLAGS_DEFAULT instead of LDFLAGS
  	    SHLIB_LD='${CC} ${CFLAGS} ${LDFLAGS_DEFAULT} -shared'
 -	    LDFLAGS="$LDFLAGS -Wl,--export-dynamic"
 +	    LDFLAGS="$LDFLAGS -Wl,--export-dynamic,-soname,\${@}"
- 	    if test $doRpath = yes; then :
  
- 		CC_SEARCH_FLAGS='-Wl,-rpath,${LIB_RUNTIME_DIR}'
-diff --git a/tcl/pkgs/tdbc1.1.1/configure b/tcl/pkgs/tdbc1.1.1/configure
-index 22c0898ee8..0d24725fc1 100755
---- a/tcl/pkgs/tdbc1.1.1/configure
-+++ b/tcl/pkgs/tdbc1.1.1/configure
-@@ -6944,7 +6944,7 @@ fi
- 
- 	    # TEA specific: use LDFLAGS_DEFAULT instead of LDFLAGS
- 	    SHLIB_LD='${CC} ${CFLAGS} ${LDFLAGS_DEFAULT} -shared'
--	    LDFLAGS="$LDFLAGS -Wl,--export-dynamic"
-+	    LDFLAGS="$LDFLAGS -Wl,--export-dynamic,-soname,\${@}"
- 	    if test $doRpath = yes; then :
- 
- 		CC_SEARCH_FLAGS='-Wl,-rpath,${LIB_RUNTIME_DIR}'
-diff --git a/tcl/pkgs/tdbcmysql1.1.1/configure b/tcl/pkgs/tdbcmysql1.1.1/configure
-index 8b49795633..459b5c7191 100755
---- a/tcl/pkgs/tdbcmysql1.1.1/configure
-+++ b/tcl/pkgs/tdbcmysql1.1.1/configure
-@@ -7288,7 +7288,7 @@ fi
+ 	    case $system in
+ 	    DragonFly-*|FreeBSD-*)
+diff --git a/tcl/pkgs/tdbc1.1.2/configure b/tcl/pkgs/tdbc1.1.2/configure
+index 5a5de51b3e..561bb12e63 100755
+--- a/tcl/pkgs/tdbc1.1.2/configure
++++ b/tcl/pkgs/tdbc1.1.2/configure
+@@ -6902,7 +6902,7 @@ fi
  
  	    # TEA specific: use LDFLAGS_DEFAULT instead of LDFLAGS
  	    SHLIB_LD='${CC} ${CFLAGS} ${LDFLAGS_DEFAULT} -shared'
 -	    LDFLAGS="$LDFLAGS -Wl,--export-dynamic"
 +	    LDFLAGS="$LDFLAGS -Wl,--export-dynamic,-soname,\${@}"
- 	    if test $doRpath = yes; then :
  
- 		CC_SEARCH_FLAGS='-Wl,-rpath,${LIB_RUNTIME_DIR}'
-diff --git a/tcl/pkgs/tdbcodbc1.1.1/configure b/tcl/pkgs/tdbcodbc1.1.1/configure
-index 0795639a62..762d6be9a7 100755
---- a/tcl/pkgs/tdbcodbc1.1.1/configure
-+++ b/tcl/pkgs/tdbcodbc1.1.1/configure
-@@ -7288,7 +7288,7 @@ fi
- 
- 	    # TEA specific: use LDFLAGS_DEFAULT instead of LDFLAGS
- 	    SHLIB_LD='${CC} ${CFLAGS} ${LDFLAGS_DEFAULT} -shared'
--	    LDFLAGS="$LDFLAGS -Wl,--export-dynamic"
-+	    LDFLAGS="$LDFLAGS -Wl,--export-dynamic,-soname,\${@}"
- 	    if test $doRpath = yes; then :
- 
- 		CC_SEARCH_FLAGS='-Wl,-rpath,${LIB_RUNTIME_DIR}'
-diff --git a/tcl/pkgs/tdbcpostgres1.1.1/configure b/tcl/pkgs/tdbcpostgres1.1.1/configure
-index 4f5024e48f..9d98a7706a 100755
---- a/tcl/pkgs/tdbcpostgres1.1.1/configure
-+++ b/tcl/pkgs/tdbcpostgres1.1.1/configure
-@@ -7288,7 +7288,7 @@ fi
+ 	    case $system in
+ 	    DragonFly-*|FreeBSD-*)
+diff --git a/tcl/pkgs/tdbcmysql1.1.2/configure b/tcl/pkgs/tdbcmysql1.1.2/configure
+index 87aa8dadda..9da02f0361 100755
+--- a/tcl/pkgs/tdbcmysql1.1.2/configure
++++ b/tcl/pkgs/tdbcmysql1.1.2/configure
+@@ -7246,7 +7246,7 @@ fi
  
  	    # TEA specific: use LDFLAGS_DEFAULT instead of LDFLAGS
  	    SHLIB_LD='${CC} ${CFLAGS} ${LDFLAGS_DEFAULT} -shared'
 -	    LDFLAGS="$LDFLAGS -Wl,--export-dynamic"
 +	    LDFLAGS="$LDFLAGS -Wl,--export-dynamic,-soname,\${@}"
- 	    if test $doRpath = yes; then :
  
- 		CC_SEARCH_FLAGS='-Wl,-rpath,${LIB_RUNTIME_DIR}'
-diff --git a/tcl/pkgs/tdbcsqlite3-1.1.1/configure b/tcl/pkgs/tdbcsqlite3-1.1.1/configure
-index 2018c91e36..6e6bec53eb 100755
---- a/tcl/pkgs/tdbcsqlite3-1.1.1/configure
-+++ b/tcl/pkgs/tdbcsqlite3-1.1.1/configure
-@@ -5628,7 +5628,7 @@ fi
- 
- 	    # TEA specific: use LDFLAGS_DEFAULT instead of LDFLAGS
- 	    SHLIB_LD='${CC} ${CFLAGS} ${LDFLAGS_DEFAULT} -shared'
--	    LDFLAGS="$LDFLAGS -Wl,--export-dynamic"
-+	    LDFLAGS="$LDFLAGS -Wl,--export-dynamic,-soname,\${@}"
- 	    if test $doRpath = yes; then :
- 
- 		CC_SEARCH_FLAGS='-Wl,-rpath,${LIB_RUNTIME_DIR}'
-diff --git a/tcl/pkgs/thread2.8.5/configure b/tcl/pkgs/thread2.8.5/configure
-index 768486bb99..7706f526f8 100755
---- a/tcl/pkgs/thread2.8.5/configure
-+++ b/tcl/pkgs/thread2.8.5/configure
-@@ -6844,7 +6844,7 @@ fi
+ 	    case $system in
+ 	    DragonFly-*|FreeBSD-*)
+diff --git a/tcl/pkgs/tdbcodbc1.1.2/configure b/tcl/pkgs/tdbcodbc1.1.2/configure
+index eb7bfa129f..da9618e28f 100755
+--- a/tcl/pkgs/tdbcodbc1.1.2/configure
++++ b/tcl/pkgs/tdbcodbc1.1.2/configure
+@@ -7246,7 +7246,7 @@ fi
  
  	    # TEA specific: use LDFLAGS_DEFAULT instead of LDFLAGS
  	    SHLIB_LD='${CC} ${CFLAGS} ${LDFLAGS_DEFAULT} -shared'
 -	    LDFLAGS="$LDFLAGS -Wl,--export-dynamic"
 +	    LDFLAGS="$LDFLAGS -Wl,--export-dynamic,-soname,\${@}"
- 	    if test $doRpath = yes; then :
  
- 		CC_SEARCH_FLAGS='-Wl,-rpath,${LIB_RUNTIME_DIR}'
+ 	    case $system in
+ 	    DragonFly-*|FreeBSD-*)
+diff --git a/tcl/pkgs/tdbcpostgres1.1.2/configure b/tcl/pkgs/tdbcpostgres1.1.2/configure
+index 22e30b3532..d48f952c65 100755
+--- a/tcl/pkgs/tdbcpostgres1.1.2/configure
++++ b/tcl/pkgs/tdbcpostgres1.1.2/configure
+@@ -7246,7 +7246,7 @@ fi
+ 
+ 	    # TEA specific: use LDFLAGS_DEFAULT instead of LDFLAGS
+ 	    SHLIB_LD='${CC} ${CFLAGS} ${LDFLAGS_DEFAULT} -shared'
+-	    LDFLAGS="$LDFLAGS -Wl,--export-dynamic"
++	    LDFLAGS="$LDFLAGS -Wl,--export-dynamic,-soname,\${@}"
+ 
+ 	    case $system in
+ 	    DragonFly-*|FreeBSD-*)
+diff --git a/tcl/pkgs/tdbcsqlite3-1.1.2/configure b/tcl/pkgs/tdbcsqlite3-1.1.2/configure
+index 15ad261f65..42b296c372 100755
+--- a/tcl/pkgs/tdbcsqlite3-1.1.2/configure
++++ b/tcl/pkgs/tdbcsqlite3-1.1.2/configure
+@@ -5586,7 +5586,7 @@ fi
+ 
+ 	    # TEA specific: use LDFLAGS_DEFAULT instead of LDFLAGS
+ 	    SHLIB_LD='${CC} ${CFLAGS} ${LDFLAGS_DEFAULT} -shared'
+-	    LDFLAGS="$LDFLAGS -Wl,--export-dynamic"
++	    LDFLAGS="$LDFLAGS -Wl,--export-dynamic,-soname,\${@}"
+ 
+ 	    case $system in
+ 	    DragonFly-*|FreeBSD-*)
+diff --git a/tcl/pkgs/thread2.8.6/configure b/tcl/pkgs/thread2.8.6/configure
+index 6e32fd85cf..14457e8951 100755
+--- a/tcl/pkgs/thread2.8.6/configure
++++ b/tcl/pkgs/thread2.8.6/configure
+@@ -7338,7 +7338,7 @@ fi
+ 
+ 	    # TEA specific: use LDFLAGS_DEFAULT instead of LDFLAGS
+ 	    SHLIB_LD='${CC} ${CFLAGS} ${LDFLAGS_DEFAULT} -shared'
+-	    LDFLAGS="$LDFLAGS -Wl,--export-dynamic"
++	    LDFLAGS="$LDFLAGS -Wl,--export-dynamic,-soname,\${@}"
+ 
+ 	    case $system in
+ 	    DragonFly-*|FreeBSD-*)
 -- 
-2.24.0
+2.29.2
 

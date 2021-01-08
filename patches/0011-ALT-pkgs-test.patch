@@ -1,25 +1,25 @@
-From 6b85200dc101da1d0b19ca67098cc2a1cb596668 Mon Sep 17 00:00:00 2001
+From 94eaa568ca1e7b12ee3a1df0d83d45847e1a4424 Mon Sep 17 00:00:00 2001
 From: "Vladimir D. Seleznev" <vseleznv@altlinux.org>
 Date: Tue, 8 Oct 2019 18:35:46 +0300
-Subject: [PATCH 11/13] ALT pkgs test
+Subject: [PATCH] ALT pkgs test
 
 Make pkgs test work.
 ---
- tcl/pkgs/itcl4.2.0/Makefile.in         | 3 ++-
- tcl/pkgs/sqlite3.30.1.2/Makefile.in    | 2 +-
- tcl/pkgs/tdbc1.1.1/Makefile.in         | 3 ++-
- tcl/pkgs/tdbcmysql1.1.1/Makefile.in    | 3 ++-
- tcl/pkgs/tdbcodbc1.1.1/Makefile.in     | 3 ++-
- tcl/pkgs/tdbcpostgres1.1.1/Makefile.in | 3 ++-
- tcl/pkgs/tdbcsqlite3-1.1.1/Makefile.in | 3 ++-
- tcl/pkgs/thread2.8.5/Makefile.in       | 3 ++-
+ tcl/pkgs/itcl4.2.1/Makefile.in         | 2 +-
+ tcl/pkgs/sqlite3.34.0/Makefile.in      | 2 +-
+ tcl/pkgs/tdbc1.1.2/Makefile.in         | 2 +-
+ tcl/pkgs/tdbcmysql1.1.2/Makefile.in    | 2 +-
+ tcl/pkgs/tdbcodbc1.1.2/Makefile.in     | 2 +-
+ tcl/pkgs/tdbcpostgres1.1.2/Makefile.in | 2 +-
+ tcl/pkgs/tdbcsqlite3-1.1.2/Makefile.in | 2 +-
+ tcl/pkgs/thread2.8.6/Makefile.in       | 2 +-
  tcl/unix/Makefile.in                   | 2 +-
- 9 files changed, 16 insertions(+), 9 deletions(-)
+ 9 files changed, 9 insertions(+), 9 deletions(-)
 
-diff --git a/tcl/pkgs/itcl4.2.0/Makefile.in b/tcl/pkgs/itcl4.2.0/Makefile.in
-index 00b31d8e16..e876bbb03a 100644
---- a/tcl/pkgs/itcl4.2.0/Makefile.in
-+++ b/tcl/pkgs/itcl4.2.0/Makefile.in
+diff --git a/tcl/pkgs/itcl4.2.1/Makefile.in b/tcl/pkgs/itcl4.2.1/Makefile.in
+index 3fd49ccb8a..e02028ff9d 100644
+--- a/tcl/pkgs/itcl4.2.1/Makefile.in
++++ b/tcl/pkgs/itcl4.2.1/Makefile.in
 @@ -132,7 +132,7 @@ TCL_SRC_DIR	= @TCL_SRC_DIR@
  EXTRA_PATH	= $(top_builddir):$(TCL_BIN_DIR)
  #EXTRA_PATH	= $(top_builddir):$(TCL_BIN_DIR):$(TK_BIN_DIR)
@@ -29,18 +29,10 @@ index 00b31d8e16..e876bbb03a 100644
  PKG_ENV		= @LD_LIBRARY_PATH_VAR@="$(EXTRA_PATH):$(@LD_LIBRARY_PATH_VAR@)" \
  		  PATH="$(EXTRA_PATH):$(PATH)" \
  		  ITCL_LIBRARY=`@CYGPATH@ $(srcdir)/library` \
-@@ -289,6 +289,7 @@ $(PKG_LIB_FILE): $(PKG_OBJECTS)
- 	-rm -f $(PKG_LIB_FILE)
- 	${MAKE_LIB}
- 	$(RANLIB) $(PKG_LIB_FILE)
-+	ln -rs $(PKG_LIB_FILE) ..
- 
- $(PKG_STUB_LIB_FILE): $(PKG_STUB_OBJECTS)
- 	-rm -f $(PKG_STUB_LIB_FILE)
-diff --git a/tcl/pkgs/sqlite3.30.1.2/Makefile.in b/tcl/pkgs/sqlite3.30.1.2/Makefile.in
-index 6ae745ff26..7edfb0e48a 100644
---- a/tcl/pkgs/sqlite3.30.1.2/Makefile.in
-+++ b/tcl/pkgs/sqlite3.30.1.2/Makefile.in
+diff --git a/tcl/pkgs/sqlite3.34.0/Makefile.in b/tcl/pkgs/sqlite3.34.0/Makefile.in
+index a1a744aa67..4a32b76169 100644
+--- a/tcl/pkgs/sqlite3.34.0/Makefile.in
++++ b/tcl/pkgs/sqlite3.34.0/Makefile.in
 @@ -132,7 +132,7 @@ TCL_SRC_DIR	= @TCL_SRC_DIR@
  EXTRA_PATH	= $(top_builddir):$(TCL_BIN_DIR)
  #EXTRA_PATH	= $(top_builddir):$(TCL_BIN_DIR):$(TK_BIN_DIR)
@@ -50,11 +42,11 @@ index 6ae745ff26..7edfb0e48a 100644
  		  @LD_LIBRARY_PATH_VAR@="$(EXTRA_PATH):$(@LD_LIBRARY_PATH_VAR@)" \
  		  PATH="$(EXTRA_PATH):$(PATH)" \
  		  TCLLIBPATH="$(TCLLIBPATH)"
-diff --git a/tcl/pkgs/tdbc1.1.1/Makefile.in b/tcl/pkgs/tdbc1.1.1/Makefile.in
-index 054a06ece7..edf312b900 100644
---- a/tcl/pkgs/tdbc1.1.1/Makefile.in
-+++ b/tcl/pkgs/tdbc1.1.1/Makefile.in
-@@ -130,7 +130,7 @@ TCL_SRC_DIR	= @TCL_SRC_DIR@
+diff --git a/tcl/pkgs/tdbc1.1.2/Makefile.in b/tcl/pkgs/tdbc1.1.2/Makefile.in
+index 9995001fac..52263ad533 100644
+--- a/tcl/pkgs/tdbc1.1.2/Makefile.in
++++ b/tcl/pkgs/tdbc1.1.2/Makefile.in
+@@ -128,7 +128,7 @@ TCL_SRC_DIR	= @TCL_SRC_DIR@
  EXTRA_PATH	= $(top_builddir):$(TCL_BIN_DIR)
  #EXTRA_PATH	= $(top_builddir):$(TCL_BIN_DIR):$(TK_BIN_DIR)
  TCLLIBPATH	= $(top_builddir)
@@ -63,19 +55,11 @@ index 054a06ece7..edf312b900 100644
  PKG_ENV		= @LD_LIBRARY_PATH_VAR@="$(EXTRA_PATH):$(@LD_LIBRARY_PATH_VAR@)" \
  		  PATH="$(EXTRA_PATH):$(PATH)" \
  		  TDBC_LIBRARY=`@CYGPATH@ $(srcdir)/library` \
-@@ -281,6 +281,7 @@ $(PKG_LIB_FILE): $(PKG_OBJECTS)
- 	-rm -f $(PKG_LIB_FILE)
- 	${MAKE_LIB}
- 	$(RANLIB) $(PKG_LIB_FILE)
-+	ln -rs $(PKG_LIB_FILE) ..
- 
- $(PKG_STUB_LIB_FILE): $(PKG_STUB_OBJECTS)
- 	-rm -f $(PKG_STUB_LIB_FILE)
-diff --git a/tcl/pkgs/tdbcmysql1.1.1/Makefile.in b/tcl/pkgs/tdbcmysql1.1.1/Makefile.in
-index 93cbcaa2f8..d0d7486b05 100644
---- a/tcl/pkgs/tdbcmysql1.1.1/Makefile.in
-+++ b/tcl/pkgs/tdbcmysql1.1.1/Makefile.in
-@@ -135,7 +135,7 @@ TDBC_LIB_FILE	= @TDBC_LIB_FILE@
+diff --git a/tcl/pkgs/tdbcmysql1.1.2/Makefile.in b/tcl/pkgs/tdbcmysql1.1.2/Makefile.in
+index b8a4330918..8282ccf1c9 100644
+--- a/tcl/pkgs/tdbcmysql1.1.2/Makefile.in
++++ b/tcl/pkgs/tdbcmysql1.1.2/Makefile.in
+@@ -133,7 +133,7 @@ TDBC_LIB_FILE	= @TDBC_LIB_FILE@
  EXTRA_PATH	= $(top_builddir):$(TCL_BIN_DIR)
  #EXTRA_PATH	= $(top_builddir):$(TCL_BIN_DIR):$(TK_BIN_DIR)
  TCLLIBPATH	= $(top_builddir) $(TDBC_BIN_DIR)
@@ -84,18 +68,10 @@ index 93cbcaa2f8..d0d7486b05 100644
  PKG_ENV		= @LD_LIBRARY_PATH_VAR@="$(EXTRA_PATH):$(@LD_LIBRARY_PATH_VAR@)" \
  		  PATH="$(EXTRA_PATH):$(PATH)" \
  		  TDBC_LIBRARY=`@CYGPATH@ @tdbc_LIBRARY_PATH@` \
-@@ -285,6 +285,7 @@ $(PKG_LIB_FILE): $(PKG_OBJECTS)
- 	-rm -f $(PKG_LIB_FILE)
- 	${MAKE_LIB}
- 	$(RANLIB) $(PKG_LIB_FILE)
-+	ln -rs $(PKG_LIB_FILE) ..
- 
- $(PKG_STUB_LIB_FILE): $(PKG_STUB_OBJECTS)
- 	-rm -f $(PKG_STUB_LIB_FILE)
-diff --git a/tcl/pkgs/tdbcodbc1.1.1/Makefile.in b/tcl/pkgs/tdbcodbc1.1.1/Makefile.in
-index 435228a36e..3ca3cf0077 100644
---- a/tcl/pkgs/tdbcodbc1.1.1/Makefile.in
-+++ b/tcl/pkgs/tdbcodbc1.1.1/Makefile.in
+diff --git a/tcl/pkgs/tdbcodbc1.1.2/Makefile.in b/tcl/pkgs/tdbcodbc1.1.2/Makefile.in
+index 72a45aeb91..70edb16d46 100644
+--- a/tcl/pkgs/tdbcodbc1.1.2/Makefile.in
++++ b/tcl/pkgs/tdbcodbc1.1.2/Makefile.in
 @@ -135,7 +135,7 @@ TDBC_LIB_FILE	= @TDBC_LIB_FILE@
  EXTRA_PATH	= $(top_builddir):$(TCL_BIN_DIR)
  #EXTRA_PATH	= $(top_builddir):$(TCL_BIN_DIR):$(TK_BIN_DIR)
@@ -105,19 +81,11 @@ index 435228a36e..3ca3cf0077 100644
  PKG_ENV		= @LD_LIBRARY_PATH_VAR@="$(EXTRA_PATH):$(@LD_LIBRARY_PATH_VAR@)" \
  		  PATH="$(EXTRA_PATH):$(PATH)" \
  		  TDBCODBC_LIBRARY=`@CYGPATH@ $(srcdir)/library` \
-@@ -298,6 +298,7 @@ $(PKG_LIB_FILE): $(PKG_OBJECTS)
- 	-rm -f $(PKG_LIB_FILE)
- 	${MAKE_LIB}
- 	$(RANLIB) $(PKG_LIB_FILE)
-+	ln -rs $(PKG_LIB_FILE) ..
- 
- $(PKG_STUB_LIB_FILE): $(PKG_STUB_OBJECTS)
- 	-rm -f $(PKG_STUB_LIB_FILE)
-diff --git a/tcl/pkgs/tdbcpostgres1.1.1/Makefile.in b/tcl/pkgs/tdbcpostgres1.1.1/Makefile.in
-index dc0a529402..6a25611768 100644
---- a/tcl/pkgs/tdbcpostgres1.1.1/Makefile.in
-+++ b/tcl/pkgs/tdbcpostgres1.1.1/Makefile.in
-@@ -135,7 +135,7 @@ TDBC_LIB_FILE	= @TDBC_LIB_FILE@
+diff --git a/tcl/pkgs/tdbcpostgres1.1.2/Makefile.in b/tcl/pkgs/tdbcpostgres1.1.2/Makefile.in
+index df3e78df49..c6bb4159cc 100644
+--- a/tcl/pkgs/tdbcpostgres1.1.2/Makefile.in
++++ b/tcl/pkgs/tdbcpostgres1.1.2/Makefile.in
+@@ -133,7 +133,7 @@ TDBC_LIB_FILE	= @TDBC_LIB_FILE@
  EXTRA_PATH	= $(top_builddir):$(TCL_BIN_DIR)
  #EXTRA_PATH	= $(top_builddir):$(TCL_BIN_DIR):$(TK_BIN_DIR)
  TCLLIBPATH	= $(top_builddir) $(TDBC_BIN_DIR)
@@ -126,18 +94,10 @@ index dc0a529402..6a25611768 100644
  PKG_ENV		= @LD_LIBRARY_PATH_VAR@="$(EXTRA_PATH):$(@LD_LIBRARY_PATH_VAR@)" \
  		  PATH="$(EXTRA_PATH):$(PATH)" \
  		  TDBC_LIBRARY=`@CYGPATH@ @tdbc_LIBRARY_PATH@` \
-@@ -285,6 +285,7 @@ $(PKG_LIB_FILE): $(PKG_OBJECTS)
- 	-rm -f $(PKG_LIB_FILE)
- 	${MAKE_LIB}
- 	$(RANLIB) $(PKG_LIB_FILE)
-+	ln -rs $(PKG_LIB_FILE) ..
- 
- $(PKG_STUB_LIB_FILE): $(PKG_STUB_OBJECTS)
- 	-rm -f $(PKG_STUB_LIB_FILE)
-diff --git a/tcl/pkgs/tdbcsqlite3-1.1.1/Makefile.in b/tcl/pkgs/tdbcsqlite3-1.1.1/Makefile.in
-index b65ef37547..9aa7f8b03b 100644
---- a/tcl/pkgs/tdbcsqlite3-1.1.1/Makefile.in
-+++ b/tcl/pkgs/tdbcsqlite3-1.1.1/Makefile.in
+diff --git a/tcl/pkgs/tdbcsqlite3-1.1.2/Makefile.in b/tcl/pkgs/tdbcsqlite3-1.1.2/Makefile.in
+index e809da5576..7ea594968c 100644
+--- a/tcl/pkgs/tdbcsqlite3-1.1.2/Makefile.in
++++ b/tcl/pkgs/tdbcsqlite3-1.1.2/Makefile.in
 @@ -134,7 +134,7 @@ TDBC_LIB_FILE	= @TDBC_LIB_FILE@
  EXTRA_PATH	= $(top_builddir):$(TCL_BIN_DIR)
  #EXTRA_PATH	= $(top_builddir):$(TCL_BIN_DIR):$(TK_BIN_DIR)
@@ -147,19 +107,11 @@ index b65ef37547..9aa7f8b03b 100644
  PKG_ENV		= @LD_LIBRARY_PATH_VAR@="$(EXTRA_PATH):$(@LD_LIBRARY_PATH_VAR@)" \
  		  PATH="$(EXTRA_PATH):$(PATH)" \
  		  TDBC_LIBRARY=`@CYGPATH@ @tdbc_LIBRARY_PATH@` \
-@@ -291,6 +291,7 @@ $(PKG_LIB_FILE): $(PKG_OBJECTS)
- 	-rm -f $(PKG_LIB_FILE)
- 	${MAKE_LIB}
- 	$(RANLIB) $(PKG_LIB_FILE)
-+	ln -rs $(PKG_LIB_FILE) ..
- 
- $(PKG_STUB_LIB_FILE): $(PKG_STUB_OBJECTS)
- 	-rm -f $(PKG_STUB_LIB_FILE)
-diff --git a/tcl/pkgs/thread2.8.5/Makefile.in b/tcl/pkgs/thread2.8.5/Makefile.in
-index 1355ab6199..b80ec8074d 100644
---- a/tcl/pkgs/thread2.8.5/Makefile.in
-+++ b/tcl/pkgs/thread2.8.5/Makefile.in
-@@ -130,7 +130,7 @@ TCL_SRC_DIR	= @TCL_SRC_DIR@
+diff --git a/tcl/pkgs/thread2.8.6/Makefile.in b/tcl/pkgs/thread2.8.6/Makefile.in
+index 3beabe74de..2c2a65b4f0 100644
+--- a/tcl/pkgs/thread2.8.6/Makefile.in
++++ b/tcl/pkgs/thread2.8.6/Makefile.in
+@@ -128,7 +128,7 @@ TCL_SRC_DIR	= @TCL_SRC_DIR@
  EXTRA_PATH	= $(top_builddir):$(TCL_BIN_DIR)
  #EXTRA_PATH	= $(top_builddir):$(TCL_BIN_DIR):$(TK_BIN_DIR)
  TCLLIBPATH	= $(top_builddir)
@@ -168,19 +120,11 @@ index 1355ab6199..b80ec8074d 100644
  PKG_ENV		= TCL_THREAD_LIBRARY=`@CYGPATH@ $(srcdir)/lib` \
  		  @LD_LIBRARY_PATH_VAR@="$(EXTRA_PATH):$(@LD_LIBRARY_PATH_VAR@)" \
  		  PATH="$(EXTRA_PATH):$(PATH)" \
-@@ -270,6 +270,7 @@ $(PKG_LIB_FILE): $(PKG_OBJECTS)
- 	-rm -f $(PKG_LIB_FILE)
- 	${MAKE_LIB}
- 	$(RANLIB) $(PKG_LIB_FILE)
-+	ln -rs $(PKG_LIB_FILE) ..
- 
- $(PKG_STUB_LIB_FILE): $(PKG_STUB_OBJECTS)
- 	-rm -f $(PKG_STUB_LIB_FILE)
 diff --git a/tcl/unix/Makefile.in b/tcl/unix/Makefile.in
-index de80bd4dc5..d25c2ac9b8 100644
+index 2f2ac53b23..7c2243098e 100644
 --- a/tcl/unix/Makefile.in
 +++ b/tcl/unix/Makefile.in
-@@ -238,7 +238,7 @@ PKGS_DIR		= $(TOP_DIR)/pkgs
+@@ -236,7 +236,7 @@ PKGS_DIR		= $(TOP_DIR)/pkgs
  # Must be absolute because of the cd dltest $(DLTEST_DIR)/configure below.
  DLTEST_DIR		= @TCL_SRC_DIR@/unix/dltest
  # Must be absolute to so the corresponding tcltest's tcl_library is absolute.
@@ -190,5 +134,5 @@ index de80bd4dc5..d25c2ac9b8 100644
  ZLIB_DIR		= ${COMPAT_DIR}/zlib
  ZLIB_INCLUDE		= @ZLIB_INCLUDE@
 -- 
-2.24.0
+2.29.2
 

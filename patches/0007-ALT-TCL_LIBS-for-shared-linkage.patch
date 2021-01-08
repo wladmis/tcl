@@ -1,7 +1,7 @@
-From ec960ed1dc64ae3513167687141ea48c7cec5ebd Mon Sep 17 00:00:00 2001
+From ffc9a9d437ca68064964e3e6ba55970c66b94656 Mon Sep 17 00:00:00 2001
 From: "Vladimir D. Seleznev" <vseleznv@altlinux.org>
 Date: Mon, 15 Apr 2019 02:33:09 +0300
-Subject: [PATCH 07/13] ALT TCL_LIBS for shared linkage
+Subject: [PATCH] ALT TCL_LIBS for shared linkage
 
 Add THREADS_LIBS to TCL_LIB_FLAG, tclConfig.sh provides flags for shared
 linkage.
@@ -11,10 +11,10 @@ linkage.
  2 files changed, 3 insertions(+), 3 deletions(-)
 
 diff --git a/tcl/unix/configure.in b/tcl/unix/configure.in
-index 08b92717eb..54d1fa6a6c 100755
+index 003a38d9e4..e30a82f6cf 100644
 --- a/tcl/unix/configure.in
 +++ b/tcl/unix/configure.in
-@@ -841,9 +841,9 @@ else
+@@ -840,9 +840,9 @@ else
      # default install directory for bundled packages
      PACKAGE_DIR="$libdir"
      if test "${TCL_LIB_VERSIONS_OK}" = "ok"; then
@@ -40,5 +40,5 @@ index b8aa935323..a116b0e927 100644
  # Top-level directory in which Tcl's platform-independent files are
  # installed.
 -- 
-2.24.0
+2.29.2
 

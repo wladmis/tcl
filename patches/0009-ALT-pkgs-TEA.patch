@@ -1,32 +1,26 @@
-From 057be22de265d0a17d9c5db1f0b92e19b4b4f942 Mon Sep 17 00:00:00 2001
+From c2847ec752475fd717b0346f127dceed3df32dd0 Mon Sep 17 00:00:00 2001
 From: "Vladimir D. Seleznev" <vseleznv@altlinux.org>
 Date: Tue, 8 Oct 2019 18:29:40 +0300
-Subject: [PATCH 09/13] ALT pkgs TEA
+Subject: [PATCH] ALT pkgs TEA
 
 ---
- tcl/pkgs/itcl4.2.0/Makefile.in             | 15 ++++++++-------
- tcl/pkgs/itcl4.2.0/configure               |  2 +-
- tcl/pkgs/itcl4.2.0/pkgIndex.tcl.in         |  4 ++--
- tcl/pkgs/sqlite3.30.1.2/Makefile.in        |  4 ++--
- tcl/pkgs/tdbc1.1.1/Makefile.in             | 19 ++++++++++---------
- tcl/pkgs/tdbc1.1.1/configure               |  2 +-
- tcl/pkgs/tdbc1.1.1/pkgIndex.tcl.in         |  2 +-
- tcl/pkgs/tdbcmysql1.1.1/Makefile.in        | 13 +++++++------
- tcl/pkgs/tdbcmysql1.1.1/pkgIndex.tcl.in    |  2 +-
- tcl/pkgs/tdbcmysql1.1.1/tclconfig/tcl.m4   |  2 +-
- tcl/pkgs/tdbcodbc1.1.1/Makefile.in         | 13 +++++++------
- tcl/pkgs/tdbcodbc1.1.1/pkgIndex.tcl.in     |  2 +-
- tcl/pkgs/tdbcpostgres1.1.1/Makefile.in     | 13 +++++++------
- tcl/pkgs/tdbcpostgres1.1.1/pkgIndex.tcl.in |  2 +-
- tcl/pkgs/tdbcsqlite3-1.1.1/Makefile.in     | 13 +++++++------
- tcl/pkgs/thread2.8.5/Makefile.in           | 13 +++++++------
- tcl/pkgs/thread2.8.5/pkgIndex.tcl.in       |  2 +-
- 17 files changed, 65 insertions(+), 58 deletions(-)
+ tcl/pkgs/itcl4.2.1/Makefile.in           | 15 ++++++++-------
+ tcl/pkgs/itcl4.2.1/configure             |  2 +-
+ tcl/pkgs/sqlite3.34.0/Makefile.in        |  4 ++--
+ tcl/pkgs/tdbc1.1.2/Makefile.in           | 19 ++++++++++---------
+ tcl/pkgs/tdbc1.1.2/configure             |  2 +-
+ tcl/pkgs/tdbcmysql1.1.2/Makefile.in      | 13 +++++++------
+ tcl/pkgs/tdbcmysql1.1.2/tclconfig/tcl.m4 |  2 +-
+ tcl/pkgs/tdbcodbc1.1.2/Makefile.in       | 13 +++++++------
+ tcl/pkgs/tdbcpostgres1.1.2/Makefile.in   | 13 +++++++------
+ tcl/pkgs/tdbcsqlite3-1.1.2/Makefile.in   | 13 +++++++------
+ tcl/pkgs/thread2.8.6/Makefile.in         | 15 ++++++++-------
+ 11 files changed, 59 insertions(+), 52 deletions(-)
 
-diff --git a/tcl/pkgs/itcl4.2.0/Makefile.in b/tcl/pkgs/itcl4.2.0/Makefile.in
-index ab22866704..00b31d8e16 100644
---- a/tcl/pkgs/itcl4.2.0/Makefile.in
-+++ b/tcl/pkgs/itcl4.2.0/Makefile.in
+diff --git a/tcl/pkgs/itcl4.2.1/Makefile.in b/tcl/pkgs/itcl4.2.1/Makefile.in
+index ef1cba0d1c..3fd49ccb8a 100644
+--- a/tcl/pkgs/itcl4.2.1/Makefile.in
++++ b/tcl/pkgs/itcl4.2.1/Makefile.in
 @@ -81,8 +81,8 @@ mandir		= @mandir@
  DESTDIR		=
  
@@ -34,7 +28,7 @@ index ab22866704..00b31d8e16 100644
 -pkgdatadir	= $(datadir)/$(PKG_DIR)
 -pkglibdir	= $(libdir)/$(PKG_DIR)
 +pkgdatadir	= $(libdir)/tcl/$(PKG_DIR)
-+pkglibdir	= $(libdir)/tcl
++pkglibdir	= $(libdir)/tcl/$(PKG_DIR)
  pkgincludedir	= $(includedir)/$(PKG_DIR)
  
  top_builddir	= @abs_top_builddir@
@@ -42,8 +36,8 @@ index ab22866704..00b31d8e16 100644
  #========================================================================
  
  install-lib-binaries: binaries
-+	@mkdir -p $(DESTDIR)$(pkglibdir) $(DESTDIR)$(pkgdatadir)
- 	@$(INSTALL_DATA_DIR) $(DESTDIR)$(pkglibdir)
++	@mkdir -p "$(DESTDIR)$(pkglibdir)" "$(DESTDIR)$(pkgdatadir)"
+ 	@$(INSTALL_DATA_DIR) "$(DESTDIR)$(pkglibdir)"
  	@list='$(lib_BINARIES)'; for p in $$list; do \
  	  if test -f $$p; then \
 @@ -419,15 +420,15 @@ install-lib-binaries: binaries
@@ -51,66 +45,54 @@ index ab22866704..00b31d8e16 100644
  	  if test -f $(srcdir)/$$p; then \
  	    destp=`basename $$p`; \
 -	    echo " Install $$destp $(DESTDIR)$(pkglibdir)/$$destp"; \
--	    $(INSTALL_DATA) $(srcdir)/$$p $(DESTDIR)$(pkglibdir)/$$destp; \
+-	    $(INSTALL_DATA) $(srcdir)/$$p "$(DESTDIR)$(pkglibdir)/$$destp"; \
 +	    echo " Install $$destp $(DESTDIR)$(pkgdatadir)/$$destp"; \
-+	    $(INSTALL_DATA) $(srcdir)/$$p $(DESTDIR)$(pkgdatadir)/$$destp; \
++	    $(INSTALL_DATA) $(srcdir)/$$p "$(DESTDIR)$(pkgdatadir)/$$destp"; \
  	  fi; \
  	done
  	@if test "x$(SHARED_BUILD)" = "x1"; then \
 -	    echo " Install pkgIndex.tcl $(DESTDIR)$(pkglibdir)"; \
--	    $(INSTALL_DATA) pkgIndex.tcl $(DESTDIR)$(pkglibdir); \
+-	    $(INSTALL_DATA) pkgIndex.tcl "$(DESTDIR)$(pkglibdir)"; \
 +	    echo " Install pkgIndex.tcl $(DESTDIR)$(pkgdatadir)"; \
-+	    $(INSTALL_DATA) pkgIndex.tcl $(DESTDIR)$(pkgdatadir); \
++	    $(INSTALL_DATA) pkgIndex.tcl "$(DESTDIR)$(pkgdatadir)"; \
  	fi
--	$(INSTALL_DATA) itclConfig.sh $(DESTDIR)$(pkglibdir)
-+	$(INSTALL_DATA) itclConfig.sh $(DESTDIR)$(libdir)
+-	$(INSTALL_DATA) itclConfig.sh "$(DESTDIR)$(pkglibdir)"
++	$(INSTALL_DATA) itclConfig.sh "$(DESTDIR)$(libdir)"
  
  #========================================================================
  # Install binary executables (e.g. .exe files and dependent .dll files)
-diff --git a/tcl/pkgs/itcl4.2.0/configure b/tcl/pkgs/itcl4.2.0/configure
-index 070003c992..b9b600a531 100755
---- a/tcl/pkgs/itcl4.2.0/configure
-+++ b/tcl/pkgs/itcl4.2.0/configure
-@@ -8451,7 +8451,7 @@ $as_echo "${TCLSH_PROG}" >&6; }
+diff --git a/tcl/pkgs/itcl4.2.1/configure b/tcl/pkgs/itcl4.2.1/configure
+index 1cfaa1220b..28914a9933 100755
+--- a/tcl/pkgs/itcl4.2.1/configure
++++ b/tcl/pkgs/itcl4.2.1/configure
+@@ -8392,7 +8392,7 @@ $as_echo "${TCLSH_PROG}" >&6; }
      #--------------------------------------------------------------------
  
      # pkglibdir must be a fully qualified path and (not ${exec_prefix}/lib)
 -    eval pkglibdir="${libdir}/itcl${PACKAGE_VERSION}"
-+    eval pkglibdir="${libdir}/tcl"
++    eval pkglibdir="${libdir}/tcl/${PACKAGE_NAME}${PACKAGE_VERSION}"
      if test "${TCL_LIB_VERSIONS_OK}" = "ok"; then
- 	eval itcl_LIB_FLAG="-litcl${PACKAGE_VERSION}${DBGX}"
- 	eval itcl_STUB_LIB_FLAG="-litclstub${PACKAGE_VERSION}${DBGX}"
-diff --git a/tcl/pkgs/itcl4.2.0/pkgIndex.tcl.in b/tcl/pkgs/itcl4.2.0/pkgIndex.tcl.in
-index 0d6ec0eb38..e7d3a95e48 100644
---- a/tcl/pkgs/itcl4.2.0/pkgIndex.tcl.in
-+++ b/tcl/pkgs/itcl4.2.0/pkgIndex.tcl.in
-@@ -17,5 +17,5 @@
- 
- if {![package vsatisfies [package provide Tcl] 8.6]} {return}
- 
--package ifneeded itcl @PACKAGE_VERSION@ [list load [file join $dir "@PKG_LIB_FILE@"] itcl]
--package ifneeded Itcl @PACKAGE_VERSION@ [list load [file join $dir "@PKG_LIB_FILE@"] itcl]
-+package ifneeded itcl @PACKAGE_VERSION@ [list load [file join $dir .. "@PKG_LIB_FILE@"] itcl]
-+package ifneeded Itcl @PACKAGE_VERSION@ [list load [file join $dir .. "@PKG_LIB_FILE@"] itcl]
-diff --git a/tcl/pkgs/sqlite3.30.1.2/Makefile.in b/tcl/pkgs/sqlite3.30.1.2/Makefile.in
-index 196ae0c8f4..6ae745ff26 100644
---- a/tcl/pkgs/sqlite3.30.1.2/Makefile.in
-+++ b/tcl/pkgs/sqlite3.30.1.2/Makefile.in
-@@ -395,8 +395,8 @@ install-lib-binaries: binaries
+ 	eval itcl_LIB_FLAG="-litcl${PACKAGE_VERSION}"
+ 	eval itcl_STUB_LIB_FLAG="-litclstub${PACKAGE_VERSION}"
+diff --git a/tcl/pkgs/sqlite3.34.0/Makefile.in b/tcl/pkgs/sqlite3.34.0/Makefile.in
+index 6b73e35eaa..a1a744aa67 100644
+--- a/tcl/pkgs/sqlite3.34.0/Makefile.in
++++ b/tcl/pkgs/sqlite3.34.0/Makefile.in
+@@ -405,8 +405,8 @@ install-lib-binaries: binaries
  	  fi; \
  	done
  	@if test "x$(SHARED_BUILD)" = "x1"; then \
 -	    echo " Install pkgIndex.tcl $(DESTDIR)$(pkglibdir)"; \
--	    $(INSTALL_DATA) pkgIndex.tcl $(DESTDIR)$(pkglibdir); \
+-	    $(INSTALL_DATA) pkgIndex.tcl "$(DESTDIR)$(pkglibdir)"; \
 +	    echo " Install pkgIndex.tcl $(DESTDIR)$(pkgdatadir)"; \
-+	    $(INSTALL_DATA) pkgIndex.tcl $(DESTDIR)$(pkgdatadir); \
++	    $(INSTALL_DATA) pkgIndex.tcl "$(DESTDIR)$(pkgdatadir)"; \
  	fi
  
  #========================================================================
-diff --git a/tcl/pkgs/tdbc1.1.1/Makefile.in b/tcl/pkgs/tdbc1.1.1/Makefile.in
-index 4a7665edce..054a06ece7 100644
---- a/tcl/pkgs/tdbc1.1.1/Makefile.in
-+++ b/tcl/pkgs/tdbc1.1.1/Makefile.in
+diff --git a/tcl/pkgs/tdbc1.1.2/Makefile.in b/tcl/pkgs/tdbc1.1.2/Makefile.in
+index ee02c14985..9995001fac 100644
+--- a/tcl/pkgs/tdbc1.1.2/Makefile.in
++++ b/tcl/pkgs/tdbc1.1.2/Makefile.in
 @@ -79,8 +79,8 @@ mandir		= @mandir@
  DESTDIR		=
  
@@ -118,11 +100,11 @@ index 4a7665edce..054a06ece7 100644
 -pkgdatadir	= $(datadir)/$(PKG_DIR)
 -pkglibdir	= $(libdir)/$(PKG_DIR)
 +pkgdatadir	= $(libdir)/tcl/$(PKG_DIR)
-+pkglibdir	= $(libdir)/tcl
++pkglibdir	= $(libdir)/tcl/$(PKG_DIR)
  pkgincludedir	= $(includedir)/$(PKG_DIR)
  
  top_builddir	= @abs_top_builddir@
-@@ -425,6 +425,7 @@ distclean: clean
+@@ -426,6 +426,7 @@ distclean: clean
  #========================================================================
  
  install-lib-binaries: binaries
@@ -130,7 +112,7 @@ index 4a7665edce..054a06ece7 100644
  	@$(INSTALL_DATA_DIR) $(DESTDIR)$(pkglibdir)
  	@list='$(lib_BINARIES)'; for p in $$list; do \
  	  if test -f $$p; then \
-@@ -434,7 +435,7 @@ install-lib-binaries: binaries
+@@ -435,7 +436,7 @@ install-lib-binaries: binaries
  	    if test "x$$ext" = "xdll"; then \
  		lib=`basename $$p|sed -e 's/.[^.]*$$//'`.lib; \
  		if test -f $$lib; then \
@@ -139,7 +121,7 @@ index 4a7665edce..054a06ece7 100644
  	            $(INSTALL_DATA) $$lib $(DESTDIR)$(pkglibdir)/$$lib; \
  		fi; \
  	    fi; \
-@@ -443,16 +444,16 @@ install-lib-binaries: binaries
+@@ -444,16 +445,16 @@ install-lib-binaries: binaries
  	@list='$(PKG_TCL_SOURCES)'; for p in $$list; do \
  	  if test -f $(srcdir)/$$p; then \
  	    destp=`basename $$p`; \
@@ -162,35 +144,23 @@ index 4a7665edce..054a06ece7 100644
  
  #========================================================================
  # Install binary executables (e.g. .exe files and dependent .dll files)
-diff --git a/tcl/pkgs/tdbc1.1.1/configure b/tcl/pkgs/tdbc1.1.1/configure
-index e5f6d7d174..22c0898ee8 100755
---- a/tcl/pkgs/tdbc1.1.1/configure
-+++ b/tcl/pkgs/tdbc1.1.1/configure
-@@ -8535,7 +8535,7 @@ fi
+diff --git a/tcl/pkgs/tdbc1.1.2/configure b/tcl/pkgs/tdbc1.1.2/configure
+index 8711596b9a..5a5de51b3e 100755
+--- a/tcl/pkgs/tdbc1.1.2/configure
++++ b/tcl/pkgs/tdbc1.1.2/configure
+@@ -8476,7 +8476,7 @@ fi
      #--------------------------------------------------------------------
  
      # pkglibdir must be a fully qualified path and (not ${exec_prefix}/lib)
 -    eval pkglibdir="${libdir}/tdbc${PACKAGE_VERSION}"
-+    eval pkglibdir="${libdir}/tcl"
++    eval pkglibdir="${libdir}/tcl/${PACKAGE_NAME}${PACKAGE_VERSION}"
      if test "${TCL_LIB_VERSIONS_OK}" = "ok"; then
- 	eval tdbc_LIB_FLAG="-ltdbc${PACKAGE_VERSION}${DBGX}"
- 	eval tdbc_STUB_LIB_FLAG="-ltdbcstub${PACKAGE_VERSION}${DBGX}"
-diff --git a/tcl/pkgs/tdbc1.1.1/pkgIndex.tcl.in b/tcl/pkgs/tdbc1.1.1/pkgIndex.tcl.in
-index 379635b7ca..16aba89b76 100644
---- a/tcl/pkgs/tdbc1.1.1/pkgIndex.tcl.in
-+++ b/tcl/pkgs/tdbc1.1.1/pkgIndex.tcl.in
-@@ -13,6 +13,6 @@ apply {{dir} {
-     }
-     package ifneeded @PACKAGE_NAME@ @PACKAGE_VERSION@ \
- 	"package require TclOO @TCLOO_VERSION_REQ@-;\
--	[list load [file join $dir @PKG_LIB_FILE@] @PACKAGE_NAME@]\;\
-+	[list load [file join $dir .. @PKG_LIB_FILE@] @PACKAGE_NAME@]\;\
- 	[list source $libraryfile]"
- }} $dir
-diff --git a/tcl/pkgs/tdbcmysql1.1.1/Makefile.in b/tcl/pkgs/tdbcmysql1.1.1/Makefile.in
-index 3d74fac7a1..93cbcaa2f8 100644
---- a/tcl/pkgs/tdbcmysql1.1.1/Makefile.in
-+++ b/tcl/pkgs/tdbcmysql1.1.1/Makefile.in
+ 	eval tdbc_LIB_FLAG="-ltdbc${PACKAGE_VERSION}"
+ 	eval tdbc_STUB_LIB_FLAG="-ltdbcstub${PACKAGE_VERSION}"
+diff --git a/tcl/pkgs/tdbcmysql1.1.2/Makefile.in b/tcl/pkgs/tdbcmysql1.1.2/Makefile.in
+index b552d88612..b8a4330918 100644
+--- a/tcl/pkgs/tdbcmysql1.1.2/Makefile.in
++++ b/tcl/pkgs/tdbcmysql1.1.2/Makefile.in
 @@ -79,8 +79,8 @@ mandir		= @mandir@
  DESTDIR		=
  
@@ -198,11 +168,11 @@ index 3d74fac7a1..93cbcaa2f8 100644
 -pkgdatadir	= $(datadir)/$(PKG_DIR)
 -pkglibdir	= $(libdir)/$(PKG_DIR)
 +pkgdatadir	= $(libdir)/tcl/$(PKG_DIR)
-+pkglibdir	= $(libdir)/tcl
++pkglibdir	= $(libdir)/tcl/$(PKG_DIR)
  pkgincludedir	= $(includedir)/$(PKG_DIR)
  
  top_builddir	= @abs_top_builddir@
-@@ -421,6 +421,7 @@ distclean: clean
+@@ -422,6 +422,7 @@ distclean: clean
  #========================================================================
  
  install-lib-binaries: binaries
@@ -210,7 +180,7 @@ index 3d74fac7a1..93cbcaa2f8 100644
  	@$(INSTALL_DATA_DIR) $(DESTDIR)$(pkglibdir)
  	@list='$(lib_BINARIES)'; for p in $$list; do \
  	  if test -f $$p; then \
-@@ -439,13 +440,13 @@ install-lib-binaries: binaries
+@@ -440,13 +441,13 @@ install-lib-binaries: binaries
  	@list='$(PKG_TCL_SOURCES)'; for p in $$list; do \
  	  if test -f $(srcdir)/$$p; then \
  	    destp=`basename $$p`; \
@@ -228,33 +198,23 @@ index 3d74fac7a1..93cbcaa2f8 100644
  	fi
  
  #========================================================================
-diff --git a/tcl/pkgs/tdbcmysql1.1.1/pkgIndex.tcl.in b/tcl/pkgs/tdbcmysql1.1.1/pkgIndex.tcl.in
-index 3365c76abf..235b773937 100644
---- a/tcl/pkgs/tdbcmysql1.1.1/pkgIndex.tcl.in
-+++ b/tcl/pkgs/tdbcmysql1.1.1/pkgIndex.tcl.in
-@@ -5,4 +5,4 @@ if {[catch {package require Tcl @TCL_VERSION_REQ@}]} {
- }
- package ifneeded tdbc::mysql @PACKAGE_VERSION@ \
-     "[list source [file join $dir @PACKAGE_NAME@.tcl]]\;\
--    [list load [file join $dir @PKG_LIB_FILE@] @PACKAGE_NAME@]"
-+    [list load [file join $dir .. @PKG_LIB_FILE@] @PACKAGE_NAME@]"
-diff --git a/tcl/pkgs/tdbcmysql1.1.1/tclconfig/tcl.m4 b/tcl/pkgs/tdbcmysql1.1.1/tclconfig/tcl.m4
-index 7d901f9d23..5e402d7fd4 100644
---- a/tcl/pkgs/tdbcmysql1.1.1/tclconfig/tcl.m4
-+++ b/tcl/pkgs/tdbcmysql1.1.1/tclconfig/tcl.m4
-@@ -3854,7 +3854,7 @@ AC_DEFUN([TEA_EXPORT_CONFIG], [
+diff --git a/tcl/pkgs/tdbcmysql1.1.2/tclconfig/tcl.m4 b/tcl/pkgs/tdbcmysql1.1.2/tclconfig/tcl.m4
+index 8d24e7ff35..e4dbc794a3 100644
+--- a/tcl/pkgs/tdbcmysql1.1.2/tclconfig/tcl.m4
++++ b/tcl/pkgs/tdbcmysql1.1.2/tclconfig/tcl.m4
+@@ -3877,7 +3877,7 @@ AC_DEFUN([TEA_EXPORT_CONFIG], [
      #--------------------------------------------------------------------
  
      # pkglibdir must be a fully qualified path and (not ${exec_prefix}/lib)
 -    eval pkglibdir="[$]{libdir}/$1${PACKAGE_VERSION}"
-+    eval pkglibdir="[$]{libdir}/tcl"
++    eval pkglibdir="[$]{libdir}/tcl/${PACKAGE_NAME}${PACKAGE_VERSION}"
      if test "${TCL_LIB_VERSIONS_OK}" = "ok"; then
- 	eval $1_LIB_FLAG="-l$1${PACKAGE_VERSION}${DBGX}"
- 	eval $1_STUB_LIB_FLAG="-l$1stub${PACKAGE_VERSION}${DBGX}"
-diff --git a/tcl/pkgs/tdbcodbc1.1.1/Makefile.in b/tcl/pkgs/tdbcodbc1.1.1/Makefile.in
-index 85d07b5720..435228a36e 100644
---- a/tcl/pkgs/tdbcodbc1.1.1/Makefile.in
-+++ b/tcl/pkgs/tdbcodbc1.1.1/Makefile.in
+ 	eval $1_LIB_FLAG="-l$1${PACKAGE_VERSION}"
+ 	eval $1_STUB_LIB_FLAG="-l$1stub${PACKAGE_VERSION}"
+diff --git a/tcl/pkgs/tdbcodbc1.1.2/Makefile.in b/tcl/pkgs/tdbcodbc1.1.2/Makefile.in
+index 85d07b5720..72a45aeb91 100644
+--- a/tcl/pkgs/tdbcodbc1.1.2/Makefile.in
++++ b/tcl/pkgs/tdbcodbc1.1.2/Makefile.in
 @@ -79,8 +79,8 @@ mandir		= @mandir@
  DESTDIR		=
  
@@ -262,7 +222,7 @@ index 85d07b5720..435228a36e 100644
 -pkgdatadir	= $(datadir)/$(PKG_DIR)
 -pkglibdir	= $(libdir)/$(PKG_DIR)
 +pkgdatadir	= $(libdir)/tcl/$(PKG_DIR)
-+pkglibdir	= $(libdir)/tcl
++pkglibdir	= $(libdir)/tcl/$(PKG_DIR)
  pkgincludedir	= $(includedir)/$(PKG_DIR)
  
  top_builddir	= @abs_top_builddir@
@@ -292,20 +252,10 @@ index 85d07b5720..435228a36e 100644
  	fi
  
  #========================================================================
-diff --git a/tcl/pkgs/tdbcodbc1.1.1/pkgIndex.tcl.in b/tcl/pkgs/tdbcodbc1.1.1/pkgIndex.tcl.in
-index 98522cac4d..1496cbf330 100644
---- a/tcl/pkgs/tdbcodbc1.1.1/pkgIndex.tcl.in
-+++ b/tcl/pkgs/tdbcodbc1.1.1/pkgIndex.tcl.in
-@@ -5,4 +5,4 @@ if {[catch {package require Tcl @TCL_VERSION_REQ@}]} {
- }
- package ifneeded tdbc::odbc @PACKAGE_VERSION@ \
-     "[list source [file join $dir @PACKAGE_NAME@.tcl]]\;\
--    [list load [file join $dir @PKG_LIB_FILE@] @PACKAGE_NAME@]"
-+    [list load [file join $dir .. @PKG_LIB_FILE@] @PACKAGE_NAME@]"
-diff --git a/tcl/pkgs/tdbcpostgres1.1.1/Makefile.in b/tcl/pkgs/tdbcpostgres1.1.1/Makefile.in
-index 72b7996d21..dc0a529402 100644
---- a/tcl/pkgs/tdbcpostgres1.1.1/Makefile.in
-+++ b/tcl/pkgs/tdbcpostgres1.1.1/Makefile.in
+diff --git a/tcl/pkgs/tdbcpostgres1.1.2/Makefile.in b/tcl/pkgs/tdbcpostgres1.1.2/Makefile.in
+index 7ae8aa4262..df3e78df49 100644
+--- a/tcl/pkgs/tdbcpostgres1.1.2/Makefile.in
++++ b/tcl/pkgs/tdbcpostgres1.1.2/Makefile.in
 @@ -79,8 +79,8 @@ mandir		= @mandir@
  DESTDIR		=
  
@@ -313,11 +263,11 @@ index 72b7996d21..dc0a529402 100644
 -pkgdatadir	= $(datadir)/$(PKG_DIR)
 -pkglibdir	= $(libdir)/$(PKG_DIR)
 +pkgdatadir	= $(libdir)/tcl/$(PKG_DIR)
-+pkglibdir	= $(libdir)/tcl
++pkglibdir	= $(libdir)/tcl/$(PKG_DIR)
  pkgincludedir	= $(includedir)/$(PKG_DIR)
  
  top_builddir	= @abs_top_builddir@
-@@ -423,6 +423,7 @@ distclean: clean
+@@ -424,6 +424,7 @@ distclean: clean
  #========================================================================
  
  install-lib-binaries: binaries
@@ -325,7 +275,7 @@ index 72b7996d21..dc0a529402 100644
  	@$(INSTALL_DATA_DIR) $(DESTDIR)$(pkglibdir)
  	@list='$(lib_BINARIES)'; for p in $$list; do \
  	  if test -f $$p; then \
-@@ -441,13 +442,13 @@ install-lib-binaries: binaries
+@@ -442,13 +443,13 @@ install-lib-binaries: binaries
  	@list='$(PKG_TCL_SOURCES)'; for p in $$list; do \
  	  if test -f $(srcdir)/$$p; then \
  	    destp=`basename $$p`; \
@@ -343,20 +293,10 @@ index 72b7996d21..dc0a529402 100644
  	fi
  
  #========================================================================
-diff --git a/tcl/pkgs/tdbcpostgres1.1.1/pkgIndex.tcl.in b/tcl/pkgs/tdbcpostgres1.1.1/pkgIndex.tcl.in
-index 0999069ff0..d6f9b8faa6 100644
---- a/tcl/pkgs/tdbcpostgres1.1.1/pkgIndex.tcl.in
-+++ b/tcl/pkgs/tdbcpostgres1.1.1/pkgIndex.tcl.in
-@@ -5,4 +5,4 @@ if {[catch {package require Tcl @TCL_VERSION_REQ@}]} {
- }
- package ifneeded tdbc::postgres @PACKAGE_VERSION@ \
-     "[list source [file join $dir @PACKAGE_NAME@.tcl]]\;\
--    [list load [file join $dir @PKG_LIB_FILE@] @PACKAGE_NAME@]"
-+    [list load [file join $dir .. @PKG_LIB_FILE@] @PACKAGE_NAME@]"
-diff --git a/tcl/pkgs/tdbcsqlite3-1.1.1/Makefile.in b/tcl/pkgs/tdbcsqlite3-1.1.1/Makefile.in
-index 106b1b0e19..b65ef37547 100644
---- a/tcl/pkgs/tdbcsqlite3-1.1.1/Makefile.in
-+++ b/tcl/pkgs/tdbcsqlite3-1.1.1/Makefile.in
+diff --git a/tcl/pkgs/tdbcsqlite3-1.1.2/Makefile.in b/tcl/pkgs/tdbcsqlite3-1.1.2/Makefile.in
+index a52af1e58b..e809da5576 100644
+--- a/tcl/pkgs/tdbcsqlite3-1.1.2/Makefile.in
++++ b/tcl/pkgs/tdbcsqlite3-1.1.2/Makefile.in
 @@ -79,8 +79,8 @@ mandir		= @mandir@
  DESTDIR		=
  
@@ -364,7 +304,7 @@ index 106b1b0e19..b65ef37547 100644
 -pkgdatadir	= $(datadir)/$(PKG_DIR)
 -pkglibdir	= $(libdir)/$(PKG_DIR)
 +pkgdatadir	= $(libdir)/tcl/$(PKG_DIR)
-+pkglibdir	= $(libdir)/tcl
++pkglibdir	= $(libdir)/tcl/$(PKG_DIR)
  pkgincludedir	= $(includedir)/$(PKG_DIR)
  
  top_builddir	= @abs_top_builddir@
@@ -394,10 +334,10 @@ index 106b1b0e19..b65ef37547 100644
  	fi
  
  #========================================================================
-diff --git a/tcl/pkgs/thread2.8.5/Makefile.in b/tcl/pkgs/thread2.8.5/Makefile.in
-index 0a1a1067fa..1355ab6199 100644
---- a/tcl/pkgs/thread2.8.5/Makefile.in
-+++ b/tcl/pkgs/thread2.8.5/Makefile.in
+diff --git a/tcl/pkgs/thread2.8.6/Makefile.in b/tcl/pkgs/thread2.8.6/Makefile.in
+index 9697a81f17..3beabe74de 100644
+--- a/tcl/pkgs/thread2.8.6/Makefile.in
++++ b/tcl/pkgs/thread2.8.6/Makefile.in
 @@ -79,8 +79,8 @@ mandir		= @mandir@
  DESTDIR		=
  
@@ -405,49 +345,38 @@ index 0a1a1067fa..1355ab6199 100644
 -pkgdatadir	= $(datadir)/$(PKG_DIR)
 -pkglibdir	= $(libdir)/$(PKG_DIR)
 +pkgdatadir	= $(libdir)/tcl/$(PKG_DIR)
-+pkglibdir	= $(libdir)/tcl
++pkglibdir	= $(libdir)/tcl/$(PKG_DIR)
  pkgincludedir	= $(includedir)/$(PKG_DIR)
  
  top_builddir	= .
-@@ -386,6 +386,7 @@ distclean: clean
+@@ -401,7 +401,8 @@ distclean: clean
  #========================================================================
  
  install-lib-binaries: binaries
-+	@mkdir -p $(DESTDIR)$(pkglibdir) $(DESTDIR)$(pkgdatadir)
- 	@$(INSTALL_DATA_DIR) $(DESTDIR)$(pkglibdir)
+-	@$(INSTALL_DATA_DIR) "$(DESTDIR)$(pkglibdir)"
++	@mkdir -p "$(DESTDIR)$(pkglibdir)" "$(DESTDIR)$(pkgdatadir)"
++	@$(INSTALL_DATA_DIR) "$(DESTDIR)$(pkgdatadir)"
  	@list='$(lib_BINARIES)'; for p in $$list; do \
  	  if test -f $$p; then \
-@@ -412,13 +413,13 @@ install-lib-binaries: binaries
+ 	    echo " $(INSTALL_LIBRARY) $$p $(DESTDIR)$(pkglibdir)/$$p"; \
+@@ -427,13 +428,13 @@ install-lib-binaries: binaries
  	@list='$(PKG_TCL_SOURCES)'; for p in $$list; do \
  	  if test -f $(srcdir)/$$p; then \
  	    destp=`basename $$p`; \
 -	    echo " Install $$destp $(DESTDIR)$(pkglibdir)/$$destp"; \
--	    $(INSTALL_DATA) $(srcdir)/$$p $(DESTDIR)$(pkglibdir)/$$destp; \
+-	    $(INSTALL_DATA) $(srcdir)/$$p "$(DESTDIR)$(pkglibdir)/$$destp"; \
 +	    echo " Install $$destp $(DESTDIR)$(pkgdatadir)/$$destp"; \
-+	    $(INSTALL_DATA) $(srcdir)/$$p $(DESTDIR)$(pkgdatadir)/$$destp; \
++	    $(INSTALL_DATA) $(srcdir)/$$p "$(DESTDIR)$(pkgdatadir)/$$destp"; \
  	  fi; \
  	done
  	@if test "x$(SHARED_BUILD)" = "x1"; then \
 -	    echo " Install pkgIndex.tcl $(DESTDIR)$(pkglibdir)"; \
--	    $(INSTALL_DATA) pkgIndex.tcl $(DESTDIR)$(pkglibdir); \
+-	    $(INSTALL_DATA) pkgIndex.tcl "$(DESTDIR)$(pkglibdir)"; \
 +	    echo " Install pkgIndex.tcl $(DESTDIR)$(pkgdatadir)"; \
-+	    $(INSTALL_DATA) pkgIndex.tcl $(DESTDIR)$(pkgdatadir); \
++	    $(INSTALL_DATA) pkgIndex.tcl "$(DESTDIR)$(pkgdatadir)"; \
  	fi
  
  #========================================================================
-diff --git a/tcl/pkgs/thread2.8.5/pkgIndex.tcl.in b/tcl/pkgs/thread2.8.5/pkgIndex.tcl.in
-index 22f5f8ff47..a2efb503e3 100644
---- a/tcl/pkgs/thread2.8.5/pkgIndex.tcl.in
-+++ b/tcl/pkgs/thread2.8.5/pkgIndex.tcl.in
-@@ -23,7 +23,7 @@ if {![package vsatisfies [package provide Tcl] 8.4]} {
- # about a thread-disabled interp, instead of the message
- # "can't find package Thread".
- 
--package ifneeded Thread @PACKAGE_VERSION@ [list load [file join $dir @PKG_LIB_FILE@]]
-+package ifneeded Thread @PACKAGE_VERSION@ [list load [file join $dir .. @PKG_LIB_FILE@]]
- 
- # package Ttrace uses some support machinery.
- 
 -- 
-2.24.0
+2.29.2
 

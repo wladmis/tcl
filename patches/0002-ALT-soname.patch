@@ -1,25 +1,25 @@
-From 3c1209be1f5615f05c4b7dd84192e3c50972b285 Mon Sep 17 00:00:00 2001
+From 806a5fbabe11a64ce40798275294f13690c7b88e Mon Sep 17 00:00:00 2001
 From: Sergey Bolshakov <sbolshakov@altlinux.org>
 Date: Sat, 15 Sep 2007 00:11:49 +0400
-Subject: [PATCH 02/13] ALT soname
+Subject: [PATCH] ALT soname
 
 ---
  tcl/unix/tcl.m4 | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/tcl/unix/tcl.m4 b/tcl/unix/tcl.m4
-index 0e146e446d..ee20409a7d 100644
+index 27b754042f..84cf2514d8 100644
 --- a/tcl/unix/tcl.m4
 +++ b/tcl/unix/tcl.m4
-@@ -2030,7 +2030,7 @@ dnl # preprocessing tests use only CPPFLAGS.
+@@ -1999,7 +1999,7 @@ dnl # preprocessing tests use only CPPFLAGS.
  
      AS_IF([test "${SHARED_BUILD}" = 1 -a "${SHLIB_SUFFIX}" != ""], [
          LIB_SUFFIX=${SHARED_LIB_SUFFIX}
--        MAKE_LIB='${SHLIB_LD} -o [$]@ ${OBJS} ${SHLIB_LD_LIBS} ${TCL_SHLIB_LD_EXTRAS} ${TK_SHLIB_LD_EXTRAS} ${LD_SEARCH_FLAGS}'
-+        MAKE_LIB='${SHLIB_LD} -o [$]@ -Wl,-soname,[$]@ ${OBJS} ${SHLIB_LD_LIBS} ${TCL_SHLIB_LD_EXTRAS} ${TK_SHLIB_LD_EXTRAS} ${LD_SEARCH_FLAGS}'
+-        MAKE_LIB='${SHLIB_LD} -o [$]@ ${OBJS} ${LDFLAGS} ${SHLIB_LD_LIBS} ${TCL_SHLIB_LD_EXTRAS} ${TK_SHLIB_LD_EXTRAS} ${LD_SEARCH_FLAGS}'
++        MAKE_LIB='${SHLIB_LD} -o [$]@ -Wl,-soname,[$]@ ${OBJS} ${LDFLAGS} ${SHLIB_LD_LIBS} ${TCL_SHLIB_LD_EXTRAS} ${TK_SHLIB_LD_EXTRAS} ${LD_SEARCH_FLAGS}'
          AS_IF([test "${SHLIB_SUFFIX}" = ".dll"], [
              INSTALL_LIB='$(INSTALL_LIBRARY) $(LIB_FILE) "$(BIN_INSTALL_DIR)/$(LIB_FILE)";if test -f $(LIB_FILE).a; then $(INSTALL_DATA) $(LIB_FILE).a "$(LIB_INSTALL_DIR)"; fi;'
              DLL_INSTALL_DIR="\$(BIN_INSTALL_DIR)"
 -- 
-2.24.0
+2.29.2
 

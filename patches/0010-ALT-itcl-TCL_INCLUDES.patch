@@ -1,19 +1,19 @@
-From d7cda88a57c080110789b60f448274c0c78f6594 Mon Sep 17 00:00:00 2001
+From 2492017a3fa35cc72a0fd5898a4ee5be30c4fc39 Mon Sep 17 00:00:00 2001
 From: "Vladimir D. Seleznev" <vseleznv@altlinux.org>
 Date: Tue, 8 Oct 2019 18:31:22 +0300
-Subject: [PATCH 10/13] ALT itcl TCL_INCLUDES
+Subject: [PATCH] ALT itcl TCL_INCLUDES
 
 TCL devel package is not installed when itcl is building, so it should use
 private headers from the TCL source instead of system include directory.
 ---
- tcl/pkgs/itcl4.2.0/configure | 3 ++-
+ tcl/pkgs/itcl4.2.1/configure | 3 ++-
  1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/tcl/pkgs/itcl4.2.0/configure b/tcl/pkgs/itcl4.2.0/configure
-index b9b600a531..618e7030a5 100755
---- a/tcl/pkgs/itcl4.2.0/configure
-+++ b/tcl/pkgs/itcl4.2.0/configure
-@@ -5316,7 +5316,8 @@ $as_echo_n "checking for Tcl private include files... " >&6; }
+diff --git a/tcl/pkgs/itcl4.2.1/configure b/tcl/pkgs/itcl4.2.1/configure
+index 28914a9933..369bf47c7f 100755
+--- a/tcl/pkgs/itcl4.2.1/configure
++++ b/tcl/pkgs/itcl4.2.1/configure
+@@ -5307,7 +5307,8 @@ $as_echo_n "checking for Tcl private include files... " >&6; }
  	# public and private headers in the same set.
  	# We want to ensure these are substituted so as not to require
  	# any *_NATIVE vars be defined in the Makefile
@@ -24,5 +24,5 @@ index b9b600a531..618e7030a5 100755
              # If Tcl was built as a framework, attempt to use
              # the framework's Headers and PrivateHeaders directories
 -- 
-2.24.0
+2.29.2
 

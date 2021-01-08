@@ -1,0 +1,109 @@
+From d4971a2f27bcb35c6cd411264e7870272bf4d180 Mon Sep 17 00:00:00 2001
+From: "Vladimir D. Seleznev" <vseleznv@altlinux.org>
+Date: Fri, 8 Jan 2021 13:12:11 +0300
+Subject: [PATCH] ALT pkgs tclstub linkage
+
+---
+ tcl/pkgs/itcl4.2.1/configure         | 2 +-
+ tcl/pkgs/sqlite3.34.0/configure      | 2 +-
+ tcl/pkgs/tdbc1.1.2/configure         | 2 +-
+ tcl/pkgs/tdbcmysql1.1.2/configure    | 2 +-
+ tcl/pkgs/tdbcodbc1.1.2/configure     | 2 +-
+ tcl/pkgs/tdbcpostgres1.1.2/configure | 2 +-
+ tcl/pkgs/thread2.8.6/configure       | 2 +-
+ 7 files changed, 7 insertions(+), 7 deletions(-)
+
+diff --git a/tcl/pkgs/itcl4.2.1/configure b/tcl/pkgs/itcl4.2.1/configure
+index 73edb38067..1e481c7957 100755
+--- a/tcl/pkgs/itcl4.2.1/configure
++++ b/tcl/pkgs/itcl4.2.1/configure
+@@ -8304,7 +8304,7 @@ rm -f conftest*
+     else
+ 	RANLIB_STUB="${RANLIB}"
+ 	if test "${SHARED_BUILD}" = "1" ; then
+-	    SHLIB_LD_LIBS="${SHLIB_LD_LIBS} ${TCL_STUB_LIB_SPEC}"
++	    SHLIB_LD_LIBS="${SHLIB_LD_LIBS} -L../.. ${TCL_STUB_LIB_SPEC}"
+ 	    if test x"${TK_BIN_DIR}" != x ; then
+ 		SHLIB_LD_LIBS="${SHLIB_LD_LIBS} ${TK_STUB_LIB_SPEC}"
+ 	    fi
+diff --git a/tcl/pkgs/sqlite3.34.0/configure b/tcl/pkgs/sqlite3.34.0/configure
+index 686895440d..df74e2eef1 100755
+--- a/tcl/pkgs/sqlite3.34.0/configure
++++ b/tcl/pkgs/sqlite3.34.0/configure
+@@ -8341,7 +8341,7 @@ rm -f conftest*
+     else
+ 	RANLIB_STUB="${RANLIB}"
+ 	if test "${SHARED_BUILD}" = "1" ; then
+-	    SHLIB_LD_LIBS="${SHLIB_LD_LIBS} ${TCL_STUB_LIB_SPEC}"
++	    SHLIB_LD_LIBS="${SHLIB_LD_LIBS} -L../.. ${TCL_STUB_LIB_SPEC}"
+ 	    if test x"${TK_BIN_DIR}" != x ; then
+ 		SHLIB_LD_LIBS="${SHLIB_LD_LIBS} ${TK_STUB_LIB_SPEC}"
+ 	    fi
+diff --git a/tcl/pkgs/tdbc1.1.2/configure b/tcl/pkgs/tdbc1.1.2/configure
+index 561bb12e63..2d76837ab4 100755
+--- a/tcl/pkgs/tdbc1.1.2/configure
++++ b/tcl/pkgs/tdbc1.1.2/configure
+@@ -8361,7 +8361,7 @@ rm -f conftest*
+     else
+ 	RANLIB_STUB="${RANLIB}"
+ 	if test "${SHARED_BUILD}" = "1" ; then
+-	    SHLIB_LD_LIBS="${SHLIB_LD_LIBS} ${TCL_STUB_LIB_SPEC}"
++	    SHLIB_LD_LIBS="${SHLIB_LD_LIBS} -L../.. ${TCL_STUB_LIB_SPEC}"
+ 	    if test x"${TK_BIN_DIR}" != x ; then
+ 		SHLIB_LD_LIBS="${SHLIB_LD_LIBS} ${TK_STUB_LIB_SPEC}"
+ 	    fi
+diff --git a/tcl/pkgs/tdbcmysql1.1.2/configure b/tcl/pkgs/tdbcmysql1.1.2/configure
+index 9da02f0361..de01464bb1 100755
+--- a/tcl/pkgs/tdbcmysql1.1.2/configure
++++ b/tcl/pkgs/tdbcmysql1.1.2/configure
+@@ -8783,7 +8783,7 @@ rm -f conftest*
+     else
+ 	RANLIB_STUB="${RANLIB}"
+ 	if test "${SHARED_BUILD}" = "1" ; then
+-	    SHLIB_LD_LIBS="${SHLIB_LD_LIBS} ${TCL_STUB_LIB_SPEC}"
++	    SHLIB_LD_LIBS="${SHLIB_LD_LIBS} -L../.. ${TCL_STUB_LIB_SPEC}"
+ 	    if test x"${TK_BIN_DIR}" != x ; then
+ 		SHLIB_LD_LIBS="${SHLIB_LD_LIBS} ${TK_STUB_LIB_SPEC}"
+ 	    fi
+diff --git a/tcl/pkgs/tdbcodbc1.1.2/configure b/tcl/pkgs/tdbcodbc1.1.2/configure
+index da9618e28f..ef3da1ad6a 100755
+--- a/tcl/pkgs/tdbcodbc1.1.2/configure
++++ b/tcl/pkgs/tdbcodbc1.1.2/configure
+@@ -8879,7 +8879,7 @@ rm -f conftest*
+     else
+ 	RANLIB_STUB="${RANLIB}"
+ 	if test "${SHARED_BUILD}" = "1" ; then
+-	    SHLIB_LD_LIBS="${SHLIB_LD_LIBS} ${TCL_STUB_LIB_SPEC}"
++	    SHLIB_LD_LIBS="${SHLIB_LD_LIBS} -L../.. ${TCL_STUB_LIB_SPEC}"
+ 	    if test x"${TK_BIN_DIR}" != x ; then
+ 		SHLIB_LD_LIBS="${SHLIB_LD_LIBS} ${TK_STUB_LIB_SPEC}"
+ 	    fi
+diff --git a/tcl/pkgs/tdbcpostgres1.1.2/configure b/tcl/pkgs/tdbcpostgres1.1.2/configure
+index d48f952c65..a85d23dfcd 100755
+--- a/tcl/pkgs/tdbcpostgres1.1.2/configure
++++ b/tcl/pkgs/tdbcpostgres1.1.2/configure
+@@ -8879,7 +8879,7 @@ rm -f conftest*
+     else
+ 	RANLIB_STUB="${RANLIB}"
+ 	if test "${SHARED_BUILD}" = "1" ; then
+-	    SHLIB_LD_LIBS="${SHLIB_LD_LIBS} ${TCL_STUB_LIB_SPEC}"
++	    SHLIB_LD_LIBS="${SHLIB_LD_LIBS} -L../.. ${TCL_STUB_LIB_SPEC}"
+ 	    if test x"${TK_BIN_DIR}" != x ; then
+ 		SHLIB_LD_LIBS="${SHLIB_LD_LIBS} ${TK_STUB_LIB_SPEC}"
+ 	    fi
+diff --git a/tcl/pkgs/thread2.8.6/configure b/tcl/pkgs/thread2.8.6/configure
+index 14457e8951..5832f4e96f 100755
+--- a/tcl/pkgs/thread2.8.6/configure
++++ b/tcl/pkgs/thread2.8.6/configure
+@@ -9053,7 +9053,7 @@ rm -rf conftest*
+     else
+ 	RANLIB_STUB="${RANLIB}"
+ 	if test "${SHARED_BUILD}" = "1" ; then
+-	    SHLIB_LD_LIBS="${SHLIB_LD_LIBS} ${TCL_STUB_LIB_SPEC}"
++	    SHLIB_LD_LIBS="${SHLIB_LD_LIBS} -L../.. ${TCL_STUB_LIB_SPEC}"
+ 	    if test x"${TK_BIN_DIR}" != x ; then
+ 		SHLIB_LD_LIBS="${SHLIB_LD_LIBS} ${TK_STUB_LIB_SPEC}"
+ 	    fi
+-- 
+2.29.2
+
