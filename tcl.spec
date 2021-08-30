@@ -5,6 +5,7 @@
 %define itcl 4.2.1
 %define tdbc 1.1.2
 %define thread 2.8.6
+%define zlib 2.0.1
 
 Name: tcl
 Version: 8.6.11
@@ -72,6 +73,9 @@ Summary: The Tool Command Language (TCL) - shared library
 Group: System/Libraries
 Provides: %_tcllibdir
 Provides: %_tcldatadir
+Provides: tcl(zlib) = %zlib
+Provides: tcl(zlib)-%(echo %zlib |cut -c 1) = %zlib
+Obsoletes: tcl-zlib <= %zlib
 
 %package devel
 Summary: Header files and C programming manual for TCL
@@ -213,6 +217,18 @@ make test |tee check.log
 sed -n '/^all.tcl/{/Failed\s\+[^0]/q1}'
 ! grep -qF "Test files exiting with errors" check.log
 popd
+
+# zlib guard
+cat <<EOF > zlib_guard.tcl
+if {![catch {package present zlib} version]} {
+	if {[string equal \$version "%zlib"]} {
+		exit 0
+	}
+}
+
+exit 1
+EOF
+%__tclsh zlib_guard.tcl
 
 %files -f exclude_pkgsmans
 %dir %docdir
