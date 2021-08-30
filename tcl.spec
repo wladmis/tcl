@@ -35,6 +35,10 @@ Patch14: 0014-ALT-pkgs-tclstub-linkage.patch
 
 BuildRequires(pre): rpm-build-tcl >= 0.4-alt1
 %{?_with_test:BuildConflicts: tcl-vfs}
+%{?_with_test:BuildRequires: libmariadb-devel}
+%{?_with_test:BuildRequires: postgresql-devel}
+%{?_with_test:BuildRequires: libiodbc-devel}
+%{?_with_test:BuildRequires: tcl-sqlite3}
 BuildRequires: zlib-devel
 
 Provides: tcl(TclOO)
@@ -205,7 +209,9 @@ mv pkgsmans{.tmp,}
 # skip clock.test due lack of /etc/localtime in the build environment (ALT#35848)
 rm -f tests/clock.test
 pushd unix
-make test
+make test |tee check.log
+sed -n '/^all.tcl/{/Failed\s\+[^0]/q1}'
+! grep -qF "Test files exiting with errors" check.log
 popd
 
 %files -f exclude_pkgsmans
