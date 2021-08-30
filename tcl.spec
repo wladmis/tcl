@@ -9,7 +9,7 @@
 
 Name: tcl
 Version: 8.6.11
-Release: alt2
+Release: alt3
 
 Summary: The Tool Command Language (TCL)
 License: TCL
@@ -299,6 +299,10 @@ EOF
 %files pkgs-devel
 
 %changelog
+* Mon Aug 30 2021 Vladimir D. Seleznev <vseleznv@altlinux.org> 8.6.11-alt3
+- spec: enhanced %%check.
+- libtcl: obsoleted tcl-zlib.
+
 * Fri Aug 27 2021 Vladimir D. Seleznev <vseleznv@altlinux.org> 8.6.11-alt2
 - Enabled LTO.
 
