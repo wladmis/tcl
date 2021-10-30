@@ -2,6 +2,7 @@
 
 %def_with test
 %define major 8.6
+%define tcloo 1.1.0
 %define itcl 4.2.1
 %define tdbc 1.1.2
 %define thread 2.8.6
@@ -42,8 +43,6 @@ BuildRequires(pre): rpm-build-tcl >= 0.4-alt1
 %{?_with_test:BuildRequires: tcl-sqlite3}
 BuildRequires: zlib-devel
 
-Provides: tcl(TclOO)
-
 Conflicts: tcl-incrtcl < 4 tcl-incrtk < 4
 Conflicts: tcl-readline < 2.1.1-alt8
 
@@ -73,6 +72,8 @@ Summary: The Tool Command Language (TCL) - shared library
 Group: System/Libraries
 Provides: %_tcllibdir
 Provides: %_tcldatadir
+Provides: tcl(TclOO) = %tcloo
+Provides: tcl(TclOO)-%(echo %tcloo |cut -c 1) = %tcloo
 Provides: tcl(zlib) = %zlib
 Provides: tcl(zlib)-%(echo %zlib |cut -c 1) = %zlib
 Obsoletes: tcl-zlib <= %zlib
@@ -229,6 +230,18 @@ if {![catch {package present zlib} version]} {
 exit 1
 EOF
 %__tclsh zlib_guard.tcl
+
+# tclOO guard
+cat <<EOF > TclOO_guard.tcl
+if {![catch {package present TclOO} version]} {
+	if {[string equal \$version "%tcloo"]} {
+		exit 0
+	}
+}
+
+exit 1
+EOF
+%__tclsh TclOO_guard.tcl
 
 %files -f exclude_pkgsmans
 %dir %docdir
