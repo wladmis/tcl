@@ -1,4 +1,4 @@
-From 48fd2f60084b5db212a7300654a5294a525fdc0e Mon Sep 17 00:00:00 2001
+From 71aebb216d3e672729bf47bdc8f9ed99b93f4597 Mon Sep 17 00:00:00 2001
 From: Sergey Bolshakov <sbolshakov@altlinux.org>
 Date: Sat, 15 Sep 2007 00:12:23 +0400
 Subject: [PATCH] ALT nostdinc
@@ -8,10 +8,10 @@ Subject: [PATCH] ALT nostdinc
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/tcl/unix/configure.in b/tcl/unix/configure.in
-index 572fb48bda..33227d6810 100644
+index c73f368641..043219efc8 100644
 --- a/tcl/unix/configure.in
 +++ b/tcl/unix/configure.in
-@@ -894,7 +894,7 @@ TCL_BUILD_STUB_LIB_PATH="`pwd`/${TCL_STUB_LIB_FILE}"
+@@ -895,7 +895,7 @@ TCL_BUILD_STUB_LIB_PATH="`pwd`/${TCL_STUB_LIB_FILE}"
  TCL_STUB_LIB_PATH="${TCL_STUB_LIB_DIR}/${TCL_STUB_LIB_FILE}"
  
  # Install time header dir can be set via --includedir
@@ -21,5 +21,5 @@ index 572fb48bda..33227d6810 100644
  #------------------------------------------------------------------------
  # tclConfig.sh refers to this by a different name
 -- 
-2.29.2
+2.33.0
 

@@ -1,4 +1,4 @@
-From b7812ab8c29f12cf19d7b4b1fb8b8746cede88db Mon Sep 17 00:00:00 2001
+From db8ea5a8afe150c72a7621bdbdff62b62a7fdddc Mon Sep 17 00:00:00 2001
 From: Sergey Bolshakov <sbolshakov@altlinux.org>
 Date: Tue, 20 Nov 2007 14:57:52 +0300
 Subject: [PATCH] Revert " * generic/tclObj.c: remove superfluous #include of
@@ -10,7 +10,7 @@ This reverts commit 267adc009b1ac3d1c5bdf495eb434b0503d744f8.
  1 file changed, 1 insertion(+)
 
 diff --git a/tcl/generic/tclObj.c b/tcl/generic/tclObj.c
-index 2ec5eb8720..16e7f96e89 100644
+index 0950dcd8c8..7f15e0b16f 100644
 --- a/tcl/generic/tclObj.c
 +++ b/tcl/generic/tclObj.c
 @@ -15,6 +15,7 @@
@@ -22,5 +22,5 @@ index 2ec5eb8720..16e7f96e89 100644
  #include <math.h>
  
 -- 
-2.29.2
+2.33.0
 

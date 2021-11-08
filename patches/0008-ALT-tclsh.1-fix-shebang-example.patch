@@ -1,4 +1,4 @@
-From e90cf457e1568474cafc215a1ee10d179df87b4b Mon Sep 17 00:00:00 2001
+From 099b5d9b506a47922bc0e0978dfa8650952efa9e Mon Sep 17 00:00:00 2001
 From: "Vladimir D. Seleznev" <vseleznv@altlinux.org>
 Date: Thu, 5 Sep 2019 00:45:46 +0300
 Subject: [PATCH] ALT tclsh.1: fix shebang example
@@ -28,5 +28,5 @@ index fa0ecc2268..b1407129a6 100644
  Many UNIX systems do not allow the \fB#!\fR line to exceed about
  30 characters in length, so be sure that the \fBtclsh\fR
 -- 
-2.29.2
+2.33.0
 

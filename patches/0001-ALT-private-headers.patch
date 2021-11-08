@@ -1,4 +1,4 @@
-From fcfca6db49855dd58496aaf4412221d1b05bceb0 Mon Sep 17 00:00:00 2001
+From 254b0fb17e4305ffcab0606c368c4cb56f706b68 Mon Sep 17 00:00:00 2001
 From: "Vladimir D. Seleznev" <vseleznv@altlinux.org>
 Date: Fri, 8 Nov 2019 01:19:10 +0300
 Subject: [PATCH] ALT private headers
@@ -11,7 +11,7 @@ rewritten.
  2 files changed, 8 insertions(+), 6 deletions(-)
 
 diff --git a/tcl/unix/Makefile.in b/tcl/unix/Makefile.in
-index 85acc1f9de..2f2ac53b23 100644
+index 398afd0861..be45aef877 100644
 --- a/tcl/unix/Makefile.in
 +++ b/tcl/unix/Makefile.in
 @@ -63,7 +63,7 @@ INCLUDE_INSTALL_DIR	= $(INSTALL_ROOT)$(includedir)
@@ -23,14 +23,14 @@ index 85acc1f9de..2f2ac53b23 100644
  
  # Top-level directory in which to install manual entries:
  MAN_INSTALL_DIR		= $(INSTALL_ROOT)$(mandir)
-@@ -1078,7 +1078,8 @@ install-private-headers:
+@@ -1069,7 +1069,8 @@ install-private-headers:
  		$(GENERIC_DIR)/tclOOInt.h $(GENERIC_DIR)/tclOOIntDecls.h \
  		$(UNIX_DIR)/tclUnixPort.h; \
  	    do \
 -	    $(INSTALL_DATA) $$i "$(PRIVATE_INCLUDE_INSTALL_DIR)"; \
 +	    $(INSTALL_DATA_DIR) "$(PRIVATE_INCLUDE_INSTALL_DIR)/$$(basename $$(dirname $$i))"; \
 +	    $(INSTALL_DATA) $$i "$(PRIVATE_INCLUDE_INSTALL_DIR)/$$(basename $$(dirname $$i))"; \
- 	    done;
+ 	done
  	@if test -f tclConfig.h; then\
  	    $(INSTALL_DATA) tclConfig.h "$(PRIVATE_INCLUDE_INSTALL_DIR)"; \
 diff --git a/tcl/unix/tclConfig.sh.in b/tcl/unix/tclConfig.sh.in
@@ -74,5 +74,5 @@ index f768690620..b8aa935323 100644
  # Path to the Tcl stub library in the install directory.
  TCL_STUB_LIB_PATH='@TCL_STUB_LIB_PATH@'
 -- 
-2.29.2
+2.33.0
 

@@ -1,4 +1,4 @@
-From d48315597a0a12a7a4f97de164ef281af3a80e59 Mon Sep 17 00:00:00 2001
+From 9f209a2398bc7901536b6a5b9275c19a3c1d6feb Mon Sep 17 00:00:00 2001
 From: "Vladimir D. Seleznev" <vseleznv@altlinux.org>
 Date: Wed, 9 Oct 2019 02:08:00 +0300
 Subject: [PATCH] ALT pkgs LDFLAGS
@@ -9,19 +9,19 @@ Set LDFLAGS to link pkgs against tclstub.
  1 file changed, 2 insertions(+), 1 deletion(-)
 
 diff --git a/tcl/unix/Makefile.in b/tcl/unix/Makefile.in
-index 7c2243098e..8713763344 100644
+index 92cd949ea2..ea1e0d2651 100644
 --- a/tcl/unix/Makefile.in
 +++ b/tcl/unix/Makefile.in
-@@ -1817,7 +1817,8 @@ configure-packages:
- 	      echo "Configuring package '$$pkg'"; \
- 	      mkdir -p $(PKG_DIR)/$$pkg; \
- 	      if [ ! -f $(PKG_DIR)/$$pkg/Makefile ]; then \
--		( cd $(PKG_DIR)/$$pkg; \
-+		( export LDFLAGS="-L`pwd` $(LDFLAGS)"; \
-+		  cd $(PKG_DIR)/$$pkg; \
- 		  $$i/configure --with-tcl=../.. \
- 		      --with-tclinclude=$(GENERIC_DIR) \
- 		      $(PKG_CFG_ARGS) --libdir=$(PACKAGE_DIR) \
+@@ -1810,7 +1810,8 @@ configure-packages:
+ 		    echo "Configuring package '$$pkg'"; \
+ 		    mkdir -p $(PKG_DIR)/$$pkg; \
+ 		    if [ ! -f $(PKG_DIR)/$$pkg/Makefile ] ; then \
+-			( cd $(PKG_DIR)/$$pkg; \
++			( export LDGLAGS="-L`pwd` $(LDGLAGS)"; \
++			  cd $(PKG_DIR)/$$pkg; \
+ 			  $$i/configure --with-tcl=../.. \
+ 			      --with-tclinclude=$(GENERIC_DIR) \
+ 			      $(PKG_CFG_ARGS) --libdir=$(PACKAGE_DIR) \
 -- 
-2.29.2
+2.33.0
 
