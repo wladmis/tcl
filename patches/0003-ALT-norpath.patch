@@ -1,4 +1,4 @@
-From ebf590b680e1fc5e1d1d6212ba769450bccfd991 Mon Sep 17 00:00:00 2001
+From 2ac37a2b77593069153ccc4a7b88fe4cb30bb180 Mon Sep 17 00:00:00 2001
 From: Sergey Bolshakov <sbolshakov@altlinux.org>
 Date: Sat, 15 Sep 2007 00:12:08 +0400
 Subject: [PATCH] ALT norpath
@@ -8,7 +8,7 @@ Subject: [PATCH] ALT norpath
  1 file changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/tcl/unix/tcl.m4 b/tcl/unix/tcl.m4
-index 525fde7af1..db3fcc0aed 100644
+index db0ccaceb9..3398c42603 100644
 --- a/tcl/unix/tcl.m4
 +++ b/tcl/unix/tcl.m4
 @@ -1398,8 +1398,8 @@ AC_DEFUN([SC_CONFIG_CFLAGS], [
@@ -23,5 +23,5 @@ index 525fde7af1..db3fcc0aed 100644
  	    AS_IF([test $do64bit = yes], [
  		AC_CACHE_CHECK([if compiler accepts -m64 flag], tcl_cv_cc_m64, [
 -- 
-2.33.0
+2.33.5
 

@@ -1,4 +1,4 @@
-From 0f706e2edec920ba49f1d63b389e63964be21a43 Mon Sep 17 00:00:00 2001
+From a5cb7e47167d6829faee980fd21c768da38d301b Mon Sep 17 00:00:00 2001
 From: "Vladimir D. Seleznev" <vseleznv@altlinux.org>
 Date: Mon, 15 Apr 2019 02:33:09 +0300
 Subject: [PATCH] ALT TCL_LIBS for shared linkage
@@ -11,7 +11,7 @@ linkage.
  2 files changed, 3 insertions(+), 3 deletions(-)
 
 diff --git a/tcl/unix/configure.in b/tcl/unix/configure.in
-index b78426abad..3d9368b46b 100644
+index 17385a7c12..4a297c904e 100644
 --- a/tcl/unix/configure.in
 +++ b/tcl/unix/configure.in
 @@ -841,9 +841,9 @@ else
@@ -40,5 +40,5 @@ index b8aa935323..a116b0e927 100644
  # Top-level directory in which Tcl's platform-independent files are
  # installed.
 -- 
-2.33.0
+2.33.5
 

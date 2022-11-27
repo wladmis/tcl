@@ -1,4 +1,4 @@
-From 0a23a38488f2ce6e5946754a4131796a60a2342c Mon Sep 17 00:00:00 2001
+From 124344d7daa8886ebf5a8c813e601bb54e151609 Mon Sep 17 00:00:00 2001
 From: Sergey Bolshakov <sbolshakov@altlinux.org>
 Date: Sat, 15 Sep 2007 00:12:52 +0400
 Subject: [PATCH] ALT libpath
@@ -12,7 +12,7 @@ Co-Authored-by: Vladimir D. Seleznev <vseleznv@altlinux.org>
  4 files changed, 16 insertions(+), 22 deletions(-)
 
 diff --git a/tcl/library/init.tcl b/tcl/library/init.tcl
-index edf6bd58d0..3b635e3a67 100644
+index 0655dc87b8..de92960ced 100644
 --- a/tcl/library/init.tcl
 +++ b/tcl/library/init.tcl
 @@ -57,11 +57,6 @@ namespace eval tcl {
@@ -84,7 +84,7 @@ index 51ecafe438..1f2b07603c 100644
  test unixInit-2.10 {TclpInitLibraryPath: executable relative} -setup {
      unset -nocomplain oldlibrary
 diff --git a/tcl/unix/configure.in b/tcl/unix/configure.in
-index 043219efc8..b78426abad 100644
+index 68680a2672..17385a7c12 100644
 --- a/tcl/unix/configure.in
 +++ b/tcl/unix/configure.in
 @@ -773,7 +773,7 @@ eval "TCL_LIB_FILE=libtcl${LIB_SUFFIX}"
@@ -141,5 +141,5 @@ index 746793815b..59f83b3021 100644
  	    Tcl_ListObjAppendElement(NULL, pathPtr, TclDStringToObj(&ds));
  	}
 -- 
-2.33.0
+2.33.5
 

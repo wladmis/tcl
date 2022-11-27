@@ -1,4 +1,4 @@
-From 36af0f10907fdb5d718f72f70a17d4c263879a90 Mon Sep 17 00:00:00 2001
+From 01e6606c49a10396673c4e6b0a446d1dbb69ddcf Mon Sep 17 00:00:00 2001
 From: Sergey Bolshakov <sbolshakov@altlinux.org>
 Date: Sat, 15 Sep 2007 00:11:49 +0400
 Subject: [PATCH] ALT soname
@@ -8,10 +8,10 @@ Subject: [PATCH] ALT soname
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/tcl/unix/tcl.m4 b/tcl/unix/tcl.m4
-index f3d08ec311..525fde7af1 100644
+index ca94abd4ad..db0ccaceb9 100644
 --- a/tcl/unix/tcl.m4
 +++ b/tcl/unix/tcl.m4
-@@ -1991,7 +1991,7 @@ dnl # preprocessing tests use only CPPFLAGS.
+@@ -2004,7 +2004,7 @@ dnl # preprocessing tests use only CPPFLAGS.
  
      AS_IF([test "${SHARED_BUILD}" = 1 -a "${SHLIB_SUFFIX}" != ""], [
          LIB_SUFFIX=${SHARED_LIB_SUFFIX}
@@ -21,5 +21,5 @@ index f3d08ec311..525fde7af1 100644
              INSTALL_LIB='$(INSTALL_LIBRARY) $(LIB_FILE) "$(BIN_INSTALL_DIR)/$(LIB_FILE)";if test -f $(LIB_FILE).a; then $(INSTALL_DATA) $(LIB_FILE).a "$(LIB_INSTALL_DIR)"; fi;'
              DLL_INSTALL_DIR="\$(BIN_INSTALL_DIR)"
 -- 
-2.33.0
+2.33.5
 

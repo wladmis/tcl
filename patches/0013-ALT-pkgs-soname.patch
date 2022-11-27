@@ -1,22 +1,22 @@
-From 6f151c528241bf8c0dcf44d84bb880e8417bce15 Mon Sep 17 00:00:00 2001
+From edf0fd672e761b4af72e0458bba8e6eec7b2a282 Mon Sep 17 00:00:00 2001
 From: "Vladimir D. Seleznev" <vseleznv@altlinux.org>
 Date: Wed, 9 Oct 2019 17:49:53 +0300
 Subject: [PATCH] ALT pkgs soname
 
 ---
- tcl/pkgs/itcl4.2.2/configure         | 2 +-
- tcl/pkgs/tdbc1.1.3/configure         | 2 +-
- tcl/pkgs/tdbcmysql1.1.3/configure    | 2 +-
- tcl/pkgs/tdbcodbc1.1.3/configure     | 2 +-
- tcl/pkgs/tdbcpostgres1.1.3/configure | 2 +-
- tcl/pkgs/tdbcsqlite3-1.1.3/configure | 2 +-
+ tcl/pkgs/itcl4.2.3/configure         | 2 +-
+ tcl/pkgs/tdbc1.1.5/configure         | 2 +-
+ tcl/pkgs/tdbcmysql1.1.5/configure    | 2 +-
+ tcl/pkgs/tdbcodbc1.1.5/configure     | 2 +-
+ tcl/pkgs/tdbcpostgres1.1.5/configure | 2 +-
+ tcl/pkgs/tdbcsqlite3-1.1.5/configure | 2 +-
  6 files changed, 6 insertions(+), 6 deletions(-)
 
-diff --git a/tcl/pkgs/itcl4.2.2/configure b/tcl/pkgs/itcl4.2.2/configure
-index 83bee7a855..4ed1e875df 100755
---- a/tcl/pkgs/itcl4.2.2/configure
-+++ b/tcl/pkgs/itcl4.2.2/configure
-@@ -7311,7 +7311,7 @@ fi
+diff --git a/tcl/pkgs/itcl4.2.3/configure b/tcl/pkgs/itcl4.2.3/configure
+index b5c7cb13bd..8016d30df4 100755
+--- a/tcl/pkgs/itcl4.2.3/configure
++++ b/tcl/pkgs/itcl4.2.3/configure
+@@ -7330,7 +7330,7 @@ fi
  
  	    # TEA specific: use LDFLAGS_DEFAULT instead of LDFLAGS
  	    SHLIB_LD='${CC} ${CFLAGS} ${LDFLAGS_DEFAULT} -shared'
@@ -25,11 +25,11 @@ index 83bee7a855..4ed1e875df 100755
  
  	    case $system in
  	    DragonFly-*|FreeBSD-*)
-diff --git a/tcl/pkgs/tdbc1.1.3/configure b/tcl/pkgs/tdbc1.1.3/configure
-index b36dba2dc4..2b14857a9e 100755
---- a/tcl/pkgs/tdbc1.1.3/configure
-+++ b/tcl/pkgs/tdbc1.1.3/configure
-@@ -7440,7 +7440,7 @@ fi
+diff --git a/tcl/pkgs/tdbc1.1.5/configure b/tcl/pkgs/tdbc1.1.5/configure
+index f0d45bd3fe..04ea91807e 100755
+--- a/tcl/pkgs/tdbc1.1.5/configure
++++ b/tcl/pkgs/tdbc1.1.5/configure
+@@ -7446,7 +7446,7 @@ fi
  
  	    # TEA specific: use LDFLAGS_DEFAULT instead of LDFLAGS
  	    SHLIB_LD='${CC} ${CFLAGS} ${LDFLAGS_DEFAULT} -shared'
@@ -38,11 +38,11 @@ index b36dba2dc4..2b14857a9e 100755
  
  	    case $system in
  	    DragonFly-*|FreeBSD-*)
-diff --git a/tcl/pkgs/tdbcmysql1.1.3/configure b/tcl/pkgs/tdbcmysql1.1.3/configure
-index cabfdea72e..2ed024bbb9 100755
---- a/tcl/pkgs/tdbcmysql1.1.3/configure
-+++ b/tcl/pkgs/tdbcmysql1.1.3/configure
-@@ -7794,7 +7794,7 @@ fi
+diff --git a/tcl/pkgs/tdbcmysql1.1.5/configure b/tcl/pkgs/tdbcmysql1.1.5/configure
+index 85bdba8cdb..0014f1fd0c 100755
+--- a/tcl/pkgs/tdbcmysql1.1.5/configure
++++ b/tcl/pkgs/tdbcmysql1.1.5/configure
+@@ -7800,7 +7800,7 @@ fi
  
  	    # TEA specific: use LDFLAGS_DEFAULT instead of LDFLAGS
  	    SHLIB_LD='${CC} ${CFLAGS} ${LDFLAGS_DEFAULT} -shared'
@@ -51,11 +51,11 @@ index cabfdea72e..2ed024bbb9 100755
  
  	    case $system in
  	    DragonFly-*|FreeBSD-*)
-diff --git a/tcl/pkgs/tdbcodbc1.1.3/configure b/tcl/pkgs/tdbcodbc1.1.3/configure
-index 6233135ac7..bb4583da97 100755
---- a/tcl/pkgs/tdbcodbc1.1.3/configure
-+++ b/tcl/pkgs/tdbcodbc1.1.3/configure
-@@ -7794,7 +7794,7 @@ fi
+diff --git a/tcl/pkgs/tdbcodbc1.1.5/configure b/tcl/pkgs/tdbcodbc1.1.5/configure
+index 5884875200..093feff943 100755
+--- a/tcl/pkgs/tdbcodbc1.1.5/configure
++++ b/tcl/pkgs/tdbcodbc1.1.5/configure
+@@ -7800,7 +7800,7 @@ fi
  
  	    # TEA specific: use LDFLAGS_DEFAULT instead of LDFLAGS
  	    SHLIB_LD='${CC} ${CFLAGS} ${LDFLAGS_DEFAULT} -shared'
@@ -64,11 +64,11 @@ index 6233135ac7..bb4583da97 100755
  
  	    case $system in
  	    DragonFly-*|FreeBSD-*)
-diff --git a/tcl/pkgs/tdbcpostgres1.1.3/configure b/tcl/pkgs/tdbcpostgres1.1.3/configure
-index 2cea8486fc..1724995c95 100755
---- a/tcl/pkgs/tdbcpostgres1.1.3/configure
-+++ b/tcl/pkgs/tdbcpostgres1.1.3/configure
-@@ -7794,7 +7794,7 @@ fi
+diff --git a/tcl/pkgs/tdbcpostgres1.1.5/configure b/tcl/pkgs/tdbcpostgres1.1.5/configure
+index ecb39e1d67..0194d63c65 100755
+--- a/tcl/pkgs/tdbcpostgres1.1.5/configure
++++ b/tcl/pkgs/tdbcpostgres1.1.5/configure
+@@ -7800,7 +7800,7 @@ fi
  
  	    # TEA specific: use LDFLAGS_DEFAULT instead of LDFLAGS
  	    SHLIB_LD='${CC} ${CFLAGS} ${LDFLAGS_DEFAULT} -shared'
@@ -77,11 +77,11 @@ index 2cea8486fc..1724995c95 100755
  
  	    case $system in
  	    DragonFly-*|FreeBSD-*)
-diff --git a/tcl/pkgs/tdbcsqlite3-1.1.3/configure b/tcl/pkgs/tdbcsqlite3-1.1.3/configure
-index f58ad12f38..5912f18e7e 100755
---- a/tcl/pkgs/tdbcsqlite3-1.1.3/configure
-+++ b/tcl/pkgs/tdbcsqlite3-1.1.3/configure
-@@ -5720,7 +5720,7 @@ fi
+diff --git a/tcl/pkgs/tdbcsqlite3-1.1.5/configure b/tcl/pkgs/tdbcsqlite3-1.1.5/configure
+index 23473e506d..68bb8d4500 100755
+--- a/tcl/pkgs/tdbcsqlite3-1.1.5/configure
++++ b/tcl/pkgs/tdbcsqlite3-1.1.5/configure
+@@ -5733,7 +5733,7 @@ fi
  
  	    # TEA specific: use LDFLAGS_DEFAULT instead of LDFLAGS
  	    SHLIB_LD='${CC} ${CFLAGS} ${LDFLAGS_DEFAULT} -shared'
@@ -91,5 +91,5 @@ index f58ad12f38..5912f18e7e 100755
  	    case $system in
  	    DragonFly-*|FreeBSD-*)
 -- 
-2.33.0
+2.33.5
 
